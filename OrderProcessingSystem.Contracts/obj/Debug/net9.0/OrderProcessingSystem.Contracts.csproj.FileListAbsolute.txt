@@ -1,0 +1,11 @@
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/bin/Debug/net9.0/OrderProcessingSystem.Contracts.deps.json
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/bin/Debug/net9.0/OrderProcessingSystem.Contracts.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/bin/Debug/net9.0/OrderProcessingSystem.Contracts.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.AssemblyInfoInputs.cache
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.AssemblyInfo.cs
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.csproj.CoreCompileInputs.cache
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/refint/OrderProcessingSystem.Contracts.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/ref/OrderProcessingSystem.Contracts.dll

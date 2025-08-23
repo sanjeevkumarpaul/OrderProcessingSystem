@@ -1,0 +1,11 @@
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.AssemblyInfoInputs.cache
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.AssemblyInfo.cs
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.csproj.CoreCompileInputs.cache
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/bin/Debug/net9.0/OrderProcessingSystem.Core.deps.json
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/bin/Debug/net9.0/OrderProcessingSystem.Core.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/bin/Debug/net9.0/OrderProcessingSystem.Core.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/refint/OrderProcessingSystem.Core.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/ref/OrderProcessingSystem.Core.dll

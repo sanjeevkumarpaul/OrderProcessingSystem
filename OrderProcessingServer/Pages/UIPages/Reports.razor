@@ -1,0 +1,77 @@
+@page "/reports"
+@inject IHttpClientFactory HttpFactory
+@using OrderProcessingServer.Shared.Dto
+@using OrderProcessingServer.UIComponents
+
+<h1 class="page-title">Reports</h1>
+
+@if (salesReport == null)
+{
+  <p><em>Loading report...</em></p>
+}
+else
+{
+  <div class="card p-3">
+    <h5>Sales by Customer</h5>
+    <table class="table">
+      <thead>
+        <tr><th>Customer</th><th>Orders</th><th>Total Sales</th></tr>
+      </thead>
+      <tbody>
+        @foreach (var r in salesReport)
+        {
+          <tr>
+            <td>@r.CustomerName</td>
+            <td>@r.OrderCount</td>
+            <td>@r.TotalSales.ToString("C")</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+<h3 class="mt-4">Orders Preview</h3>
+@if (ordersPreview == null)
+{
+  <p><em>Loading orders preview...</em></p>
+}
+else
+{
+  <GenericGrid TItem="OrderDto" Items="ordersPreview" Columns="orderColumns" PageSize="5" PageSizes="new int[]{5,10,15}" />
+}
+
+@code {
+  List<SalesByCustomerDto>? salesReport = null;
+  List<OrderDto>? ordersPreview = null;
+  List<GridColumn> orderColumns = new List<GridColumn>
+  {
+    new GridColumn { Header = "Order #", Field = "OrderId", Sortable = true, Filterable = true },
+    new GridColumn { Header = "Customer", Field = "Customer.Name", Filterable = true },
+    new GridColumn { Header = "Supplier", Field = "Supplier.Name", Filterable = true },
+    new GridColumn { Header = "Total", Field = "Total", Sortable = true }
+  };
+
+  protected override Task OnInitializedAsync() => Task.CompletedTask;
+
+  private bool _loaded;
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (!firstRender || _loaded) return;
+    _loaded = true;
+
+    try
+    {
+  var client = HttpFactory.CreateClient("ApiClient");
+  salesReport = await client.GetFromJsonAsync<List<SalesByCustomerDto>>("api/data/reports/sales-by-customer") ?? new List<SalesByCustomerDto>();
+  // fetch a small orders preview from the new Reports API
+  ordersPreview = await client.GetFromJsonAsync<List<OrderDto>>("api/reports?dataset=orders") ?? new List<OrderDto>();
+      StateHasChanged();
+    }
+    catch (Exception ex)
+    {
+      Console.Error.WriteLine($"Reports fetch failed: {ex}");
+      salesReport = new List<SalesByCustomerDto>();
+    }
+  }
+}

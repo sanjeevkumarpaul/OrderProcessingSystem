@@ -1,0 +1,4 @@
+{
+  "salesByMonth": [ { "month": "Jan", "amount": 12000 }, { "month": "Feb", "amount": 15000 } ],
+  "topCustomers": [ "Acme Corp", "Globex" ]
+}

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "jLmeKjUASmg=",
+  "success": true,
+  "projectFilePath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/OrderProcessingSystem.Cache.csproj",
+  "expectedPackageFiles": [
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.caching.abstractions/8.0.0/microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.caching.stackexchangeredis/8.0.0/microsoft.extensions.caching.stackexchangeredis.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.options/8.0.0/microsoft.extensions.options.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/stackexchange.redis/2.6.122/stackexchange.redis.2.6.122.nupkg.sha512",
+    "/Users/sanjeevkumarpaul/.nuget/packages/system.io.pipelines/5.0.1/system.io.pipelines.5.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

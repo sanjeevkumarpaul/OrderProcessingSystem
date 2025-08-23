@@ -1,0 +1,331 @@
+@page "/suppliers"
+@inject IHttpClientFactory HttpFactory
+@inject IJSRuntime JS
+@using OrderProcessingServer.Shared.Dto
+@using OrderProcessingServer.UIComponents
+
+<h1 class="page-title d-flex justify-content-between align-items-center">Suppliers
+	<button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Suppliers")</button>
+</h1>
+
+@if (suppliers == null)
+{
+	<p><em>Loading...</em></p>
+}
+
+@* In-place grid: when showAllSuppliers (renamed to showGrid) is true we hide the cards and render a full grid with column-level filter icons similar to Orders page *@
+@if (showGrid)
+{
+	<GenericGrid TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="gridPageSize" PageSizes="gridPageSizes" />
+}
+else
+{
+	@* Cards view (unchanged) *@
+	<div class="row">
+	@foreach (var s in (suppliers ?? Enumerable.Empty<SupplierDto>()).Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize))
+		{
+			<div class="col-md-6 mb-3">
+				<div class="card p-3">
+					<h5>@s.Name</h5>
+					<p class="small text-muted">Country: @s.Country</p>
+				</div>
+			</div>
+		}
+	</div>
+
+	<div class="d-flex justify-content-between mt-2 align-items-center">
+		<div>
+			<button class="btn btn-secondary me-2" @onclick="PrevSuppliers" disabled="@(supplierPageIndex==0)">Previous</button>
+			<button class="btn btn-secondary" @onclick="NextSuppliers" disabled="@(supplierPageIndex+1>=supplierTotalPages)">Next</button>
+		</div>
+		<div>
+			<small>Page @(supplierPageIndex+1) of @supplierTotalPages</small>
+		</div>
+	</div>
+}
+
+@code {
+	List<SupplierDto>? suppliers = null;
+
+	// Cards paging
+	int supplierPageIndex = 0;
+	int supplierPageSize = 10;
+	int supplierTotalPages = 1;
+
+	// Grid mode and paging
+	bool showGrid = false;
+	List<SupplierDto>? pagedGridSuppliers = null;
+	int gridCurrentPage = 1;
+	int gridPageSize = 10;
+	int gridTotalPages = 1;
+	int[] gridPageSizes = new[] { 5, 10, 15 };
+
+	// Filters (column-level)
+	string[] textOps = new[] { "StartsWith", "EndsWith", "Equals" };
+	string supplierNameOp = "StartsWith";
+	string supplierCountryOp = "StartsWith";
+	string supplierNameFilter = string.Empty;
+	string supplierCountryFilter = string.Empty;
+
+	bool showNameFilter = false;
+	bool showCountryFilter = false;
+
+	// grid columns
+	List<GridColumn> supplierColumns = new List<GridColumn>();
+
+	protected override Task OnInitializedAsync()
+	{
+		return Task.CompletedTask;
+	}
+
+	private bool _loaded;
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (!firstRender || _loaded) return;
+		_loaded = true;
+
+		try
+		{
+			var client = HttpFactory.CreateClient("ApiClient");
+			suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("api/data/suppliers") ?? new List<SupplierDto>();
+			// initialize paging and grid columns
+			SetupCardsPaging();
+			SetupGridPaging();
+			supplierColumns = new List<GridColumn>
+			{
+				new GridColumn { Header = "SupplierId", Field = "SupplierId", Sortable = true },
+				new GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
+				new GridColumn { Header = "Country", Field = "Country", Filterable = true }
+			};
+			StateHasChanged();
+		}
+		catch (Exception ex)
+		{
+			Console.Error.WriteLine($"Suppliers fetch failed: {ex}");
+			suppliers = new List<SupplierDto>();
+		}
+	}
+
+	void NextSuppliers()
+	{
+		if (suppliers == null) return;
+		if (supplierPageIndex + 1 >= supplierTotalPages) return;
+		supplierPageIndex++;
+	}
+
+	void PrevSuppliers()
+	{
+		if (suppliers == null) return;
+		if (supplierPageIndex <= 0) return;
+		supplierPageIndex--;
+	}
+
+	void SetupCardsPaging()
+	{
+		supplierPageIndex = 0;
+		supplierTotalPages = Math.Max(1, (int)Math.Ceiling((double)(suppliers?.Count ?? 0) / supplierPageSize));
+	}
+
+	// Grid paging helpers
+	void SetupGridPaging()
+	{
+		gridCurrentPage = 1;
+		gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)(GetFilteredSuppliers().Count()) / gridPageSize));
+		ApplyGridPage();
+	}
+
+	void ApplyGridPage()
+	{
+		if (suppliers == null) { pagedGridSuppliers = new List<SupplierDto>(); return; }
+		var list = GetFilteredSuppliers().ToList();
+		gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / gridPageSize));
+		if (gridCurrentPage < 1) gridCurrentPage = 1;
+		if (gridCurrentPage > gridTotalPages) gridCurrentPage = gridTotalPages;
+		pagedGridSuppliers = list.Skip((gridCurrentPage - 1) * gridPageSize).Take(gridPageSize).ToList();
+	}
+
+	void GoToGridPage(int page)
+	{
+		if (suppliers == null) return;
+		gridCurrentPage = Math.Clamp(page, 1, gridTotalPages);
+		ApplyGridPage();
+	}
+
+	void OnGridPageSizeChanged(ChangeEventArgs e)
+	{
+		if (int.TryParse(e?.Value?.ToString(), out var s))
+		{
+			gridPageSize = s;
+			SetupGridPaging();
+		}
+	}
+
+	void ApplySupplierFilters()
+	{
+		// reset both pagers
+		supplierPageIndex = 0;
+		SetupGridPaging();
+	}
+
+	void ClearSupplierFilters()
+	{
+		supplierNameFilter = supplierCountryFilter = string.Empty;
+		supplierNameOp = supplierCountryOp = "StartsWith";
+		supplierPageIndex = 0;
+		SetupGridPaging();
+	}
+
+	IEnumerable<SupplierDto> GetFilteredSuppliers()
+	{
+		if (suppliers == null) return Enumerable.Empty<SupplierDto>();
+		IEnumerable<SupplierDto> q = suppliers;
+
+		if (!string.IsNullOrWhiteSpace(supplierNameFilter))
+		{
+			var t = supplierNameFilter.Trim();
+			q = q.Where(s => MatchText(s.Name ?? string.Empty, t, supplierNameOp));
+		}
+
+		if (!string.IsNullOrWhiteSpace(supplierCountryFilter))
+		{
+			var t = supplierCountryFilter.Trim();
+			q = q.Where(s => MatchText(s.Country ?? string.Empty, t, supplierCountryOp));
+		}
+
+		return q;
+	}
+
+	static bool MatchText(string value, string term, string op)
+	{
+		if (value == null) return false;
+		return op switch
+		{
+			"StartsWith" => value.StartsWith(term, StringComparison.OrdinalIgnoreCase),
+			"EndsWith" => value.EndsWith(term, StringComparison.OrdinalIgnoreCase),
+			"Equals" => string.Equals(value, term, StringComparison.OrdinalIgnoreCase),
+			_ => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
+		};
+	}
+
+	async Task ExportSuppliers()
+	{
+		var list = GetFilteredSuppliers().ToList();
+		var csv = BuildCsv(list);
+		var filename = $"suppliers_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+		await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+	}
+
+	bool IsSupplierFilterActive()
+	{
+		return !string.IsNullOrWhiteSpace(supplierNameFilter)
+			|| !string.IsNullOrWhiteSpace(supplierCountryFilter);
+	}
+
+	async Task ExportAllSuppliersAsync()
+	{
+		if (suppliers == null || suppliers.Count == 0) return;
+		var csv = BuildCsv(suppliers);
+		var filename = $"suppliers_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+		await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+	}
+
+	async Task ExportFilteredSuppliersAsync()
+	{
+		if (suppliers == null || suppliers.Count == 0) return;
+		var list = GetFilteredSuppliers().ToList();
+		var csv = BuildCsv(list);
+		var filename = $"suppliers_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+		await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+	}
+
+	// Column-level filter toggle/handlers
+	async Task ToggleNameFilter()
+	{
+		showNameFilter = !showNameFilter;
+		if (showNameFilter) showCountryFilter = false;
+		await InvokeAsync(StateHasChanged);
+		if (showNameFilter) await JS.InvokeVoidAsync("showPopup", "nameFilterBtn", "nameFilterPopup");
+	}
+
+	async Task ApplyNameFilter()
+	{
+		showNameFilter = false;
+		ApplySupplierFilters();
+		await InvokeAsync(StateHasChanged);
+		await JS.InvokeVoidAsync("hidePopup", "nameFilterPopup");
+	}
+
+	async Task ClearNameFilter()
+	{
+		supplierNameFilter = string.Empty;
+		supplierNameOp = "StartsWith";
+		showNameFilter = false;
+		ApplySupplierFilters();
+		await InvokeAsync(StateHasChanged);
+		await JS.InvokeVoidAsync("hidePopup", "nameFilterPopup");
+	}
+
+	async Task ToggleCountryFilter()
+	{
+		showCountryFilter = !showCountryFilter;
+		if (showCountryFilter) showNameFilter = false;
+		await InvokeAsync(StateHasChanged);
+		if (showCountryFilter) await JS.InvokeVoidAsync("showPopup", "countryFilterBtn", "countryFilterPopup");
+	}
+
+	async Task ApplyCountryFilter()
+	{
+		showCountryFilter = false;
+		ApplySupplierFilters();
+		await InvokeAsync(StateHasChanged);
+		await JS.InvokeVoidAsync("hidePopup", "countryFilterPopup");
+	}
+
+	async Task ClearCountryFilter()
+	{
+		supplierCountryFilter = string.Empty;
+		supplierCountryOp = "StartsWith";
+		showCountryFilter = false;
+		ApplySupplierFilters();
+		await InvokeAsync(StateHasChanged);
+		await JS.InvokeVoidAsync("hidePopup", "countryFilterPopup");
+	}
+
+	void ToggleGrid()
+	{
+		showGrid = !showGrid;
+		if (showGrid)
+		{
+			// entering grid view
+			SetupGridPaging();
+		}
+		else
+		{
+			// returning to cards
+			SetupCardsPaging();
+		}
+	}
+
+	string BuildCsv(List<SupplierDto> list)
+	{
+		var sb = new System.Text.StringBuilder();
+		sb.AppendLine("SupplierId,Name,Country");
+		foreach (var s in list)
+		{
+			var name = EscapeCsv(s.Name ?? string.Empty);
+			var country = EscapeCsv(s.Country ?? string.Empty);
+			sb.AppendLine($"{s.SupplierId},{name},{country}");
+		}
+		return sb.ToString();
+	}
+
+	static string EscapeCsv(string input)
+	{
+		if (input == null) return string.Empty;
+		if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
+		{
+			return "\"" + input.Replace("\"", "\"\"") + "\"";
+		}
+		return input;
+	}
+}

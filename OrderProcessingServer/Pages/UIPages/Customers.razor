@@ -1,0 +1,48 @@
+@page "/customers"
+@inject IHttpClientFactory HttpFactory
+@using OrderProcessingServer.Shared.Dto
+
+<h1 class="page-title">Customers</h1>
+
+@if (customers == null)
+{
+  <p><em>Loading...</em></p>
+}
+else
+{
+  <div class="row">
+    @foreach (var c in customers)
+    {
+      <div class="col-md-4 mb-3">
+        <div class="card p-3">
+          <h5>@c.Name</h5>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@code {
+  List<CustomerDto>? customers = null;
+
+  protected override Task OnInitializedAsync() => Task.CompletedTask;
+
+  private bool _loaded;
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (!firstRender || _loaded) return;
+    _loaded = true;
+
+    try
+    {
+      var client = HttpFactory.CreateClient("ApiClient");
+      customers = await client.GetFromJsonAsync<List<CustomerDto>>("api/data/customers") ?? new List<CustomerDto>();
+      StateHasChanged();
+    }
+    catch (Exception ex)
+    {
+      Console.Error.WriteLine($"Customers fetch failed: {ex}");
+      customers = new List<CustomerDto>();
+    }
+  }
+}

@@ -1,0 +1,33 @@
+/* Aesthetic app styles */
+.bg-app {
+  background: linear-gradient(180deg, #f8fafc 0%, #e8f0ff 60%);
+  min-height: 100vh;
+  width: 100%;
+  background-attachment: fixed;
+}
+
+html, body { height: 100%; }
+body { font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: transparent; }
+.topnav { background: rgba(255,255,255,0.92); box-shadow: 0 2px 6px rgba(16,24,40,0.08); }
+.navbar-brand { font-weight: 700; letter-spacing: 0.4px; color: #0b5cff !important; }
+.nav-link { color: #334155 !important; font-weight: 500; }
+.nav-link:hover { color: #0b5cff !important; }
+.container.mt-4 { padding-top: 100px; }
+.topnav.fixed-top { position: fixed; top: 0; left: 0; right: 0; z-index: 1030; }
+.navbar { padding: 0.6rem 1rem; }
+.card { border-radius: 12px; box-shadow: 0 6px 16px rgba(2,6,23,0.08); }
+.page-title { font-size: 1.6rem; color: #0f172a; }
+
+/* Vertical gradient bar on the left */
+.vertical-bar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  background: linear-gradient(180deg, rgba(11,92,255,0.9), rgba(14,165,233,0.9));
+  z-index: 1040;
+}
+
+/* shift main content to the right so bar isn't overlapping */
+.app-content { margin-left: 20px; }

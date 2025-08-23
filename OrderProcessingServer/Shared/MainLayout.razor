@@ -1,0 +1,19 @@
+@using OrderProcessingServer.Shared
+@inherits LayoutComponentBase
+
+<div class="bg-app">
+    <div class="vertical-bar" aria-hidden="true"></div>
+    <NavMenu />
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                Happy Days
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4 app-content">
+        @Body
+    </div>
+</div>
