@@ -19,3 +19,4 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Infrastructure/bin/Debug/net9.0/OrderProcessingSystem.Data.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Infrastructure/bin/Debug/net9.0/OrderProcessingSystem.Cache.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Infrastructure/bin/Debug/net9.0/OrderProcessingSystem.Cache.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Infrastructure/obj/Debug/net9.0/OrderProcessingSystem.Infrastructure.sourcelink.json

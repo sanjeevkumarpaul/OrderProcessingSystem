@@ -58,3 +58,41 @@ window.hidePopup = (popupId) => {
         console.warn('hidePopup failed', e);
     }
 };
+
+// load /Privacy page and show it inside the modal with id #privacyModal
+window.showPrivacyModal = async (evt) => {
+    try {
+        // fetch the static privacy page HTML
+        const res = await fetch('/Privacy');
+        if (!res.ok) {
+            console.warn('Failed to load privacy page', res.status);
+            return;
+        }
+        const html = await res.text();
+
+        // inject into modal body (strip any layout wrapper if present)
+        const body = document.getElementById('privacyModalBody');
+        if (!body) return;
+
+        // Try to extract the inner markup if the returned page includes <body> or a main heading
+        // Simple heuristic: find the first <h1> and return its container's following elements
+        // Fallback: place full HTML
+        let content = html;
+        // If it's a razor page with a single <h1> and a paragraph, just keep from <h1>
+        const h1Index = html.indexOf('<h1');
+        if (h1Index >= 0) {
+            content = html.substring(h1Index);
+        }
+
+        body.innerHTML = content;
+
+        // show bootstrap modal
+        const modalEl = document.getElementById('privacyModal');
+        if (!modalEl) return;
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    }
+    catch (e) {
+        console.warn('showPrivacyModal failed', e);
+    }
+};

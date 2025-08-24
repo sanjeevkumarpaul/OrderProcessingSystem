@@ -152,3 +152,4 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Tests/bin/Debug/net9.0/StackExchange.Redis.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Tests/bin/Debug/net9.0/OrderProcessingSystem.Cache.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Tests/bin/Debug/net9.0/OrderProcessingSystem.Cache.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Tests/obj/Debug/net9.0/OrderProcessingSystem.Tests.sourcelink.json

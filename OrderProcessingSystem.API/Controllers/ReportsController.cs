@@ -15,13 +15,16 @@ public class ReportsController : ControllerBase
     public ReportsController(IApiDataService apiDataService, IMapper mapper) => (_apiDataService, _mapper) = (apiDataService, mapper);
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] string dataset = "orders", [FromQuery] string? text = null)
+    public async Task<IActionResult> Get([FromQuery] string dataset = "orders", [FromQuery] string? text = null, [FromQuery] int? customerId = null, [FromQuery] int? top = null)
     {
         if (string.Equals(dataset, "orders", StringComparison.OrdinalIgnoreCase))
         {
             var orders = await _apiDataService.GetOrdersAsync();
             var list = orders.AsEnumerable();
             if (!string.IsNullOrWhiteSpace(text)) list = list.Where(o => (o.Customer?.Name ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase) || (o.Supplier?.Name ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase));
+            if (customerId.HasValue) list = list.Where(o => o.CustomerId == customerId.Value);
+            // top == 0 convention means 'no limit'
+            if (top.HasValue && top.Value > 0) list = list.Take(top.Value);
             var dto = _mapper.Map<List<OrderDto>>(list.ToList());
             return Ok(dto);
         }

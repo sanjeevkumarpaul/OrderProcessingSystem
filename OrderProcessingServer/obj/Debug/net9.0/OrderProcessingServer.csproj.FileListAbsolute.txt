@@ -97,4 +97,5 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/bin/Debug/net9.0/OrderProcessingSystem.Contracts.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/OrderProcessingServer.csproj.AssemblyReference.cache
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/OrderPro.1B7CECDB.Up2Date
-/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/3j3naw1fgk-a6uj00loyl.gz
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/OrderProcessingServer.sourcelink.json
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/3j3naw1fgk-jdddc0watx.gz

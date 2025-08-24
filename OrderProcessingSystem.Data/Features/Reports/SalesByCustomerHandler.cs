@@ -10,6 +10,6 @@ public class SalesByCustomerHandler : IRequestHandler<SalesByCustomerQuery, List
 
     public async Task<List<SalesByCustomerDto>> Handle(SalesByCustomerQuery request, CancellationToken cancellationToken)
     {
-        return await _reports.GetSalesByCustomerAsync(cancellationToken);
+        return await _reports.GetSalesByCustomerAsync(request.CustomerId, request.Top, cancellationToken);
     }
 }

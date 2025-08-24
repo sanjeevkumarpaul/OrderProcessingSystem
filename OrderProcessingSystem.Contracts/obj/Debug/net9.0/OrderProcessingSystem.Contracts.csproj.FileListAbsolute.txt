@@ -9,3 +9,4 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/refint/OrderProcessingSystem.Contracts.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/ref/OrderProcessingSystem.Contracts.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/obj/Debug/net9.0/OrderProcessingSystem.Contracts.sourcelink.json

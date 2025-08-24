@@ -1,77 +1,295 @@
 @page "/reports"
 @inject IHttpClientFactory HttpFactory
 @using OrderProcessingServer.Shared.Dto
-@using OrderProcessingServer.UIComponents
+
+<style>
+  /* SSRS-like page layout */
+  .report-layout {
+    display: flex;
+    gap: 1rem;
+  }
+  .report-params {
+    width: 260px;
+    background: #f8f9fa;
+    border: 1px solid #e2e2e2;
+    padding: 1rem;
+    border-radius: 4px;
+    height: calc(100vh - 160px);
+    overflow: auto;
+  }
+  .report-canvas-wrap {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .report-pages {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+    height: calc(100vh - 160px);
+    overflow: auto;
+  }
+  .report-page {
+    width: 8.5in; /* approximate letter width */
+    min-height: 11in;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 0 8px rgba(0,0,0,0.08);
+    background: white;
+    padding: 1rem 1.25rem;
+    box-sizing: border-box;
+  }
+  .report-header, .report-footer { text-align: center; color: #666; margin-bottom: 0.5rem; }
+  .report-body { margin-top: 0.75rem; }
+  .report-toolbar { display:flex; gap:0.5rem; align-items:center; }
+  .report-table th, .report-table td { padding: 0.25rem 0.5rem; }
+</style>
 
 <h1 class="page-title">Reports</h1>
 
-@if (salesReport == null)
-{
-  <p><em>Loading report...</em></p>
-}
-else
-{
-  <div class="card p-3">
-    <h5>Sales by Customer</h5>
-    <table class="table">
-      <thead>
-        <tr><th>Customer</th><th>Orders</th><th>Total Sales</th></tr>
-      </thead>
-      <tbody>
-        @foreach (var r in salesReport)
+<div class="report-layout">
+  <aside class="report-params">
+    <h5>Parameters</h5>
+    <div class="mb-3">
+      <!-- Date range removed per request -->
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Customer</label>
+      <select class="form-select" @bind="selectedCustomerId">
+        <option value="">(All)</option>
+        @foreach(var c in customers ?? Enumerable.Empty<CustomerDto>())
         {
-          <tr>
-            <td>@r.CustomerName</td>
-            <td>@r.OrderCount</td>
-            <td>@r.TotalSales.ToString("C")</td>
-          </tr>
+          <option value="@c.CustomerId">@c.Name</option>
         }
-      </tbody>
-    </table>
-  </div>
-}
+      </select>
+    </div>
+    <div class="d-grid">
+      <button class="btn btn-primary" @onclick="RunReport" disabled="@isRunning">
+        @if (isRunning) { <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> }
+        <span class="ms-1">Run</span>
+      </button>
+      <button class="btn btn-outline-secondary mt-2" @onclick="ResetParameters" disabled="@isRunning">Reset</button>
+    </div>
+  </aside>
 
-<h3 class="mt-4">Orders Preview</h3>
-@if (ordersPreview == null)
-{
-  <p><em>Loading orders preview...</em></p>
-}
-else
-{
-  <GenericGrid TItem="OrderDto" Items="ordersPreview" Columns="orderColumns" PageSize="5" PageSizes="new int[]{5,10,15}" />
-}
+  <section class="report-canvas-wrap">
+    <div class="report-toolbar">
+      <div>Preview: <strong>@(reportPagesCount) page(s)</strong></div>
+      <div class="ms-3">
+        @if (!string.IsNullOrEmpty(lastError))
+        {
+          <span class="text-danger">Error: @lastError</span>
+        }
+        else if (lastRunAt != null)
+        {
+          <small class="text-muted">Last run: @lastRunAt?.ToString("yyyy-MM-dd HH:mm:ss")</small>
+        }
+      </div>
+      <div class="ms-auto">
+        <button class="btn btn-sm btn-outline-primary me-1" @onclick="ExportPdf">Export PDF</button>
+        <button class="btn btn-sm btn-outline-secondary" @onclick="PrintReport">Print</button>
+      </div>
+    </div>
+
+    <div class="report-pages">
+      @if (!hasLoaded)
+      {
+        <p><em>Loading report...</em></p>
+      }
+      else
+      {
+        <!-- Single page preview below; additional pages would be looped here -->
+        <div class="report-page">
+          <div class="report-header">
+            <h4>Sales Report</h4>
+            <!-- date range removed -->
+          </div>
+
+          <div class="report-body">
+            <h6>Sales by Customer</h6>
+            <table class="table table-sm report-table">
+              <thead>
+                <tr><th>Customer</th><th class="text-end">Orders</th><th class="text-end">Total Sales</th></tr>
+              </thead>
+              <tbody>
+                @if (salesReport == null || salesReport.Count == 0)
+                {
+                  <tr><td colspan="3"><em>No data</em></td></tr>
+                }
+                else
+                {
+                  @foreach(var r in salesReport)
+                  {
+                    <tr>
+                      <td>@r.CustomerName</td>
+                      <td class="text-end">@r.OrderCount</td>
+                      <td class="text-end">@r.TotalSales.ToString("C")</td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+
+            <h6 class="mt-4">Orders Preview</h6>
+            <table class="table table-sm report-table">
+              <thead>
+                <tr><th>Order #</th><th>Customer</th><th>Supplier</th><th class="text-end">Total</th></tr>
+              </thead>
+              <tbody>
+                @if (ordersPreview == null || ordersPreview.Count == 0)
+                {
+                  <tr><td colspan="4"><em>No orders</em></td></tr>
+                }
+                else
+                {
+                  foreach(var o in ordersPreview)
+                  {
+                    <tr>
+                      <td>@o.OrderId</td>
+                      <td>@o.Customer?.Name</td>
+                      <td>@o.Supplier?.Name</td>
+                      <td class="text-end">@o.Total.ToString("C")</td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="report-footer">
+            Generated @DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</div>
 
 @code {
+  bool hasLoaded = false;
+  int reportPagesCount = 1;
+  string? selectedCustomerId;
+
   List<SalesByCustomerDto>? salesReport = null;
   List<OrderDto>? ordersPreview = null;
-  List<GridColumn> orderColumns = new List<GridColumn>
-  {
-    new GridColumn { Header = "Order #", Field = "OrderId", Sortable = true, Filterable = true },
-    new GridColumn { Header = "Customer", Field = "Customer.Name", Filterable = true },
-    new GridColumn { Header = "Supplier", Field = "Supplier.Name", Filterable = true },
-    new GridColumn { Header = "Total", Field = "Total", Sortable = true }
-  };
+  List<CustomerDto>? customers = null;
 
   protected override Task OnInitializedAsync() => Task.CompletedTask;
 
-  private bool _loaded;
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    if (!firstRender || _loaded) return;
-    _loaded = true;
-
+    if (!firstRender) return;
     try
     {
-  var client = HttpFactory.CreateClient("ApiClient");
-  salesReport = await client.GetFromJsonAsync<List<SalesByCustomerDto>>("api/data/reports/sales-by-customer") ?? new List<SalesByCustomerDto>();
-  // fetch a small orders preview from the new Reports API
-  ordersPreview = await client.GetFromJsonAsync<List<OrderDto>>("api/reports?dataset=orders") ?? new List<OrderDto>();
+      var client = HttpFactory.CreateClient("ApiClient");
+      customers = await client.GetFromJsonAsync<List<CustomerDto>>("api/data/customers") ?? new List<CustomerDto>();
+      await RunReport();
+      hasLoaded = true;
       StateHasChanged();
+    }
+    catch(Exception ex)
+    {
+      Console.Error.WriteLine($"Reports fetch failed: {ex}");
+    }
+  }
+
+  bool isRunning = false;
+  string? lastError = null;
+  DateTime? lastRunAt = null;
+  async Task RunReport()
+  {
+    if (isRunning) return;
+    isRunning = true;
+    lastError = null;
+    try
+    {
+      var client = HttpFactory.CreateClient("ApiClient");
+
+      // build query parameters for filtering (customer only)
+      var query = new List<string>();
+      // Only include customerId if it's a valid integer to avoid model-binding 400s
+      if (!string.IsNullOrWhiteSpace(selectedCustomerId) && int.TryParse(selectedCustomerId, out var parsedCustomerId))
+      {
+        query.Add($"customerId={parsedCustomerId}");
+      }
+      // Always send top=0 to indicate 'no limit' on the server
+      query.Add("top=0");
+      var qs = query.Count > 0 ? "?" + string.Join("&", query) : string.Empty;
+
+  // call sales report endpoint with filters
+  var salesUrl = $"api/data/reports/sales-by-customer" + qs;
+  // ordersUrl already contains a query param (dataset=orders). If qs starts with '?', convert it to '&'
+  var ordersUrl = qs.StartsWith("?") ? $"api/reports?dataset=orders&{qs.Substring(1)}" : $"api/reports?dataset=orders" + qs;
+
+      // Use GetAsync so we can inspect non-success responses and surface body text
+      var salesResp = await client.GetAsync(salesUrl);
+      if (!salesResp.IsSuccessStatusCode)
+      {
+        var content = await salesResp.Content.ReadAsStringAsync();
+        lastError = $"Sales report request failed: {(int)salesResp.StatusCode} {salesResp.ReasonPhrase}: {content}";
+        Console.Error.WriteLine(lastError);
+        salesReport = new List<SalesByCustomerDto>();
+        ordersPreview = ordersPreview ?? new List<OrderDto>();
+        return;
+      }
+      var sales = await salesResp.Content.ReadFromJsonAsync<List<SalesByCustomerDto>>();
+
+      var ordersResp = await client.GetAsync(ordersUrl);
+      if (!ordersResp.IsSuccessStatusCode)
+      {
+        var content = await ordersResp.Content.ReadAsStringAsync();
+        lastError = $"Orders request failed: {(int)ordersResp.StatusCode} {ordersResp.ReasonPhrase}: {content}";
+        Console.Error.WriteLine(lastError);
+        ordersPreview = new List<OrderDto>();
+        salesReport = sales ?? new List<SalesByCustomerDto>();
+        return;
+      }
+      var orders = await ordersResp.Content.ReadFromJsonAsync<List<OrderDto>>();
+
+      salesReport = sales ?? new List<SalesByCustomerDto>();
+      ordersPreview = orders ?? new List<OrderDto>();
+      reportPagesCount = 1; // stub — paging/layout calculation would go here
+      lastRunAt = DateTime.Now;
+      // ensure UI updates on the UI thread
+      await InvokeAsync(StateHasChanged);
     }
     catch (Exception ex)
     {
-      Console.Error.WriteLine($"Reports fetch failed: {ex}");
-      salesReport = new List<SalesByCustomerDto>();
+      lastError = ex.Message;
+      Console.Error.WriteLine($"RunReport failed: {ex}");
+      salesReport = salesReport ?? new List<SalesByCustomerDto>();
+      ordersPreview = ordersPreview ?? new List<OrderDto>();
+      await InvokeAsync(StateHasChanged);
     }
+    finally
+    {
+      isRunning = false;
+      await InvokeAsync(StateHasChanged);
+    }
+  }
+
+  void ResetParameters()
+  {
+  selectedCustomerId = null;
+  }
+
+  void ExportPdf()
+  {
+    // placeholder: implement server-side PDF generation or client-side print-to-PDF
+    Console.WriteLine("Export PDF (not implemented)");
+  }
+
+  void PrintReport()
+  {
+    // simple print (invokes browser print). Could be improved to only print the .report-page
+    JSInvokePrint();
+  }
+
+  // small helper to call window.print()
+  [Inject] IJSRuntime? JS { get; set; }
+  void JSInvokePrint()
+  {
+    try { JS?.InvokeVoidAsync("print"); } catch { }
   }
 }

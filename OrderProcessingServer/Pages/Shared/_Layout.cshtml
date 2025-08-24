@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OrderProcessingServer.styles.css" asp-append-version="true" />
+    <style>
+        /* Keep a fixed footer that overlays page content; add bottom padding to main so content isn't hidden
+           when scrolled under the footer. Adjust --footer-height if you change footer size. */
+        :root { --footer-height: 64px; }
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+        main[role="main"] { padding-bottom: calc(var(--footer-height) + 12px); }
+    </style>
 </head>
 <body>
     <header>
@@ -19,15 +36,41 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - OrderProcessingServer - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    <footer class="border-top footer text-muted fixed-footer">
+                <div class="container">
+                    &copy; 2025 - OrderProcessingServer
+                    @{
+                        var path = Context?.Request?.Path.Value ?? string.Empty;
+                        if (!path.Equals("/Privacy", StringComparison.OrdinalIgnoreCase) && !path.Equals("/Privacy/", StringComparison.OrdinalIgnoreCase))
+                        {
+                            @: - <a href="#" onclick="showPrivacyModal(event); return false;">Privacy</a>
+                        }
+                    }
+                </div>
+        </footer>
+
+        <!-- Privacy modal (loads /Privacy into body) -->
+        <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="privacyModalBody">
+                        <!-- loaded content -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site-helpers.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

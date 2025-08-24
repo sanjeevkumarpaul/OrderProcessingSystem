@@ -38,9 +38,14 @@ namespace OrderProcessingSystem.Infrastructure.Services
             return customers;
         }
 
-    public async Task<System.Collections.Generic.List<OrderProcessingSystem.Data.Features.Reports.SalesByCustomerDto>> GetSalesByCustomerAsync()
+    public async Task<System.Collections.Generic.List<OrderProcessingSystem.Data.Features.Reports.SalesByCustomerDto>> GetSalesByCustomerAsync(int? customerId = null, int? top = null)
         {
-            var report = await _mediator.Send(new OrderProcessingSystem.Data.Features.Reports.SalesByCustomerQuery());
+            var query = new OrderProcessingSystem.Data.Features.Reports.SalesByCustomerQuery
+            {
+                CustomerId = customerId,
+                Top = top
+            };
+            var report = await _mediator.Send(query);
             return report;
         }
     }

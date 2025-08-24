@@ -38,9 +38,9 @@ public class DataController : ControllerBase
     }
 
     [HttpGet("reports/sales-by-customer")]
-    public async Task<IActionResult> SalesByCustomer()
+    public async Task<IActionResult> SalesByCustomer([FromQuery] int? customerId = null, [FromQuery] int? top = null)
     {
-    var report = await _apiDataService.GetSalesByCustomerAsync();
+    var report = await _apiDataService.GetSalesByCustomerAsync(customerId, top);
     var dto = _mapper.Map<List<SalesByCustomerDto>>(report);
     return Ok(dto);
     }

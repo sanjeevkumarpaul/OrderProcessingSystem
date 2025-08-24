@@ -85,10 +85,19 @@
     </div>
 
     <nav aria-label="grid-paging">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center align-items-center">
             <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(1)">«</button></li>
             <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage-1)">Previous</button></li>
-            <li class="page-item disabled"><span class="page-link">Page @CurrentPage of @TotalPages</span></li>
+
+            <li class="page-item px-2">
+                <select class="form-select form-select-sm" style="width:100px; display:inline-block" @onchange="OnPageSelect" value="@CurrentPage">
+                    @for (int p = 1; p <= TotalPages; p++)
+                    {
+                        <option value="@p" selected="@(p==CurrentPage)">Page @p</option>
+                    }
+                </select>
+            </li>
+
             <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage+1)">Next</button></li>
             <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(TotalPages)">»</button></li>
         </ul>
@@ -168,7 +177,50 @@
 
     List<TItem> ApplySort(List<TItem> input, GridColumn col, bool asc)
     {
-        // order by the string representation safely to avoid null/reference issues
+        // Try to detect the underlying data type from a sample value and sort accordingly
+        var sampleItem = input.FirstOrDefault(i => GetValue(i, col.Field) != null);
+        var sampleVal = sampleItem != null ? GetValue(sampleItem, col.Field) : null;
+
+        if (sampleVal != null)
+        {
+            var t = sampleVal.GetType();
+            var typeCode = System.Type.GetTypeCode(t);
+
+            bool isNumeric = typeCode == TypeCode.Byte || typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 ||
+                             typeCode == TypeCode.UInt16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.UInt32 ||
+                             typeCode == TypeCode.Int64 || typeCode == TypeCode.UInt64 || typeCode == TypeCode.Single ||
+                             typeCode == TypeCode.Double || typeCode == TypeCode.Decimal;
+
+            if (isNumeric)
+            {
+                if (asc)
+                    return input.OrderBy(i => {
+                        var v = GetValue(i, col.Field);
+                        try { return Convert.ToDecimal(v ?? 0); } catch { return decimal.MinValue; }
+                    }).ToList();
+                else
+                    return input.OrderByDescending(i => {
+                        var v = GetValue(i, col.Field);
+                        try { return Convert.ToDecimal(v ?? 0); } catch { return decimal.MinValue; }
+                    }).ToList();
+            }
+
+            if (typeCode == TypeCode.DateTime)
+            {
+                if (asc)
+                    return input.OrderBy(i => {
+                        var v = GetValue(i, col.Field);
+                        return v is DateTime dt ? dt : DateTime.MinValue;
+                    }).ToList();
+                else
+                    return input.OrderByDescending(i => {
+                        var v = GetValue(i, col.Field);
+                        return v is DateTime dt ? dt : DateTime.MinValue;
+                    }).ToList();
+            }
+        }
+
+        // fallback to string comparison
         return asc
             ? input.OrderBy(i => (GetValue(i, col.Field)?.ToString() ?? string.Empty)).ToList()
             : input.OrderByDescending(i => (GetValue(i, col.Field)?.ToString() ?? string.Empty)).ToList();
@@ -240,6 +292,14 @@
         ApplyPage();
     }
 
+    void OnPageSelect(ChangeEventArgs e)
+    {
+        if (int.TryParse(e?.Value?.ToString(), out var p))
+        {
+            GoToPage(p);
+        }
+    }
+
     bool IsFilterActive()
     {
         return !string.IsNullOrWhiteSpace(TextFilterValue) || !string.IsNullOrWhiteSpace(EnumFilterValue);
@@ -293,4 +353,22 @@
             padding-right: 4px;
             box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         }
+
+    /* Header styling: double-line border and professional tone */
+        .table thead th {
+            /* stronger double-line borders for clearer separation */
+            border-top: 3px double rgba(52,58,64,0.30); /* darker gray */
+            border-bottom: 3px double rgba(52,58,64,0.45);
+            background: linear-gradient(180deg, #ffffff 0%, #f4f5f7 100%);
+            font-weight: 600;
+            color: #212529;
+            padding: .75rem .9rem;
+            vertical-align: middle;
+        }
+
+    /* Slightly reduce the button visual weight in headers */
+    .table thead th .btn {
+        font-size: .8rem;
+        padding: .18rem .4rem;
+    }
 </style>

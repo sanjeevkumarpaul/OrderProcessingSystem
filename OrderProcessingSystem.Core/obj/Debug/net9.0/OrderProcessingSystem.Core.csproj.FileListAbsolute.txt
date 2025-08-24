@@ -9,3 +9,4 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/refint/OrderProcessingSystem.Core.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/ref/OrderProcessingSystem.Core.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/obj/Debug/net9.0/OrderProcessingSystem.Core.sourcelink.json

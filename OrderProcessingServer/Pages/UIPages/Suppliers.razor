@@ -21,13 +21,14 @@
 else
 {
 	@* Cards view (unchanged) *@
-	<div class="row">
-	@foreach (var s in (suppliers ?? Enumerable.Empty<SupplierDto>()).Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize))
-		{
+		<div class="row">
+		@foreach (var s in GetPagedCardSuppliers())
+			{
 			<div class="col-md-6 mb-3">
 				<div class="card p-3">
-					<h5>@s.Name</h5>
-					<p class="small text-muted">Country: @s.Country</p>
+						<h5>@s.Name</h5>
+						<p class="small text-muted">Country: @s.Country</p>
+						<p class="small">Orders supplied: <strong>@s.OrdersSupplied</strong></p>
 				</div>
 			</div>
 		}
@@ -87,15 +88,24 @@ else
 		try
 		{
 			var client = HttpFactory.CreateClient("ApiClient");
+			// fetch suppliers and orders so we can compute per-supplier order counts
 			suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("api/data/suppliers") ?? new List<SupplierDto>();
+			var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
+			// compute OrdersSupplied for each supplier
+			var orderCounts = orders.Where(o => o.SupplierId.HasValue).GroupBy(o => o.SupplierId!.Value)
+				.ToDictionary(g => g.Key, g => g.Count());
+			foreach (var s in suppliers)
+			{
+				s.OrdersSupplied = orderCounts.TryGetValue(s.SupplierId, out var c) ? c : 0;
+			}
 			// initialize paging and grid columns
 			SetupCardsPaging();
 			SetupGridPaging();
 			supplierColumns = new List<GridColumn>
 			{
-				new GridColumn { Header = "SupplierId", Field = "SupplierId", Sortable = true },
 				new GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-				new GridColumn { Header = "Country", Field = "Country", Filterable = true }
+				new GridColumn { Header = "Country", Field = "Country", Filterable = true },
+				new GridColumn { Header = "Orders", Field = "OrdersSupplied", Sortable = true }
 			};
 			StateHasChanged();
 		}
@@ -123,7 +133,16 @@ else
 	void SetupCardsPaging()
 	{
 		supplierPageIndex = 0;
-		supplierTotalPages = Math.Max(1, (int)Math.Ceiling((double)(suppliers?.Count ?? 0) / supplierPageSize));
+		// total pages should consider the suppliers after sorting/filtering; cards view sorts by OrdersSupplied desc
+		var total = (suppliers ?? Enumerable.Empty<SupplierDto>()).OrderByDescending(s => s.OrdersSupplied).Count();
+		supplierTotalPages = Math.Max(1, (int)Math.Ceiling((double)total / supplierPageSize));
+	}
+
+	IEnumerable<SupplierDto> GetPagedCardSuppliers()
+	{
+		if (suppliers == null) return Enumerable.Empty<SupplierDto>();
+		var sorted = suppliers.OrderByDescending(s => s.OrdersSupplied);
+		return sorted.Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize);
 	}
 
 	// Grid paging helpers
@@ -309,13 +328,13 @@ else
 	string BuildCsv(List<SupplierDto> list)
 	{
 		var sb = new System.Text.StringBuilder();
-		sb.AppendLine("SupplierId,Name,Country");
-		foreach (var s in list)
-		{
-			var name = EscapeCsv(s.Name ?? string.Empty);
-			var country = EscapeCsv(s.Country ?? string.Empty);
-			sb.AppendLine($"{s.SupplierId},{name},{country}");
-		}
+			sb.AppendLine("SupplierId,Name,Country,OrdersSupplied");
+			foreach (var s in list)
+			{
+				var name = EscapeCsv(s.Name ?? string.Empty);
+				var country = EscapeCsv(s.Country ?? string.Empty);
+				sb.AppendLine($"{s.SupplierId},{name},{country},{s.OrdersSupplied}");
+			}
 		return sb.ToString();
 	}
 
