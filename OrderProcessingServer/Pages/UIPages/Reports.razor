@@ -1,6 +1,8 @@
 @page "/reports"
 @inject IHttpClientFactory HttpFactory
 @using OrderProcessingServer.Shared.Dto
+@using System.Text
+@using OrderProcessingServer.UIComponents
 
 <style>
   /* SSRS-like page layout */
@@ -87,8 +89,7 @@
         }
       </div>
       <div class="ms-auto">
-        <button class="btn btn-sm btn-outline-primary me-1" @onclick="ExportPdf">Export PDF</button>
-        <button class="btn btn-sm btn-outline-secondary" @onclick="PrintReport">Print</button>
+        <button class="btn btn-sm btn-outline-primary" @onclick="PrintFromComponent">Print Report</button>
       </div>
     </div>
 
@@ -100,7 +101,8 @@
       else
       {
         <!-- Single page preview below; additional pages would be looped here -->
-        <div class="report-page">
+        <PrintExporter @ref="printExporter" Title="Sales Report">
+          <div class="report-page">
           <div class="report-header">
             <h4>Sales Report</h4>
             <!-- date range removed -->
@@ -160,7 +162,8 @@
           <div class="report-footer">
             Generated @DateTime.Now.ToString("yyyy-MM-dd HH:mm")
           </div>
-        </div>
+          </div>
+        </PrintExporter>
       }
     </div>
   </section>
@@ -274,22 +277,18 @@
   selectedCustomerId = null;
   }
 
-  void ExportPdf()
-  {
-    // placeholder: implement server-side PDF generation or client-side print-to-PDF
-    Console.WriteLine("Export PDF (not implemented)");
-  }
+  // Print is handled by the PrintExporter component; keep ExportPdf removed
 
-  void PrintReport()
-  {
-    // simple print (invokes browser print). Could be improved to only print the .report-page
-    JSInvokePrint();
-  }
-
-  // small helper to call window.print()
+  // JS runtime is used by ExportPdf to open a printable window
   [Inject] IJSRuntime? JS { get; set; }
-  void JSInvokePrint()
+  // reference to the reusable print exporter component (now under UIComponents)
+  private OrderProcessingServer.UIComponents.PrintExporter? printExporter;
+
+  async Task PrintFromComponent()
   {
-    try { JS?.InvokeVoidAsync("print"); } catch { }
+    if (printExporter != null)
+    {
+      await printExporter.PrintAsync();
+    }
   }
 }

@@ -1,0 +1,371 @@
+@typeparam TItem
+@using System.Linq.Expressions
+@using OrderProcessingServer.Shared.UIComponents
+@inject IJSRuntime JS
+
+<div class="card p-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-outline-secondary me-2" @onclick="ExportAll" disabled="@(Items==null || !Items.Any())">Export All</button>
+            <button class="btn btn-outline-secondary me-3" @onclick="ExportFiltered" disabled="@(Items==null || !IsFilterActive())">Export Filtered</button>
+
+            <label class="me-2">Page size:</label>
+            <select class="form-select d-inline-block w-auto" @onchange="OnPageSizeChanged">
+                @foreach (var s in PageSizes)
+                {
+                    <option selected="@(s==PageSize)" value="@s">@s</option>
+                }
+            </select>
+        </div>
+        <div>
+            <small>Showing @((PagedItems?.Count ?? 0)) of @(Items?.Count() ?? 0) items</small>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    @foreach(var c in Columns)
+                    {
+                                <th style="position:relative;">
+                                    <div class="d-flex align-items-center">
+                                        <span>@c.Header</span>
+                                        @if (c.Filterable)
+                                        {
+                                            <button class="btn btn-sm btn-light ms-2" @onclick="() => ToggleFilter(c)">🔽</button>
+                                        }
+                                        @if (c.Sortable)
+                                        {
+                                            <button class="btn btn-sm btn-light ms-1" @onclick="() => ToggleSort(c)">↕</button>
+                                        }
+                                    </div>
+                                    @if (ActiveFilterColumn == c)
+                                    {
+                                        <div class="grid-filter-popup p-2 shadow-sm bg-white border">
+                                            @if (c.IsEnum && c.EnumValues != null)
+                                            {
+                                                <select class="form-select form-select-sm" @bind="EnumFilterValue">
+                                                    <option value="">Any</option>
+                                                    @foreach(var v in c.EnumValues) { <option value="@v">@v</option> }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-select form-select-sm mb-1" @bind="TextFilterOp">
+                                                    @foreach(var op in TextOps) { <option value="@op">@op</option> }
+                                                </select>
+                                                <input class="form-control form-control-sm" @bind="TextFilterValue" />
+                                            }
+                                            <div class="mt-2 text-end">
+                                                <button class="btn btn-sm btn-primary me-1" @onclick="ApplyFilter">Apply</button>
+                                                <button class="btn btn-sm btn-link" @onclick="ClearFilter">Clear</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (PagedItems != null)
+                {
+                    @foreach(var item in PagedItems)
+                    {
+                        <tr>
+                            @foreach(var c in Columns)
+                            {
+                                <td>@GetValue(item, c.Field)</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="grid-paging">
+        <ul class="pagination justify-content-center align-items-center">
+            <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(1)">«</button></li>
+            <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage-1)">Previous</button></li>
+
+            <li class="page-item px-2">
+                <select class="form-select form-select-sm" style="width:100px; display:inline-block" @onchange="OnPageSelect" value="@CurrentPage">
+                    @for (int p = 1; p <= TotalPages; p++)
+                    {
+                        <option value="@p" selected="@(p==CurrentPage)">Page @p</option>
+                    }
+                </select>
+            </li>
+
+            <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage+1)">Next</button></li>
+            <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(TotalPages)">»</button></li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TItem>? Items { get; set; }
+    [Parameter] public List<GridColumn> Columns { get; set; } = new List<GridColumn>();
+    [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public int[] PageSizes { get; set; } = new[] {5,10,15};
+
+    List<TItem>? PagedItems;
+    int CurrentPage = 1;
+    int TotalPages = 1;
+
+    // filtering state
+    GridColumn? ActiveFilterColumn;
+    string[] TextOps = new[] {"StartsWith","EndsWith","Equals"};
+    string TextFilterOp = "StartsWith";
+    string TextFilterValue = string.Empty;
+    string EnumFilterValue = string.Empty;
+
+    // sorting
+    GridColumn? SortColumn;
+    bool SortAsc = true;
+
+    protected override void OnParametersSet()
+    {
+        PageSize = PageSize;
+        SetupPaging();
+    }
+
+    void SetupPaging()
+    {
+        CurrentPage = 1;
+        var c = (Items?.Count() ?? 0);
+        TotalPages = Math.Max(1, (int)Math.Ceiling((double)c / PageSize));
+        ApplyPage();
+    }
+
+    void ApplyPage()
+    {
+        if (Items == null) { PagedItems = new List<TItem>(); return; }
+        var list = ApplyFilterList(Items.ToList());
+        if (SortColumn != null) list = ApplySort(list, SortColumn, SortAsc);
+        TotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / PageSize));
+        if (CurrentPage < 1) CurrentPage = 1;
+        if (CurrentPage > TotalPages) CurrentPage = TotalPages;
+        PagedItems = list.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+    }
+
+    List<TItem> ApplyFilterList(List<TItem> input)
+    {
+        if (input == null) return new List<TItem>();
+        IEnumerable<TItem> q = input;
+        if (ActiveFilterColumn != null)
+        {
+            if (ActiveFilterColumn.IsEnum)
+            {
+                if (!string.IsNullOrWhiteSpace(EnumFilterValue))
+                {
+                    q = q.Where(i => string.Equals(GetValue(i, ActiveFilterColumn.Field)?.ToString() ?? string.Empty, EnumFilterValue, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(TextFilterValue))
+                {
+                    var t = TextFilterValue.Trim();
+                    q = q.Where(i => MatchText(GetValue(i, ActiveFilterColumn.Field)?.ToString() ?? string.Empty, t, TextFilterOp));
+                }
+            }
+        }
+        return q.ToList();
+    }
+
+    List<TItem> ApplySort(List<TItem> input, GridColumn col, bool asc)
+    {
+        var sampleItem = input.FirstOrDefault(i => GetValue(i, col.Field) != null);
+        var sampleVal = sampleItem != null ? GetValue(sampleItem, col.Field) : null;
+
+        if (sampleVal != null)
+        {
+            var t = sampleVal.GetType();
+            var typeCode = System.Type.GetTypeCode(t);
+
+            bool isNumeric = typeCode == TypeCode.Byte || typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 ||
+                             typeCode == TypeCode.UInt16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.UInt32 ||
+                             typeCode == TypeCode.Int64 || typeCode == TypeCode.UInt64 || typeCode == TypeCode.Single ||
+                             typeCode == TypeCode.Double || typeCode == TypeCode.Decimal;
+
+            if (isNumeric)
+            {
+                if (asc)
+                    return input.OrderBy(i => {
+                        var v = GetValue(i, col.Field);
+                        try { return Convert.ToDecimal(v ?? 0); } catch { return decimal.MinValue; }
+                    }).ToList();
+                else
+                    return input.OrderByDescending(i => {
+                        var v = GetValue(i, col.Field);
+                        try { return Convert.ToDecimal(v ?? 0); } catch { return decimal.MinValue; }
+                    }).ToList();
+            }
+
+            if (typeCode == TypeCode.DateTime)
+            {
+                if (asc)
+                    return input.OrderBy(i => {
+                        var v = GetValue(i, col.Field);
+                        return v is DateTime dt ? dt : DateTime.MinValue;
+                    }).ToList();
+                else
+                    return input.OrderByDescending(i => {
+                        var v = GetValue(i, col.Field);
+                        return v is DateTime dt ? dt : DateTime.MinValue;
+                    }).ToList();
+            }
+        }
+
+        return asc
+            ? input.OrderBy(i => (GetValue(i, col.Field)?.ToString() ?? string.Empty)).ToList()
+            : input.OrderByDescending(i => (GetValue(i, col.Field)?.ToString() ?? string.Empty)).ToList();
+    }
+
+    object? GetValue(TItem? item, string field)
+    {
+        if (item == null) return null;
+        var parts = (field ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        object? cur = item as object;
+        foreach (var p in parts)
+        {
+            if (cur == null) return null;
+            var prop = cur.GetType().GetProperty(p);
+            if (prop == null) return null;
+            cur = prop.GetValue(cur);
+        }
+        return cur;
+    }
+
+    static bool MatchText(string value, string term, string op)
+    {
+        if (value == null) return false;
+        return op switch
+        {
+            "StartsWith" => value.StartsWith(term, StringComparison.OrdinalIgnoreCase),
+            "EndsWith" => value.EndsWith(term, StringComparison.OrdinalIgnoreCase),
+            "Equals" => string.Equals(value, term, StringComparison.OrdinalIgnoreCase),
+            _ => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
+        };
+    }
+
+    void ToggleFilter(GridColumn c)
+    {
+        if (ActiveFilterColumn == c) { ActiveFilterColumn = null; ClearFilter(); }
+        else { ActiveFilterColumn = c; TextFilterValue = string.Empty; EnumFilterValue = string.Empty; }
+    }
+
+    void ApplyFilter()
+    {
+        CurrentPage = 1;
+        ApplyPage();
+    }
+
+    void ClearFilter()
+    {
+        TextFilterValue = EnumFilterValue = string.Empty;
+        TextFilterOp = "StartsWith";
+        ActiveFilterColumn = null;
+        ApplyPage();
+    }
+
+    void ToggleSort(GridColumn c)
+    {
+        if (SortColumn == c) SortAsc = !SortAsc;
+        else { SortColumn = c; SortAsc = true; }
+        ApplyPage();
+    }
+
+    void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e?.Value?.ToString(), out var s)) { PageSize = s; SetupPaging(); }
+    }
+
+    void GoToPage(int p)
+    {
+        CurrentPage = Math.Clamp(p, 1, TotalPages);
+        ApplyPage();
+    }
+
+    void OnPageSelect(ChangeEventArgs e)
+    {
+        if (int.TryParse(e?.Value?.ToString(), out var p))
+        {
+            GoToPage(p);
+        }
+    }
+
+    bool IsFilterActive()
+    {
+        return !string.IsNullOrWhiteSpace(TextFilterValue) || !string.IsNullOrWhiteSpace(EnumFilterValue);
+    }
+
+    async Task ExportAll()
+    {
+        if (Items == null) return;
+        var csv = BuildCsv(Items.ToList());
+        var filename = $"grid_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+        await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+    }
+
+    async Task ExportFiltered()
+    {
+        if (Items == null) return;
+        var list = ApplyFilterList(Items.ToList());
+        var csv = BuildCsv(list);
+        var filename = $"grid_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+        await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+    }
+
+    string BuildCsv(List<TItem> list)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine(string.Join(',', Columns.Select(c => c.Header)));
+        foreach (var it in list)
+        {
+            var row = Columns.Select(c => EscapeCsv((GetValue(it, c.Field)?.ToString() ?? string.Empty))).ToArray();
+            sb.AppendLine(string.Join(',', row));
+        }
+        return sb.ToString();
+    }
+
+    static string EscapeCsv(string input)
+    {
+        if (input == null) return string.Empty;
+        if (input.Contains(',') || input.Contains('"') || input.Contains('\n')) return '"' + input.Replace("\"", "\"\"") + '"';
+        return input;
+    }
+}
+
+<style>
+        .grid-filter-popup {
+            position: absolute;
+            top: 36px; /* below header row */
+            z-index: 2000;
+            min-width: 200px;
+            left: 0; /* align with left edge of the TH */
+            padding-left: 4px;
+            padding-right: 4px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+    /* Header styling: double-line border and professional tone */
+        .table thead th {
+            /* stronger double-line borders for clearer separation */
+            border-top: 3px double rgba(52,58,64,0.30); /* darker gray */
+            border-bottom: 3px double rgba(52,58,64,0.45);
+            background: linear-gradient(180deg, #ffffff 0%, #f4f5f7 100%);
+            font-weight: 600;
+            color: #212529;
+            padding: .75rem .9rem;
+            vertical-align: middle;
+        }
+
+    /* Slightly reduce the button visual weight in headers */
+    .table thead th .btn {
+        font-size: .8rem;
+        padding: .18rem .4rem;
+    }
+</style>

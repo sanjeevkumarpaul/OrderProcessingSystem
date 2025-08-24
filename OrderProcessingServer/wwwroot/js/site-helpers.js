@@ -59,6 +59,59 @@ window.hidePopup = (popupId) => {
     }
 };
 
+// Open a new window with provided HTML and trigger print (user can choose Save as PDF)
+window.openPrintWindow = (htmlContent) => {
+    try {
+        const win = window.open('', '_blank', 'width=900,height=700');
+        if (!win) {
+            console.warn('openPrintWindow: popup blocked');
+            return;
+        }
+        // basic printable HTML; include Bootstrap from CDN for consistent styling if available
+        const doc = win.document;
+        doc.open();
+        doc.write('<!doctype html><html><head><meta charset="utf-8"/>' +
+            '<meta name="viewport" content="width=device-width, initial-scale=1"/>' +
+            '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>' +
+            '<title>Report Export</title></head><body class="p-3">');
+        doc.write(htmlContent);
+        doc.write('</body></html>');
+        doc.close();
+
+        // Wait briefly for resources to render then trigger print
+        setTimeout(() => {
+            try {
+                win.focus();
+                // In many browsers window.print() blocks until the print dialog closes.
+                // Call print(), then close the print window immediately after the dialog returns
+                win.print();
+                try { win.close(); } catch (e) { /* ignore */ }
+                // Fallback: ensure the window is closed after a short delay in case print() doesn't block in this browser
+                setTimeout(() => { try { if (!win.closed) win.close(); } catch (e) { } }, 1500);
+            } catch (e) {
+                console.warn('print failed', e);
+                try { if (!win.closed) win.close(); } catch (e) { }
+            }
+        }, 500);
+    } catch (e) {
+        console.warn('openPrintWindow failed', e);
+    }
+};
+
+// Reads an element's innerHTML and opens the print window. Accepts an Element and optional includeBootstrap flag.
+window.openPrintWindowFromElement = (el, includeBootstrap) => {
+    try {
+        if (!el) return;
+        const html = el.innerHTML || '';
+        let content = html;
+        if (includeBootstrap === undefined || includeBootstrap === null) includeBootstrap = true;
+        // If caller wants bootstrap injected, wrap content; the lower-level openPrintWindow already includes bootstrap tag when writing head.
+        window.openPrintWindow(content);
+    } catch (e) {
+        console.warn('openPrintWindowFromElement failed', e);
+    }
+};
+
 // load /Privacy page and show it inside the modal with id #privacyModal
 window.showPrivacyModal = async (evt) => {
     try {

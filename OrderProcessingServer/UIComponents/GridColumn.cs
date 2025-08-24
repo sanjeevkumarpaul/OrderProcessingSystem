@@ -1,15 +1,8 @@
-using System.Collections.Generic;
+// This type was moved to Shared/UIComponents/GridColumn.cs
+// Keep a stub type in the old namespace to avoid breaking references during consolidation.
+using OrderProcessingServer.Shared.UIComponents;
 
 namespace OrderProcessingServer.UIComponents
 {
-    public class GridColumn
-    {
-        public string Header { get; set; } = string.Empty;
-        // Field supports dotted path like Customer.Name
-        public string Field { get; set; } = string.Empty;
-        public bool Sortable { get; set; } = false;
-        public bool Filterable { get; set; } = false;
-        public bool IsEnum { get; set; } = false;
-        public IEnumerable<string>? EnumValues { get; set; }
-    }
+    public class GridColumn : OrderProcessingServer.Shared.UIComponents.GridColumn { }
 }

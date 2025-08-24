@@ -68,8 +68,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/Shared/UIComponents/GenericGrid.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1VJQ29tcG9uZW50cy9HZW5lcmljR3JpZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/Shared/UIComponents/PrintExporter.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1VJQ29tcG9uZW50cy9QcmludEV4cG9ydGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/UIComponents/GenericGrid.razor]
 build_metadata.AdditionalFiles.TargetPath = VUlDb21wb25lbnRzL0dlbmVyaWNHcmlkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/UIComponents/PrintExporter.razor]
+build_metadata.AdditionalFiles.TargetPath = VUlDb21wb25lbnRzL1ByaW50RXhwb3J0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/_Imports.razor]
