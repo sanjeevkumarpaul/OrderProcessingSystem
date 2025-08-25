@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OrderProcessingServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a704924cd9df1c195b8a1617bf345b0bb740b380")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c406fc4a88e09c304866e451239c1fbf32a9cf42")]
 [assembly: System.Reflection.AssemblyProductAttribute("OrderProcessingServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OrderProcessingServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
