@@ -13,8 +13,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(OrderProcessingSystem.API.Mapping.ApiMappingProfile).Assembly);
+// AutoMapper - Register all mapping profiles from this assembly
+builder.Services.AddAutoMapper(typeof(OrderProcessingSystem.API.Mapping.ApiMappingProfile).Assembly,
+                                typeof(OrderProcessingSystem.API.Mapping.GridColumnMappingProfile).Assembly);
+
+// Register mapping services
+builder.Services.AddScoped<OrderProcessingSystem.API.Services.IGridColumnMappingService, 
+                          OrderProcessingSystem.API.Services.GridColumnMappingService>();
 
 // Register Data services with SQLite file in OrderDatabase/OPSDB.db
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "..", "OrderDatabase", "OPSDB.db");

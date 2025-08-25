@@ -2,24 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using OrderProcessingSystem.Core.Metadata;
 using OrderProcessingSystem.Contracts.Dto;
+using OrderProcessingSystem.API.Models;
+using OrderProcessingSystem.API.Services;
 
 namespace OrderProcessingSystem.API.Controllers;
-
-// Simple UI GridColumn DTO to avoid client-side mapping
-public class UIGridColumnDto
-{
-    public string Header { get; set; } = string.Empty;
-    public string Field { get; set; } = string.Empty;
-    public bool Sortable { get; set; }
-    public bool Filterable { get; set; }
-    public bool IsNumeric { get; set; }
-    public bool IsEnum { get; set; }
-}
 
 [ApiController]
 [Route("api/[controller]")]
 public class MetadataController : ControllerBase
 {
+    private readonly IGridColumnMappingService _mappingService;
+
+    public MetadataController(IGridColumnMappingService mappingService)
+    {
+        _mappingService = mappingService ?? throw new ArgumentNullException(nameof(mappingService));
+    }
     [HttpGet("grid-columns/{name}")]
     public IActionResult GetGridColumns(string name)
     {
@@ -59,19 +56,11 @@ public class MetadataController : ControllerBase
         {
             try
             {
-                // Convert directly to UI format at server level
+                // Use AutoMapper for clean, maintainable DTO transformation
                 var dtoList = JsonSerializer.Deserialize<List<GridColumnDto>>(arr.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 if (dtoList != null && dtoList.Count > 0)
                 {
-                    var uiColumns = dtoList.Select(dto => new UIGridColumnDto
-                    {
-                        Header = dto.Header,
-                        Field = dto.Field,
-                        Sortable = dto.Sortable,
-                        Filterable = dto.Filterable,
-                        IsNumeric = dto.IsNumeric,
-                        IsEnum = dto.IsEnum
-                    }).ToList();
+                    var uiColumns = _mappingService.MapToUIColumns(dtoList);
                     return Ok(uiColumns);
                 }
             }
@@ -81,41 +70,15 @@ public class MetadataController : ControllerBase
             }
         }
 
-        // Fallback to hard-coded UI columns
-        var fallbackUIColumns = GetFallbackUIColumns(name.ToLowerInvariant());
-        if (fallbackUIColumns != null)
+        // Fallback to hard-coded UI columns using AutoMapper
+        var fallbackContractColumns = GetFallbackColumns(name.ToLowerInvariant());
+        if (fallbackContractColumns != null)
         {
+            var fallbackUIColumns = _mappingService.MapToUIColumns(fallbackContractColumns);
             return Ok(fallbackUIColumns);
         }
 
         return NotFound($"No UI metadata available for grid: {name}");
-    }
-
-    private static List<UIGridColumnDto>? GetFallbackUIColumns(string gridName)
-    {
-        return gridName switch
-        {
-            "customers" => new List<UIGridColumnDto>
-            {
-                new() { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-                new() { Header = "Orders", Field = "OrdersCount", Sortable = true, IsNumeric = true },
-                new() { Header = "Total Sales", Field = "TotalSales", Sortable = true, IsNumeric = true }
-            },
-            "suppliers" => new List<UIGridColumnDto>
-            {
-                new() { Header = "Name", Field = "Name", Sortable = true, Filterable = true },
-                new() { Header = "Country", Field = "Country", Sortable = true, Filterable = true },
-                new() { Header = "Orders Supplied", Field = "OrdersSupplied", Sortable = true, IsNumeric = true }
-            },
-            "orders" => new List<UIGridColumnDto>
-            {
-                new() { Header = "Order", Field = "OrderId", Sortable = true },
-                new() { Header = "Customer", Field = "Customer.Name", Sortable = true, Filterable = true },
-                new() { Header = "Total", Field = "Total", Sortable = true, IsNumeric = true },
-                new() { Header = "Status", Field = "Status", Sortable = true, Filterable = true, IsEnum = true }
-            },
-            _ => null
-        };
     }
 
     private static List<GridColumnDto>? GetFallbackColumns(string gridName)
