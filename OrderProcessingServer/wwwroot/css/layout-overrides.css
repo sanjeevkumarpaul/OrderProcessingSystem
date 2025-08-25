@@ -1,0 +1,25 @@
+:root { --footer-height: 64px; }
+
+/* Ensure the document fills the viewport and the main area scrolls internally so the footer stays fixed */
+html, body { height: 100%; }
+/* prevent horizontal overflow site-wide and ensure container gutters match Bootstrap's row negative margins */
+body, html { overflow-x: hidden; }
+body > .container { display: flex; flex-direction: column; min-height: calc(100vh - var(--footer-height)); box-sizing: border-box; padding-right: 0.75rem; padding-left: 0.75rem; }
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    height: var(--footer-height);
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
+}
+main[role="main"] { padding-bottom: calc(var(--footer-height) + 12px); flex: 1 1 auto; overflow: auto; padding-right: 0.75rem; padding-left: 0.75rem; box-sizing: border-box; }
+
+.table-responsive { overflow-y: visible !important; overflow-x: auto; }
+.table thead th { position: relative; }
+.grid-filter-popup { position: absolute; top: 100%; margin-top: 6px; z-index: 3000; min-width: 200px; left: 0; background: white; }
+.grid-filter-popup.flip-up { top: auto; bottom: 100%; margin-top: 0; margin-bottom: 6px; }

@@ -104,3 +104,6 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/bin/Debug/net9.0/OrderProcessingSystem.Core.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/9r1k11ab8m-5rtaetfa5o.gz
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/3j3naw1fgk-v4jutpt64f.gz
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/85nlkvgklm-uq4eea6lzo.gz
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/ld799wm9wx-j2dpxtnvrc.gz
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingServer/obj/Debug/net9.0/compressed/ynvi7frf3d-pbph9yy8t3.gz

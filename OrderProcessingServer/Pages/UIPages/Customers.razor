@@ -4,44 +4,7 @@
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingServer.Shared.UIComponents
 @using OrderProcessingSystem.Utilities.Extensions
-<style>
-  /* Keep the page header controls inside the viewport by allowing the title to shrink and preventing the button from overflowing */
-  .page-title {
-    display: flex;
-    flex-wrap: nowrap; /* keep title and controls on one line when possible */
-    gap: 0.5rem;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* make the title shrink when space is constrained so the controls cannot overflow */
-  .page-title .title-text {
-    flex: 1 1 0;
-    min-width: 0; /* allow shrinking in flex containers */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
-  .page-title .header-controls {
-    flex: 0 0 auto; /* keep controls at their intrinsic size */
-  }
-
-  .page-title .btn {
-    white-space: nowrap; /* keep button label on one line */
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Small screens: allow wrapping so controls can move below the title */
-  @@media (max-width: 576px) {
-    .page-title { flex-wrap: wrap; align-items: flex-start; }
-    .page-title .title-text, .page-title .header-controls { width: 100%; }
-    .page-title .header-controls { margin-top: .25rem; }
-  }
-</style>
+<link rel="stylesheet" href="~/css/customers.css" />
 <h1 class="page-title d-flex justify-content-between align-items-center">
   <span class="title-text">Customers</span>
   <div class="header-controls">
