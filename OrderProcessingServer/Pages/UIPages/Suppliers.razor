@@ -351,28 +351,15 @@ else
 		try
 		{
 			var client = HttpFactory.CreateClient("ApiClient");
-			var metadataColumns = await client.GetFromJsonAsync<List<OrderProcessingSystem.Contracts.Dto.GridColumnDto>>("api/metadata/grid-columns/suppliers") ?? new List<OrderProcessingSystem.Contracts.Dto.GridColumnDto>();
-			
-			supplierColumns = metadataColumns.Select(dto => new OrderProcessingServer.Shared.UIComponents.GridColumn
-			{
-				Header = dto.Header,
-				Field = dto.Field,
-				Sortable = dto.Sortable,
-				Filterable = dto.Filterable,
-				IsNumeric = dto.IsNumeric,
-				IsEnum = dto.IsEnum
-			}).ToList();
+			// Use the new UI-optimized endpoint - NO client-side mapping needed!
+			supplierColumns = await client.GetFromJsonAsync<List<OrderProcessingServer.Shared.UIComponents.GridColumn>>("api/metadata/ui-grid-columns/suppliers")
+				?? new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 		}
 		catch (Exception ex)
 		{
 			Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
-			// Fallback to hard-coded columns if API fails
-			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
-			{
-				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Contact", Field = "ContactPerson", Filterable = true, Sortable = true },
-				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders Supplied", Field = "OrdersSupplied", Sortable = true, IsNumeric = true }
-			};
+			// API should handle fallbacks, so this should not happen in normal operations
+			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 		}
 	}
 }

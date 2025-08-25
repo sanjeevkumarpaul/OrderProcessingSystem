@@ -11,7 +11,7 @@ builder.Services.AddHttpClient();
 // Named client for API
 builder.Services.AddHttpClient("ApiClient", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5269/");
+    client.BaseAddress = new Uri("http://localhost:5270/");
 });
 // Default scoped client still available
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());
