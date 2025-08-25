@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Sql\**\*.sql" />
+  <EmbeddedResource Include="Metadata\**\*.json" />
   </ItemGroup>
 
 </Project>

@@ -121,9 +121,11 @@
                             }
                         </tr>
                     }
-                    // Ensure the table body keeps a minimum height by rendering empty placeholder rows
+                    // Ensure the table body keeps a minimum height by rendering empty placeholder rows.
+                    // If there are no displayed items, render exactly 1 placeholder row; otherwise keep the
+                    // existing behavior (minRows = 5) so the grid doesn't collapse.
                     var displayed = PagedItems.Count;
-                    var minRows = 5;
+                    var minRows = (displayed == 0) ? 1 : 5;
                     if (displayed < minRows)
                     {
                         for (int r = displayed; r < minRows; r++)

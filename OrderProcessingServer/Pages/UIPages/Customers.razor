@@ -98,12 +98,10 @@ else
 
       SetupCardsPaging();
       SetupGridPaging();
-      customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
-      {
-        new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-  new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders", Field = "OrdersCount", Sortable = true, IsNumeric = true },
-  new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Total Sales", Field = "TotalSales", Sortable = true, IsNumeric = true }
-      };
+      
+      // Load column metadata from API
+      await LoadColumnMetadata();
+      
       StateHasChanged();
     }
     catch (Exception ex)
@@ -207,5 +205,40 @@ else
   {
     showGrid = !showGrid;
     if (showGrid) SetupGridPaging(); else SetupCardsPaging();
+  }
+
+  async Task LoadColumnMetadata()
+  {
+    try
+    {
+      Console.WriteLine("Loading column metadata for customers...");
+      var client = HttpFactory.CreateClient("ApiClient");
+      Console.WriteLine($"Created HTTP client with base address: {client.BaseAddress}");
+      var metadataColumns = await client.GetFromJsonAsync<List<global::OrderProcessingSystem.Contracts.Dto.GridColumnDto>>("api/metadata/grid-columns/customers") ?? new List<global::OrderProcessingSystem.Contracts.Dto.GridColumnDto>();
+      Console.WriteLine($"Retrieved {metadataColumns.Count} column definitions from API");
+      
+      customerColumns = metadataColumns.Select(dto => new OrderProcessingServer.Shared.UIComponents.GridColumn
+      {
+        Header = dto.Header,
+        Field = dto.Field,
+        Sortable = dto.Sortable,
+        Filterable = dto.Filterable,
+        IsNumeric = dto.IsNumeric,
+        IsEnum = dto.IsEnum
+      }).ToList();
+      Console.WriteLine($"Successfully loaded {customerColumns.Count} columns from API metadata");
+    }
+    catch (Exception ex)
+    {
+      Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
+      // Fallback to hard-coded columns if API fails
+      customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
+      {
+        new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
+        new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders", Field = "OrdersCount", Sortable = true, IsNumeric = true },
+        new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Total Sales", Field = "TotalSales", Sortable = true, IsNumeric = true }
+      };
+      Console.WriteLine("Using fallback hard-coded column definitions");
+    }
   }
 }

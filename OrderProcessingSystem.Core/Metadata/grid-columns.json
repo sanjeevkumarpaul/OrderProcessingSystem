@@ -1,0 +1,19 @@
+{
+  "customers": [
+    { "Header": "Name", "Field": "Name", "Filterable": true, "Sortable": true },
+    { "Header": "Orders", "Field": "OrdersCount", "Sortable": true, "IsNumeric": true },
+    { "Header": "Total Sales", "Field": "TotalSales", "Sortable": true, "IsNumeric": true }
+  ],
+  "orders": [
+    { "Header": "Order", "Field": "OrderId", "Sortable": true },
+    { "Header": "Customer", "Field": "Customer.Name", "Filterable": true, "Sortable": true },
+    { "Header": "Supplier", "Field": "Supplier.Name", "Filterable": true, "Sortable": true },
+    { "Header": "Total", "Field": "Total", "Sortable": true, "IsNumeric": true },
+    { "Header": "Status", "Field": "Status", "Filterable": true, "Sortable": true, "IsEnum": true }
+  ],
+  "suppliers": [
+    { "Header": "Name", "Field": "Name", "Filterable": true, "Sortable": true },
+    { "Header": "Country", "Field": "Country", "Filterable": true, "Sortable": true },
+    { "Header": "Orders Supplied", "Field": "OrdersSupplied", "Sortable": true, "IsNumeric": true }
+  ]
+}

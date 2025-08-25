@@ -47,15 +47,8 @@ else
             orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
             Console.WriteLine($"Fetched {orders.Count} orders.");
             SetupPaging();
-            // initialize grid columns now that statusValues is available
-            orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
-            {
-                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Order", Field = "OrderId", Sortable = true },
-                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Customer", Field = "Customer.Name", Filterable = true, Sortable = true },
-                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Supplier", Field = "Supplier.Name", Filterable = true, Sortable = true },
-                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Total", Field = "Total", Sortable = true, IsNumeric = true },
-                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Status", Field = "Status", Filterable = true, Sortable = true, IsEnum = true, EnumValues = statusValues }
-            };
+            // Load column metadata from API
+            await LoadColumnMetadata();
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
@@ -307,5 +300,38 @@ else
     {
         // Use JS interop to trigger a file download in the browser
         await JS.InvokeVoidAsync("blazorDownload", filename, content);
+    }
+
+    async Task LoadColumnMetadata()
+    {
+        try
+        {
+            var client = HttpFactory.CreateClient("ApiClient");
+            var metadataColumns = await client.GetFromJsonAsync<List<OrderProcessingSystem.Contracts.Dto.GridColumnDto>>("api/metadata/grid-columns/orders") ?? new List<OrderProcessingSystem.Contracts.Dto.GridColumnDto>();
+            
+            orderColumns = metadataColumns.Select(dto => new OrderProcessingServer.Shared.UIComponents.GridColumn
+            {
+                Header = dto.Header,
+                Field = dto.Field,
+                Sortable = dto.Sortable,
+                Filterable = dto.Filterable,
+                IsNumeric = dto.IsNumeric,
+                IsEnum = dto.IsEnum,
+                EnumValues = dto.IsEnum ? statusValues : null
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
+            // Fallback to hard-coded columns if API fails
+            orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
+            {
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Order", Field = "OrderId", Sortable = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Customer", Field = "Customer.Name", Filterable = true, Sortable = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Supplier", Field = "Supplier.Name", Filterable = true, Sortable = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Total", Field = "Total", Sortable = true, IsNumeric = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Status", Field = "Status", Filterable = true, Sortable = true, IsEnum = true, EnumValues = statusValues }
+            };
+        }
     }
 }

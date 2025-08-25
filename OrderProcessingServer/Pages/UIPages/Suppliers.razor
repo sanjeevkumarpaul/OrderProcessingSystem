@@ -101,12 +101,10 @@ else
 			// initialize paging and grid columns
 			SetupCardsPaging();
 			SetupGridPaging();
-			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
-			{
-				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Country", Field = "Country", Filterable = true },
-				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders", Field = "OrdersSupplied", Sortable = true, IsNumeric = true }
-			};
+			
+			// Load column metadata from API
+			await LoadColumnMetadata();
+			
 			StateHasChanged();
 		}
 		catch (Exception ex)
@@ -346,5 +344,35 @@ else
 			return "\"" + input.Replace("\"", "\"\"") + "\"";
 		}
 		return input;
+	}
+
+	async Task LoadColumnMetadata()
+	{
+		try
+		{
+			var client = HttpFactory.CreateClient("ApiClient");
+			var metadataColumns = await client.GetFromJsonAsync<List<OrderProcessingSystem.Contracts.Dto.GridColumnDto>>("api/metadata/grid-columns/suppliers") ?? new List<OrderProcessingSystem.Contracts.Dto.GridColumnDto>();
+			
+			supplierColumns = metadataColumns.Select(dto => new OrderProcessingServer.Shared.UIComponents.GridColumn
+			{
+				Header = dto.Header,
+				Field = dto.Field,
+				Sortable = dto.Sortable,
+				Filterable = dto.Filterable,
+				IsNumeric = dto.IsNumeric,
+				IsEnum = dto.IsEnum
+			}).ToList();
+		}
+		catch (Exception ex)
+		{
+			Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
+			// Fallback to hard-coded columns if API fails
+			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
+			{
+				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
+				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Contact", Field = "ContactPerson", Filterable = true, Sortable = true },
+				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders Supplied", Field = "OrdersSupplied", Sortable = true, IsNumeric = true }
+			};
+		}
 	}
 }

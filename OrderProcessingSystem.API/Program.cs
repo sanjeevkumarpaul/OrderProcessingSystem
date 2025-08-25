@@ -9,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Register controllers
 builder.Services.AddControllers();
 
+// Swagger / OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(OrderProcessingSystem.API.Mapping.ApiMappingProfile).Assembly);
 
@@ -20,6 +24,14 @@ builder.Services.AddOrderProcessingData(conn);
 builder.Services.AddInfrastructureServices();
 
 var app = builder.Build();
+
+// Enable Swagger (OpenAPI) UI
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.RoutePrefix = "swagger"; // serve at /swagger
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "OrderProcessingSystem API V1");
+});
 
 // Seed database on startup
 using (var scope = app.Services.CreateScope())

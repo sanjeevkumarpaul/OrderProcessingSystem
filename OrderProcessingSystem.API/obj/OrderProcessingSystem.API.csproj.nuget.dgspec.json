@@ -30,6 +30,9 @@
               "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj": {
                 "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj"
               },
+              "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/OrderProcessingSystem.Core.csproj": {
+                "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/OrderProcessingSystem.Core.csproj"
+              },
               "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/OrderProcessingSystem.Data.csproj": {
                 "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/OrderProcessingSystem.Data.csproj"
               },
@@ -62,6 +65,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.5, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
