@@ -14,11 +14,12 @@ else
 }
 
 @using OrderProcessingServer.Shared.Dto
-@using OrderProcessingServer.UIComponents
+@using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingSystem.Core.Enums
 
 @code {
     // grid columns for orders (initialized after statusValues available)
-    List<GridColumn> orderColumns = new List<GridColumn>();
+    List<OrderProcessingServer.Shared.UIComponents.GridColumn> orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 
     List<OrderDto>? orders = null;
     List<OrderDto>? pagedOrders = null;
@@ -47,13 +48,13 @@ else
             Console.WriteLine($"Fetched {orders.Count} orders.");
             SetupPaging();
             // initialize grid columns now that statusValues is available
-            orderColumns = new List<GridColumn>
+            orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
             {
-                new GridColumn { Header = "Order", Field = "OrderId", Sortable = true },
-                new GridColumn { Header = "Customer", Field = "Customer.Name", Filterable = true, Sortable = true },
-                new GridColumn { Header = "Supplier", Field = "Supplier.Name", Filterable = true, Sortable = true },
-                new GridColumn { Header = "Total", Field = "Total", Sortable = true },
-                new GridColumn { Header = "Status", Field = "Status", Filterable = true, IsEnum = true, EnumValues = statusValues }
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Order", Field = "OrderId", Sortable = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Customer", Field = "Customer.Name", Filterable = true, Sortable = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Supplier", Field = "Supplier.Name", Filterable = true, Sortable = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Total", Field = "Total", Sortable = true, IsNumeric = true },
+                new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Status", Field = "Status", Filterable = true, Sortable = true, IsEnum = true, EnumValues = statusValues }
             };
             await InvokeAsync(StateHasChanged);
         }
@@ -107,7 +108,7 @@ else
     string statusFilter = string.Empty; // empty means Any
 
     string[] textOps = new[] { "StartsWith", "EndsWith", "Equals" };
-    List<string> statusValues = new List<string> { "Pending", "Processing", "Completed", "Cancelled" };
+    List<string> statusValues = Enum.GetNames(typeof(OrderStatus)).ToList();
 
     // UI dropdown visibility for header filters
     bool showCustomerFilter = false;

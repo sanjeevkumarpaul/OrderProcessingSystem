@@ -1,31 +1,107 @@
 @page "/customers"
 @inject IHttpClientFactory HttpFactory
+@inject IJSRuntime JS
 @using OrderProcessingServer.Shared.Dto
+@using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingSystem.Utilities.Extensions
+<style>
+  /* Keep the page header controls inside the viewport by allowing the title to shrink and preventing the button from overflowing */
+  .page-title {
+    display: flex;
+    flex-wrap: nowrap; /* keep title and controls on one line when possible */
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-<h1 class="page-title">Customers</h1>
+  /* make the title shrink when space is constrained so the controls cannot overflow */
+  .page-title .title-text {
+    flex: 1 1 0;
+    min-width: 0; /* allow shrinking in flex containers */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .page-title .header-controls {
+    flex: 0 0 auto; /* keep controls at their intrinsic size */
+  }
+
+  .page-title .btn {
+    white-space: nowrap; /* keep button label on one line */
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Small screens: allow wrapping so controls can move below the title */
+  @@media (max-width: 576px) {
+    .page-title { flex-wrap: wrap; align-items: flex-start; }
+    .page-title .title-text, .page-title .header-controls { width: 100%; }
+    .page-title .header-controls { margin-top: .25rem; }
+  }
+</style>
+<h1 class="page-title d-flex justify-content-between align-items-center">
+  <span class="title-text">Customers</span>
+  <div class="header-controls">
+    <button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Customers")</button>
+  </div>
+</h1>
 
 @if (customers == null)
 {
   <p><em>Loading...</em></p>
 }
+
+@if (showGrid)
+{
+  <GenericGrid TItem="CustomerDto" Items="customers" Columns="customerColumns" PageSize="gridPageSize" PageSizes="gridPageSizes" />
+}
 else
 {
-  <div class="row">
-    @foreach (var c in customers)
+  <div class="row g-3">
+    @foreach (var c in GetPagedCardCustomers())
     {
-      <div class="col-md-4 mb-3">
-        <div class="card p-3">
-          <h5>@c.Name</h5>
+      <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+        <div class="card p-3" style="max-width:100%; word-break:break-word;">
+          <h5 class="text-truncate">@c.Name</h5>
+          <p class="small text-muted">Orders: @c.OrdersCount</p>
+          <p class="small">Sales Total: <strong>@c.TotalSales.ToTwoDecimals(true)</strong></p>
         </div>
       </div>
     }
+  </div>
+
+  <div class="d-flex justify-content-between mt-2 align-items-center">
+    <div>
+      <button class="btn btn-secondary me-2" @onclick="PrevCustomers" disabled="@(customerPageIndex==0)">Previous</button>
+      <button class="btn btn-secondary" @onclick="NextCustomers" disabled="@(customerPageIndex+1>=customerTotalPages)">Next</button>
+    </div>
+    <div>
+      <small>Page @(customerPageIndex+1) of @customerTotalPages</small>
+    </div>
   </div>
 }
 
 @code {
   List<CustomerDto>? customers = null;
 
-  protected override Task OnInitializedAsync() => Task.CompletedTask;
+  // Cards paging
+  int customerPageIndex = 0;
+  int customerPageSize = 12;
+  int customerTotalPages = 1;
+
+  // Grid mode and paging
+  bool showGrid = false;
+  List<CustomerDto>? pagedGridCustomers = null;
+  int gridCurrentPage = 1;
+  int gridPageSize = 10;
+  int gridTotalPages = 1;
+  int[] gridPageSizes = new[] { 5, 10, 15 };
+
+  // grid columns
+  List<OrderProcessingServer.Shared.UIComponents.GridColumn> customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 
   private bool _loaded;
   protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -37,6 +113,34 @@ else
     {
       var client = HttpFactory.CreateClient("ApiClient");
       customers = await client.GetFromJsonAsync<List<CustomerDto>>("api/data/customers") ?? new List<CustomerDto>();
+      var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
+
+      // compute OrdersCount and TotalSales per customer
+      var groups = orders
+        .GroupBy(o => o.CustomerId)
+        .ToDictionary(g => g.Key, g => new { Count = g.Count(), Total = g.Sum(x => x.Total) });
+      foreach (var c in customers)
+      {
+        if (groups.TryGetValue(c.CustomerId, out var v))
+        {
+          c.OrdersCount = v.Count;
+          c.TotalSales = v.Total;
+        }
+        else
+        {
+          c.OrdersCount = 0;
+          c.TotalSales = 0;
+        }
+      }
+
+      SetupCardsPaging();
+      SetupGridPaging();
+      customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
+      {
+        new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
+  new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders", Field = "OrdersCount", Sortable = true, IsNumeric = true },
+  new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Total Sales", Field = "TotalSales", Sortable = true, IsNumeric = true }
+      };
       StateHasChanged();
     }
     catch (Exception ex)
@@ -44,5 +148,101 @@ else
       Console.Error.WriteLine($"Customers fetch failed: {ex}");
       customers = new List<CustomerDto>();
     }
+  }
+
+  void NextCustomers()
+  {
+    if (customers == null) return;
+    if (customerPageIndex + 1 >= customerTotalPages) return;
+    customerPageIndex++;
+  }
+
+  void PrevCustomers()
+  {
+    if (customers == null) return;
+    if (customerPageIndex <= 0) return;
+    customerPageIndex--;
+  }
+
+  void SetupCardsPaging()
+  {
+    customerPageIndex = 0;
+    var total = (customers ?? Enumerable.Empty<CustomerDto>()).Count();
+    customerTotalPages = Math.Max(1, (int)Math.Ceiling((double)total / customerPageSize));
+  }
+
+  IEnumerable<CustomerDto> GetPagedCardCustomers()
+  {
+    if (customers == null) return Enumerable.Empty<CustomerDto>();
+    return customers.Skip(customerPageIndex * customerPageSize).Take(customerPageSize);
+  }
+
+  void SetupGridPaging()
+  {
+    gridCurrentPage = 1;
+    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)(customers?.Count ?? 0) / gridPageSize));
+    ApplyGridPage();
+  }
+
+  void ApplyGridPage()
+  {
+    if (customers == null) { pagedGridCustomers = new List<CustomerDto>(); return; }
+    var list = customers.ToList();
+    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / gridPageSize));
+    if (gridCurrentPage < 1) gridCurrentPage = 1;
+    if (gridCurrentPage > gridTotalPages) gridCurrentPage = gridTotalPages;
+    pagedGridCustomers = list.Skip((gridCurrentPage - 1) * gridPageSize).Take(gridPageSize).ToList();
+  }
+
+  void GoToGridPage(int page)
+  {
+    if (customers == null) return;
+    gridCurrentPage = Math.Clamp(page, 1, gridTotalPages);
+    ApplyGridPage();
+  }
+
+  async Task ExportFilteredCustomersAsync()
+  {
+    if (customers == null || customers.Count == 0) return;
+    var list = customers.ToList();
+    var csv = BuildCsv(list);
+    var filename = $"customers_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+  }
+
+  async Task ExportAllCustomersAsync()
+  {
+    if (customers == null || customers.Count == 0) return;
+    var csv = BuildCsv(customers);
+    var filename = $"customers_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+  }
+
+  string BuildCsv(List<CustomerDto> list)
+  {
+    var sb = new System.Text.StringBuilder();
+    sb.AppendLine("CustomerId,Name,OrdersCount,TotalSales");
+    foreach (var c in list)
+    {
+      var name = EscapeCsv(c.Name ?? string.Empty);
+      sb.AppendLine($"{c.CustomerId},{name},{c.OrdersCount},{c.TotalSales}");
+    }
+    return sb.ToString();
+  }
+
+  static string EscapeCsv(string input)
+  {
+    if (input == null) return string.Empty;
+    if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
+    {
+      return "\"" + input.Replace("\"", "\"\"") + "\"";
+    }
+    return input;
+  }
+
+  void ToggleGrid()
+  {
+    showGrid = !showGrid;
+    if (showGrid) SetupGridPaging(); else SetupCardsPaging();
   }
 }

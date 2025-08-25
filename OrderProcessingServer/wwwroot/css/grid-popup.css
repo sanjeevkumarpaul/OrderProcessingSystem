@@ -1,0 +1,50 @@
+.grid-filter-popup{position:fixed;box-shadow:0 .125rem .25rem rgba(0,0,0,.075);border-radius:.25rem;padding:.5rem;background:#fff}
+
+/* caret triangle uses a CSS variable --caret-x to position horizontally */
+.grid-filter-popup::before{
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgba(0,0,0,0.1); /* subtle border for caret */
+  left: var(--caret-x, 16px);
+  top: -8px;
+  transform: translateX(0);
+  z-index: -1;
+}
+
+.grid-filter-popup::after{
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #fff; /* caret fill */
+  left: calc(var(--caret-x, 16px) + 1px);
+  top: -7px;
+  z-index: 1;
+}
+
+/* flipped caret (popup above header) */
+.grid-filter-popup.flip-up::before{
+  top: auto;
+  bottom: -8px;
+  border-bottom: none;
+  border-top: 8px solid rgba(0,0,0,0.1);
+}
+.grid-filter-popup.flip-up::after{
+  top: auto;
+  bottom: -7px;
+  border-bottom: none;
+  border-top: 7px solid #fff;
+}
+
+/* adjust caret position for right-aligned popups */
+.grid-filter-popup.caret-right::before,
+.grid-filter-popup.caret-right::after{
+  left: auto;
+  right: var(--caret-x, 16px);
+}

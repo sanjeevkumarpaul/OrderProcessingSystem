@@ -11,6 +11,26 @@
         "runtime": {
           "bin/placeholder/OrderProcessingSystem.Contracts.dll": {}
         }
+      },
+      "OrderProcessingSystem.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/OrderProcessingSystem.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OrderProcessingSystem.Core.dll": {}
+        }
+      },
+      "OrderProcessingSystem.Utilities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/OrderProcessingSystem.Utilities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OrderProcessingSystem.Utilities.dll": {}
+        }
       }
     }
   },
@@ -19,11 +39,23 @@
       "type": "project",
       "path": "../OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj",
       "msbuildProject": "../OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj"
+    },
+    "OrderProcessingSystem.Core/1.0.0": {
+      "type": "project",
+      "path": "../OrderProcessingSystem.Core/OrderProcessingSystem.Core.csproj",
+      "msbuildProject": "../OrderProcessingSystem.Core/OrderProcessingSystem.Core.csproj"
+    },
+    "OrderProcessingSystem.Utilities/1.0.0": {
+      "type": "project",
+      "path": "../OrderProcessingSystem.Utilities/OrderProcessingSystem.Utilities.csproj",
+      "msbuildProject": "../OrderProcessingSystem.Utilities/OrderProcessingSystem.Utilities.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "OrderProcessingSystem.Contracts >= 1.0.0"
+      "OrderProcessingSystem.Contracts >= 1.0.0",
+      "OrderProcessingSystem.Core >= 1.0.0",
+      "OrderProcessingSystem.Utilities >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -54,6 +86,12 @@
           "projectReferences": {
             "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj": {
               "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj"
+            },
+            "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/OrderProcessingSystem.Core.csproj": {
+              "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Core/OrderProcessingSystem.Core.csproj"
+            },
+            "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Utilities/OrderProcessingSystem.Utilities.csproj": {
+              "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Utilities/OrderProcessingSystem.Utilities.csproj"
             }
           }
         }

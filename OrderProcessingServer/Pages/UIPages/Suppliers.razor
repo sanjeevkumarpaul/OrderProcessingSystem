@@ -2,7 +2,7 @@
 @inject IHttpClientFactory HttpFactory
 @inject IJSRuntime JS
 @using OrderProcessingServer.Shared.Dto
-@using OrderProcessingServer.UIComponents
+@using OrderProcessingServer.Shared.UIComponents
 
 <h1 class="page-title d-flex justify-content-between align-items-center">Suppliers
 	<button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Suppliers")</button>
@@ -21,12 +21,12 @@
 else
 {
 	@* Cards view (unchanged) *@
-		<div class="row">
+		<div class="row g-3">
 		@foreach (var s in GetPagedCardSuppliers())
 			{
-			<div class="col-md-6 mb-3">
-				<div class="card p-3">
-						<h5>@s.Name</h5>
+			<div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+				<div class="card p-3" style="max-width:100%; word-break:break-word;">
+						<h5 class="text-truncate">@s.Name</h5>
 						<p class="small text-muted">Country: @s.Country</p>
 						<p class="small">Orders supplied: <strong>@s.OrdersSupplied</strong></p>
 				</div>
@@ -72,7 +72,7 @@ else
 	bool showCountryFilter = false;
 
 	// grid columns
-	List<GridColumn> supplierColumns = new List<GridColumn>();
+	List<OrderProcessingServer.Shared.UIComponents.GridColumn> supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 
 	protected override Task OnInitializedAsync()
 	{
@@ -101,11 +101,11 @@ else
 			// initialize paging and grid columns
 			SetupCardsPaging();
 			SetupGridPaging();
-			supplierColumns = new List<GridColumn>
+			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>
 			{
-				new GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-				new GridColumn { Header = "Country", Field = "Country", Filterable = true },
-				new GridColumn { Header = "Orders", Field = "OrdersSupplied", Sortable = true }
+				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
+				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Country", Field = "Country", Filterable = true },
+				new OrderProcessingServer.Shared.UIComponents.GridColumn { Header = "Orders", Field = "OrdersSupplied", Sortable = true, IsNumeric = true }
 			};
 			StateHasChanged();
 		}

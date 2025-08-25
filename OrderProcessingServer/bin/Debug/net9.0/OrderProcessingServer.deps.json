@@ -8,7 +8,9 @@
     ".NETCoreApp,Version=v9.0": {
       "OrderProcessingServer/1.0.0": {
         "dependencies": {
-          "OrderProcessingSystem.Contracts": "1.0.0"
+          "OrderProcessingSystem.Contracts": "1.0.0",
+          "OrderProcessingSystem.Core": "1.0.0",
+          "OrderProcessingSystem.Utilities": "1.0.0"
         },
         "runtime": {
           "OrderProcessingServer.dll": {}
@@ -17,6 +19,22 @@
       "OrderProcessingSystem.Contracts/1.0.0": {
         "runtime": {
           "OrderProcessingSystem.Contracts.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "OrderProcessingSystem.Core/1.0.0": {
+        "runtime": {
+          "OrderProcessingSystem.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "OrderProcessingSystem.Utilities/1.0.0": {
+        "runtime": {
+          "OrderProcessingSystem.Utilities.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -31,6 +49,16 @@
       "sha512": ""
     },
     "OrderProcessingSystem.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OrderProcessingSystem.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OrderProcessingSystem.Utilities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

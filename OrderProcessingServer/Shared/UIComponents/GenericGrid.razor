@@ -1,6 +1,7 @@
 @typeparam TItem
 @using System.Linq.Expressions
 @using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingSystem.Utilities.Extensions
 @inject IJSRuntime JS
 
 <div class="card p-3">
@@ -8,6 +9,7 @@
         <div class="d-flex align-items-center">
             <button class="btn btn-outline-secondary me-2" @onclick="ExportAll" disabled="@(Items==null || !Items.Any())">Export All</button>
             <button class="btn btn-outline-secondary me-3" @onclick="ExportFiltered" disabled="@(Items==null || !IsFilterActive())">Export Filtered</button>
+            <button class="btn btn-outline-secondary me-3" @onclick="ClearAllFilters" disabled="@(!IsFilterActive())">Clear Filters</button>
 
             <label class="me-2">Page size:</label>
             <select class="form-select d-inline-block w-auto" @onchange="OnPageSizeChanged">
@@ -18,7 +20,7 @@
             </select>
         </div>
         <div>
-            <small>Showing @((PagedItems?.Count ?? 0)) of @(Items?.Count() ?? 0) items</small>
+            <small>Showing @((PagedItems?.Count ?? 0)) of @(FilteredTotalCount) items</small>
         </div>
     </div>
 
@@ -28,12 +30,16 @@
                 <tr>
                     @foreach(var c in Columns)
                     {
-                                <th style="position:relative;">
-                                    <div class="d-flex align-items-center">
-                                        <span>@c.Header</span>
+                                <th style="position:relative;" class="@(IsNumericColumn(c) ? "text-end" : string.Empty)">
+                                    <div class="d-flex align-items-center @(IsNumericColumn(c) ? "justify-content-end" : "")">
+                                        <span class="@(IsNumericColumn(c) ? "me-2 text-end" : "")">@c.Header</span>
                                         @if (c.Filterable)
                                         {
-                                            <button class="btn btn-sm btn-light ms-2" @onclick="() => ToggleFilter(c)">🔽</button>
+                                            <button id="@($"{_gridId}-btn-{c.Field}")" class="btn btn-sm btn-light ms-2" @onclick="() => ToggleFilter(c)">🔽</button>
+                                            @if (ColumnFilters.TryGetValue(c.Field, out var _fs) && (!string.IsNullOrWhiteSpace(_fs.TextValue) || !string.IsNullOrWhiteSpace(_fs.EnumValue)))
+                                            {
+                                                <span class="filter-indicator ms-1" title="Filter active"></span>
+                                            }
                                         }
                                         @if (c.Sortable)
                                         {
@@ -42,7 +48,7 @@
                                     </div>
                                     @if (ActiveFilterColumn == c)
                                     {
-                                        <div class="grid-filter-popup p-2 shadow-sm bg-white border">
+                                        <div id="@($"{_gridId}-popup-{c.Field}")" class="grid-filter-popup p-2 shadow-sm bg-white border @(ShouldFlipFilterPopup ? "flip-up" : "")" style="display:block;">
                                             @if (c.IsEnum && c.EnumValues != null)
                                             {
                                                 <select class="form-select form-select-sm" @bind="EnumFilterValue">
@@ -75,9 +81,60 @@
                         <tr>
                             @foreach(var c in Columns)
                             {
-                                <td>@GetValue(item, c.Field)</td>
+                                var raw = GetValue(item, c.Field);
+                                string outVal;
+                                string cellClass = string.Empty;
+                                if (raw != null)
+                                {
+                                    var t = raw.GetType();
+                                    var tc = System.Type.GetTypeCode(t);
+                                    if (tc == TypeCode.Decimal || tc == TypeCode.Double || tc == TypeCode.Single)
+                                    {
+                                        // floating-point / decimal-capable values: format to two decimals and right-align
+                                        cellClass = "text-end";
+                                        try
+                                        {
+                                            var d = Convert.ToDouble(raw);
+                                            outVal = d.ToTwoDecimals(false);
+                                        }
+                                        catch { outVal = raw.ToString() ?? string.Empty; }
+                                    }
+                                    else if (tc == TypeCode.Int16 || tc == TypeCode.Int32 || tc == TypeCode.Int64 ||
+                                             tc == TypeCode.UInt16 || tc == TypeCode.UInt32 || tc == TypeCode.UInt64 ||
+                                             tc == TypeCode.Byte || tc == TypeCode.SByte)
+                                    {
+                                        // integer types: no decimal places, right-align
+                                        cellClass = "text-end";
+                                        try
+                                        {
+                                            outVal = raw.ToString() ?? string.Empty;
+                                        }
+                                        catch { outVal = raw.ToString() ?? string.Empty; }
+                                    }
+                                    else
+                                    {
+                                        outVal = raw.ToString() ?? string.Empty;
+                                    }
+                                }
+                                else outVal = string.Empty;
+                                <td class="@cellClass">@(outVal)</td>
                             }
                         </tr>
+                    }
+                    // Ensure the table body keeps a minimum height by rendering empty placeholder rows
+                    var displayed = PagedItems.Count;
+                    var minRows = 5;
+                    if (displayed < minRows)
+                    {
+                        for (int r = displayed; r < minRows; r++)
+                        {
+                            <tr class="table-placeholder-row">
+                                @foreach (var c in Columns)
+                                {
+                                    <td>&nbsp;</td>
+                                }
+                            </tr>
+                        }
                     }
                 }
             </tbody>
@@ -113,13 +170,24 @@
     List<TItem>? PagedItems;
     int CurrentPage = 1;
     int TotalPages = 1;
+    int FilteredTotalCount = 0;
 
     // filtering state
     GridColumn? ActiveFilterColumn;
     string[] TextOps = new[] {"StartsWith","EndsWith","Equals"};
+    // temporary inputs for the currently-open filter popup
     string TextFilterOp = "StartsWith";
     string TextFilterValue = string.Empty;
     string EnumFilterValue = string.Empty;
+
+    // persistent per-column filters (field -> FilterState)
+    class FilterState {
+        public string TextOp { get; set; } = "StartsWith";
+        public string TextValue { get; set; } = string.Empty;
+        public string EnumValue { get; set; } = string.Empty;
+        public bool IsEnum { get; set; } = false;
+    }
+    Dictionary<string, FilterState> ColumnFilters = new Dictionary<string, FilterState>();
 
     // sorting
     GridColumn? SortColumn;
@@ -142,7 +210,8 @@
     void ApplyPage()
     {
         if (Items == null) { PagedItems = new List<TItem>(); return; }
-        var list = ApplyFilterList(Items.ToList());
+    var list = ApplyFilterList(Items.ToList());
+    FilteredTotalCount = list.Count;
         if (SortColumn != null) list = ApplySort(list, SortColumn, SortAsc);
         TotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / PageSize));
         if (CurrentPage < 1) CurrentPage = 1;
@@ -154,21 +223,24 @@
     {
         if (input == null) return new List<TItem>();
         IEnumerable<TItem> q = input;
-        if (ActiveFilterColumn != null)
+        // Apply all column filters present in ColumnFilters (persisted per-column state)
+        foreach (var kv in ColumnFilters)
         {
-            if (ActiveFilterColumn.IsEnum)
+            var field = kv.Key;
+            var fs = kv.Value;
+            if (fs.IsEnum)
             {
-                if (!string.IsNullOrWhiteSpace(EnumFilterValue))
+                if (!string.IsNullOrWhiteSpace(fs.EnumValue))
                 {
-                    q = q.Where(i => string.Equals(GetValue(i, ActiveFilterColumn.Field)?.ToString() ?? string.Empty, EnumFilterValue, StringComparison.OrdinalIgnoreCase));
+                    q = q.Where(i => string.Equals(GetValue(i, field)?.ToString() ?? string.Empty, fs.EnumValue, StringComparison.OrdinalIgnoreCase));
                 }
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(TextFilterValue))
+                if (!string.IsNullOrWhiteSpace(fs.TextValue))
                 {
-                    var t = TextFilterValue.Trim();
-                    q = q.Where(i => MatchText(GetValue(i, ActiveFilterColumn.Field)?.ToString() ?? string.Empty, t, TextFilterOp));
+                    var t = fs.TextValue.Trim();
+                    q = q.Where(i => MatchText(GetValue(i, field)?.ToString() ?? string.Empty, t, fs.TextOp));
                 }
             }
         }
@@ -251,20 +323,91 @@
         };
     }
 
-    void ToggleFilter(GridColumn c)
+    bool IsNumericColumn(GridColumn c)
     {
-        if (ActiveFilterColumn == c) { ActiveFilterColumn = null; ClearFilter(); }
-        else { ActiveFilterColumn = c; TextFilterValue = string.Empty; EnumFilterValue = string.Empty; }
+        if (c == null) return false;
+        // explicit override from column definition
+        if (c.IsNumeric) return true;
+        if (Items == null || string.IsNullOrWhiteSpace(c.Field)) return false;
+        var sample = Items.FirstOrDefault(i => GetValue(i, c.Field) != null);
+        if (sample == null) return false;
+        var raw = GetValue(sample, c.Field);
+        if (raw == null) return false;
+        return raw.GetType().IsNumericType();
     }
 
-    void ApplyFilter()
+    async Task ToggleFilter(GridColumn c)
     {
+        var btnId = $"{_gridId}-btn-{c.Field}";
+        var popupId = $"{_gridId}-popup-{c.Field}";
+
+        // If this column is already active, hide popup first then clear active
+        if (ActiveFilterColumn == c)
+        {
+            try { await JS.InvokeVoidAsync("hidePopup", popupId); } catch { }
+            ActiveFilterColumn = null;
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        // open popup for this column; load persisted filter values if present
+        ActiveFilterColumn = c;
+        if (ColumnFilters.TryGetValue(c.Field, out var fs))
+        {
+            TextFilterOp = fs.TextOp;
+            TextFilterValue = fs.TextValue;
+            EnumFilterValue = fs.EnumValue;
+        }
+        else
+        {
+            TextFilterOp = "StartsWith";
+            TextFilterValue = string.Empty;
+            EnumFilterValue = string.Empty;
+        }
+
+    // ensure DOM updates so popup element exists, then position it via JS
+    await InvokeAsync(StateHasChanged);
+    // small delay to let the browser layout stabilize (helps when table is empty)
+    await Task.Delay(250);
+    try { await JS.InvokeVoidAsync("showPopup", btnId, popupId); } catch { }
+    }
+
+    bool ShouldFlipFilterPopup => (PagedItems == null || !PagedItems.Any());
+
+    // stable id per grid instance (used for element ids)
+    string _gridId = "grid-" + System.Guid.NewGuid().ToString("N");
+
+    async Task ApplyFilter()
+    {
+        // persist current inputs for the active column and re-run filtering
+        if (ActiveFilterColumn != null)
+        {
+            ColumnFilters[ActiveFilterColumn.Field] = new FilterState {
+                TextOp = TextFilterOp,
+                TextValue = TextFilterValue,
+                EnumValue = EnumFilterValue,
+                IsEnum = ActiveFilterColumn.IsEnum
+            };
+        }
         CurrentPage = 1;
         ApplyPage();
+        // close popup for the active column
+        var col = ActiveFilterColumn;
+        if (col != null)
+        {
+            try { await JS.InvokeVoidAsync("hidePopup", $"{_gridId}-popup-{col.Field}"); } catch { }
+        }
+        ActiveFilterColumn = null;
+        await InvokeAsync(StateHasChanged);
     }
 
     void ClearFilter()
     {
+        // clear only the active column's persisted filter
+        if (ActiveFilterColumn != null)
+        {
+            ColumnFilters.Remove(ActiveFilterColumn.Field);
+        }
         TextFilterValue = EnumFilterValue = string.Empty;
         TextFilterOp = "StartsWith";
         ActiveFilterColumn = null;
@@ -299,7 +442,7 @@
 
     bool IsFilterActive()
     {
-        return !string.IsNullOrWhiteSpace(TextFilterValue) || !string.IsNullOrWhiteSpace(EnumFilterValue);
+    return ColumnFilters.Any(kv => !string.IsNullOrWhiteSpace(kv.Value.TextValue) || !string.IsNullOrWhiteSpace(kv.Value.EnumValue));
     }
 
     async Task ExportAll()
@@ -339,16 +482,27 @@
     }
 }
 
+@code {
+    void ClearAllFilters()
+    {
+        ColumnFilters.Clear();
+        ApplyPage();
+    }
+}
+
 <style>
-        .grid-filter-popup {
-            position: absolute;
-            top: 36px; /* below header row */
-            z-index: 2000;
-            min-width: 200px;
-            left: 0; /* align with left edge of the TH */
-            padding-left: 4px;
-            padding-right: 4px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    .grid-filter-popup {
+        position: absolute;
+        top: 100%; /* position immediately below the TH regardless of table/header height */
+        margin-top: 6px; /* small gap under the header */
+        z-index: 3000; /* higher than other elements */
+        min-width: 200px;
+        left: 0; /* align with left edge of the TH */
+    padding-left: 4px;
+    padding-right: 4px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    background: white;
+    /* debug styles removed */
         }
 
     /* Header styling: double-line border and professional tone */
@@ -367,5 +521,43 @@
     .table thead th .btn {
         font-size: .8rem;
         padding: .18rem .4rem;
+    }
+
+    /* Ensure consistent left/right padding for all columns and headers */
+    .table th, .table td {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    /* Placeholder rows (empty) used to keep table body height consistent */
+    .table-placeholder-row td {
+        background: transparent;
+        height: 2.4rem; /* approximate row height */
+        line-height: 2.4rem;
+        color: transparent; /* hide any accidental content */
+        border: none;
+        pointer-events: none;
+    }
+
+    /* Keep popup form controls compact and prevent them from stretching the popup width */
+    .grid-filter-popup .form-control,
+    .grid-filter-popup .form-select {
+        max-width: 260px;
+        width: auto;
+        display: block;
+    }
+
+    .grid-filter-popup .mt-2.text-end {
+        /* align actions without pushing layout */
+        margin-top: .5rem;
+    }
+
+    /* small dot indicator shown when a column has an active filter */
+    .filter-indicator {
+        width: 8px;
+        height: 8px;
+        background: #0d6efd; /* bootstrap primary */
+        border-radius: 50%;
+        display: inline-block;
     }
 </style>
