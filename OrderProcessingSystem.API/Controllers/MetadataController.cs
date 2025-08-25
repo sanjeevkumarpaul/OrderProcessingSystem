@@ -31,20 +31,13 @@ public class MetadataController : ControllerBase
                     return Ok(list);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Fall through to fallback logic
+                return BadRequest($"Error deserializing metadata for grid '{name}': {ex.Message}");
             }
         }
 
-        // Fallback to hard-coded columns if metadata loading fails
-        var fallbackColumns = GetFallbackColumns(name.ToLowerInvariant());
-        if (fallbackColumns != null)
-        {
-            return Ok(fallbackColumns);
-        }
-
-        return NotFound($"No metadata or fallback available for grid: {name}");
+        return NotFound($"No metadata found for grid: {name}. Please ensure the grid name exists in the metadata JSON file.");
     }
 
     // NEW: Direct UI-ready endpoint - no client-side mapping needed!
@@ -64,48 +57,13 @@ public class MetadataController : ControllerBase
                     return Ok(uiColumns);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Fall through to fallback logic
+                return BadRequest($"Error processing UI metadata for grid '{name}': {ex.Message}");
             }
         }
 
-        // Fallback to hard-coded UI columns using AutoMapper
-        var fallbackContractColumns = GetFallbackColumns(name.ToLowerInvariant());
-        if (fallbackContractColumns != null)
-        {
-            var fallbackUIColumns = _mappingService.MapToUIColumns(fallbackContractColumns);
-            return Ok(fallbackUIColumns);
-        }
-
-        return NotFound($"No UI metadata available for grid: {name}");
+        return NotFound($"No UI metadata found for grid: {name}. Please ensure the grid name exists in the metadata JSON file.");
     }
 
-    private static List<GridColumnDto>? GetFallbackColumns(string gridName)
-    {
-        return gridName switch
-        {
-            "customers" => new List<GridColumnDto>
-            {
-                new() { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-                new() { Header = "Orders", Field = "OrdersCount", Sortable = true, IsNumeric = true },
-                new() { Header = "Total Sales", Field = "TotalSales", Sortable = true, IsNumeric = true }
-            },
-            "orders" => new List<GridColumnDto>
-            {
-                new() { Header = "Order", Field = "OrderId", Sortable = true },
-                new() { Header = "Customer", Field = "Customer.Name", Filterable = true, Sortable = true },
-                new() { Header = "Supplier", Field = "Supplier.Name", Filterable = true, Sortable = true },
-                new() { Header = "Total", Field = "Total", Sortable = true, IsNumeric = true },
-                new() { Header = "Status", Field = "Status", Filterable = true, Sortable = true, IsEnum = true }
-            },
-            "suppliers" => new List<GridColumnDto>
-            {
-                new() { Header = "Name", Field = "Name", Filterable = true, Sortable = true },
-                new() { Header = "Country", Field = "Country", Filterable = true, Sortable = true },
-                new() { Header = "Orders Supplied", Field = "OrdersSupplied", Sortable = true, IsNumeric = true }
-            },
-            _ => null
-        };
-    }
 }
