@@ -1,0 +1,391 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Page Setup - Light Theme with Minimal Aesthetic */
+.order-process-page {
+    background: transparent;
+    min-height: 100vh;
+    margin: -20px -15px -20px -15px;
+    padding: 40px 15px 40px 30px;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Main Heading with Yellow Badge Style */
+.custom-process-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: #333333;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 2rem;
+    text-align: left;
+    position: relative;
+}
+
+.custom-process-heading::before {
+    content: "minimal";
+    background: #f7df1e;
+    color: #333333;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+}
+
+.custom-process-heading::after {
+    content: "dream aesthetic ↗";
+    background: #f7df1e;
+    color: #333333;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    position: absolute;
+    bottom: -1.8rem;
+    left: 0;
+}
+
+
+
+/* Order Capture Section - Graphic Card Style */
+.order-capture-section {
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.capture-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    color: #333333;
+    position: relative;
+}
+
+.capture-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #f7df1e 0%, #f7df1e 50%, transparent 50%);
+}
+
+.card-header {
+    background: #ffffff;
+    color: #333333;
+    padding: 1.25rem 1.5rem 0.5rem;
+    text-align: left;
+    border-bottom: none;
+    position: relative;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0 0 0.5rem 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333333;
+}
+
+.section-subtitle {
+    font-size: 0.75rem;
+    margin: 0 0 1rem 0;
+    font-style: normal;
+    color: #666666;
+    font-weight: 400;
+    background: rgba(247, 223, 30, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.card-body {
+    padding: 0 1.5rem 1.5rem;
+    background: #ffffff;
+}
+
+/* Flowing Text Style */
+.flowing-text {
+    margin-bottom: 1.5rem;
+}
+
+.narrative-text {
+    font-size: 1rem;
+    line-height: 1.7;    
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.01em;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    color: #555555;
+    padding: 0;
+}
+
+/* Inline Controls with Light Theme Style */
+.inline-control-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 0 0.2rem;
+}
+
+.inline-select {
+    background: rgba(247, 223, 30, 0.2);
+    border: 1px solid rgba(247, 223, 30, 0.5);
+    border-radius: 4px;
+    color: #333333;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23333333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+    padding-right: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inline-select:focus {
+    outline: none;
+    border-color: #f7df1e;
+    background: rgba(247, 223, 30, 0.3);
+    box-shadow: 0 0 0 2px rgba(247, 223, 30, 0.2);
+}
+
+.inline-select:hover {
+    background: rgba(247, 223, 30, 0.25);
+    border-color: rgba(247, 223, 30, 0.6);
+    transform: translateY(-1px);
+}
+
+.inline-quantity-group {
+    position: relative;
+    display: inline-block;
+}
+
+.inline-input {
+    background: rgba(247, 223, 30, 0.2);
+    border: 1px solid rgba(247, 223, 30, 0.5);
+    border-radius: 4px;
+    color: #333333;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 2rem 0.4rem 0.8rem;
+    width: 80px;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inline-input:focus {
+    outline: none;
+    border-color: #f7df1e;
+    background: rgba(247, 223, 30, 0.3);
+    box-shadow: 0 0 0 2px rgba(247, 223, 30, 0.2);
+}
+
+.micro-controls {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.micro-btn {
+    background: rgba(247, 223, 30, 0.3) !important;
+    border: none !important;
+    color: #f7df1e !important;
+    width: 18px;
+    height: 14px;
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.micro-btn:hover {
+    background: rgba(247, 223, 30, 0.5) !important;
+    color: #2d2d30 !important;
+    transform: scale(1.1);
+}
+
+/* Action Flow with Graphic Buttons */
+.action-flow {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 1.5rem;
+}
+
+.process-narrative {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.flow-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.flow-btn {
+    background: #f7df1e !important;
+    border: none !important;
+    color: #2d2d30 !important;
+    padding: 0.6rem 1.5rem !important;
+    border-radius: 6px !important;
+    font-size: 0.9rem;
+    font-weight: 500 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 2px 8px rgba(247, 223, 30, 0.3);
+    text-transform: none;
+}
+
+.flow-btn:hover:not(:disabled) {
+    background: #f4d91a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(247, 223, 30, 0.4);
+    color: #2d2d30 !important;
+}
+
+.flow-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.secondary-flow-btn {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: 6px !important;
+    font-size: 0.85rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.secondary-flow-btn:hover {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Status Narrative with Graphic Style */
+.status-narrative {
+    text-align: center;
+    padding: 1rem 1.5rem;
+    background: rgba(247, 223, 30, 0.1) !important;
+    border-radius: 6px;
+    border-left: 3px solid #f7df1e;
+    color: #ffffff !important;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.status-indicator {
+    display: inline-block;
+    margin-right: 0.5rem;
+    color: #f7df1e !important;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* Loading State with Graphics */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    color: #f7df1e !important;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
+.loading-state .spinner-border {
+    border-color: rgba(247, 223, 30, 0.3);
+    border-top-color: #f7df1e;
+}
+
+/* Text Styling Updates */
+.narrative-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.01em;
+    text-align: left;
+}
+
+/* Fallback for browsers that don't support background-clip: text */
+@supports not (-webkit-background-clip: text) {
+    .custom-process-heading {
+        background: none;
+        color: #667eea;
+        -webkit-text-fill-color: initial;
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-process-heading {
+        font-size: 1.8rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .capture-message {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-process-heading {
+        font-size: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+}

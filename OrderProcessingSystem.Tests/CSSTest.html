@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal Aesthetic Text Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #111;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      padding: 20px;
+    }
+    .label-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .tag {
+      background-color: #fdd835;
+      color: black;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-right: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .text {
+      color: white;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="label-line">
+  <button class="tag" data-value="minimal">minimal ▼</button>
+  <span class="text" id="minimal-text">abstraction of a Lion on the finger tip of a Man</span>
+</div>
+
+<div class="label-line">
+  <button class="tag" data-value="dream aesthetic">dream aesthetic ▼</button>
+  <span class="text" id="dream-aesthetic-text">Some default text</span>
+</div>
+</body>
+</html>
+
+<script language="javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+  const minimalButton = document.querySelector('.tag[data-value="minimal"]');
+  const minimalText = document.getElementById('minimal-text');
+
+  const dreamButton = document.querySelector('.tag[data-value="dream aesthetic"]');
+  const dreamText = document.getElementById('dream-aesthetic-text');
+
+  minimalButton.addEventListener('click', function() {
+    minimalText.textContent = "New text for minimal!"; // Change this to your desired value
+  });
+
+  dreamButton.addEventListener('click', function() {
+    dreamText.textContent = "New text for dream aesthetic!"; // Change this to your desired value
+  });
+});
+</script>

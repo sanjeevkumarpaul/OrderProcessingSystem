@@ -1,0 +1,198 @@
+@page "/orderprocess"
+@page "/process-order"
+@using OrderProcessingServer.Services
+@using OrderProcessingServer.Shared.Dto
+@inject DataLoadingService DataService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Process Order - OrderProcessingServer</PageTitle>
+
+<div class="order-process-page">
+    <div class="text-center mb-5">
+        <h1 class="custom-process-heading">Order Processing Initialization - Simulation Process</h1>
+    </div>
+    
+    <!-- Order Capture Form -->
+    <div class="order-capture-section mb-5">
+        <div class="capture-card">
+            <div class="card-header">
+                <h3 class="section-title">Order Capture Application</h3>                
+            </div>
+                
+                <div class="card-body">
+                    @if (isLoading)
+                    {
+                        <div class="loading-state">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span class="ms-2">initializing dream sequence...</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="flowing-text">
+                            <p class="narrative-text">
+                                Message to be delivered to Order Capture Application, where 
+                                <span class="inline-control-wrapper">
+                                    <select class="inline-select" @bind="selectedCustomerId">
+                                        <option value="0">Customer</option>
+                                        @if (customers != null)
+                                        {
+                                            @foreach (var customer in customers)
+                                            {
+                                                <option value="@customer.CustomerId">@customer.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </span>
+                                to Order 
+                                <span class="inline-control-wrapper">
+                                    <div class="inline-quantity-group">
+                                        <input type="number" 
+                                               class="inline-input" 
+                                               @bind="orderQuantity" 
+                                               min="1" 
+                                               max="5000" 
+                                               placeholder="qty">
+                                        <div class="micro-controls">
+                                            <button type="button" class="micro-btn" @onclick="IncrementQuantity">↑</button>
+                                            <button type="button" class="micro-btn" @onclick="DecrementQuantity">↓</button>
+                                        </div>
+                                    </div>
+                                </span>
+                                from the supplier 
+                                <span class="inline-control-wrapper">
+                                    <select class="inline-select" @bind="selectedSupplierId">
+                                        <option value="0">Supplier</option>
+                                        @if (suppliers != null)
+                                        {
+                                            @foreach (var supplier in suppliers)
+                                            {
+                                                <option value="@supplier.SupplierId">@supplier.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </span>
+                                in this minimal abstraction of a Lion on the finger tip of a Man.
+                            </p>
+                        </div>
+                        
+                        <!-- Action Area -->
+                        <div class="action-flow mt-4">
+                            <div class="process-narrative">
+                                <span class="flow-text">initiate the dream sequence</span>
+                                <button class="flow-btn" 
+                                        @onclick="ProcessOrderCapture" 
+                                        disabled="@(!CanProcessOrder)">
+                                    ✨ process
+                                </button>
+                                <span class="flow-text">or</span>
+                                <button class="secondary-flow-btn" @onclick="ResetForm">
+                                    reset reality
+                                </button>
+                            </div>
+                        </div>                       
+                    }
+                </div>
+            </div>
+        </div>
+</div>
+
+@code {
+    // Data properties
+    private List<CustomerDto>? customers;
+    private List<SupplierDto>? suppliers;
+    private bool isLoading = true;
+  
+    // Form properties
+    private int selectedCustomerId = 0;
+    private int selectedSupplierId = 0;
+    private int orderQuantity = 1;
+    
+    // Computed properties
+    private bool CanProcessOrder => 
+        selectedCustomerId > 0 && 
+        selectedSupplierId > 0 && 
+        orderQuantity >= 1 && 
+        orderQuantity <= 5000;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFormData();
+    }
+    
+    private async Task LoadFormData()
+    {
+        isLoading = true;
+                
+        try
+        {
+            var customersTask = DataService.LoadCustomersWithCalculationsAsync();
+            var suppliersTask = DataService.LoadSuppliersWithCalculationsAsync();
+            
+            await Task.WhenAll(customersTask, suppliersTask);
+            
+            customers = await customersTask;
+            suppliers = await suppliersTask;
+                      
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Error loading form data:", ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+    
+    private void IncrementQuantity()
+    {
+        if (orderQuantity < 5000)
+        {
+            orderQuantity++;
+        }
+    }
+    
+    private void DecrementQuantity()
+    {
+        if (orderQuantity > 1)
+        {
+            orderQuantity--;
+        }
+    }
+    
+    private async Task ProcessOrderCapture()
+    {
+        if (!CanProcessOrder) return;
+        
+        try
+        {
+            var selectedCustomer = customers?.FirstOrDefault(c => c.CustomerId == selectedCustomerId);
+            var selectedSupplier = suppliers?.FirstOrDefault(s => s.SupplierId == selectedSupplierId);
+            
+            // Simulate order processing
+            await Task.Delay(1500);
+            
+            await JSRuntime.InvokeVoidAsync("console.log", "Order processed:", new {
+                CustomerId = selectedCustomerId,
+                CustomerName = selectedCustomer?.Name,
+                SupplierId = selectedSupplierId,
+                SupplierName = selectedSupplier?.Name,
+                Quantity = orderQuantity
+            });
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Error processing order:", ex.Message);
+        }
+    }
+    
+    private void ResetForm()
+    {
+        selectedCustomerId = 0;
+        selectedSupplierId = 0;
+        orderQuantity = 1;        
+    }
+}
