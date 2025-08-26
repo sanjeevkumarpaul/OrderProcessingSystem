@@ -1,78 +1,31 @@
 @page "/customers"
 @using OrderProcessingServer.Shared.Dto
-@using OrderProcessingServer.Shared.UIComponents
-@using OrderProcessingServer.Services
 @using OrderProcessingSystem.Utilities.Extensions
-@using OrderProcessingSystem.Infrastructure.Models
-@using OrderProcessingSystem.Infrastructure.Interfaces
-@inherits BaseGridPage
-@inject IJSRuntime JS
-@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
-@inject DataLoadingService DataService
+@inherits BaseDataPage<CustomerDto>
 <link rel="stylesheet" href="~/css/customers.css" />
-<h1 class="page-title d-flex justify-content-between align-items-center">
-  <span class="title-text">Customers</span>
-  <div class="header-controls">
-    <button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Customers")</button>
-  </div>
-</h1>
 
-@if (customers == null)
-{
-  <p><em>Loading...</em></p>
-}
-
-@if (showGrid)
-{
-  <GenericGrid TItem="CustomerDto" Items="customers" Columns="customerColumns" PageSize="10"  />
-}
-else
-{
-  <GenericCards TItem="CustomerDto" Items="customers" Columns="customerColumns" PageSize="12" CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+<BaseDataPage TItem="CustomerDto" 
+              PageTitle="Customers"
+              EntityName="customers"
+              ShowCardsText="Show Cards"
+              ShowGridText="All Customers"
+              GridPageSize="10"
+              CardPageSize="12"
+              CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3"
+              DataLoader="@LoadCustomersAsync">
     <CardTemplate Context="customer">
-      <div class="card p-3" style="max-width:100%; word-break:break-word;">
-        <h5 class="text-truncate">@customer.Name</h5>
-        <p class="small text-muted">Orders: @customer.OrdersCount</p>
-        <p class="small">Sales Total: <strong>@customer.TotalSales.ToTwoDecimals(true)</strong></p>
-      </div>
+        <div class="card p-3" style="max-width:100%; word-break:break-word;">
+            <h5 class="text-truncate">@customer.Name</h5>
+            <p class="small text-muted">Orders: @customer.OrdersCount</p>
+            <p class="small">Sales Total: <strong>@customer.TotalSales.ToTwoDecimals(true)</strong></p>
+        </div>
     </CardTemplate>
-  </GenericCards>
-}
+</BaseDataPage>
 
 @code {
-  List<CustomerDto>? customers = null;
-
-  // Grid mode
-  bool showGrid = false;
-
-  // grid columns - keeping UI GridColumn for component compatibility
-  List<OrderProcessingServer.Shared.UIComponents.GridColumn> customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
-
-  private bool _loaded;
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
-    if (!firstRender || _loaded) return;
-    _loaded = true;
-
-    try
+    // Data loader function for customers
+    private async Task<List<CustomerDto>?> LoadCustomersAsync()
     {
-      // Use the centralized data loading service
-      customers = await DataService.LoadCustomersWithCalculationsAsync();
+        return await DataLoadingService.LoadCustomersWithCalculationsAsync();
     }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"Error loading customers: {ex.Message}");      
-    }
-    finally
-    {
-      customerColumns = await LoadUIColumnMetadataAsync("customers");
-      customers = (customers?.Any() == true) ? customers : new List<CustomerDto>();
-      await InvokeAsync(StateHasChanged);
-    }
-  }
-
-  void ToggleGrid()
-  {
-    showGrid = !showGrid;
-  }
 }

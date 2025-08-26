@@ -1,111 +1,51 @@
 @page "/orders"
-@inherits BaseGridPage
-@inject DataLoadingService DataService
-@inject IHttpClientFactory HttpFactory
-@inject IJSRuntime JS
-@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
-@using OrderProcessingServer.Services
-@using OrderProcessingSystem.Infrastructure.Models
-
-<h1 class="page-title d-flex justify-content-between align-items-center">
-  <span class="title-text">Orders</span>
-  <div class="header-controls">
-    <button class="btn btn-sm btn-primary" @onclick="ToggleView">@((showGrid) ? "Show Cards" : "Show Grid")</button>
-  </div>
-</h1>
-
-@if (orders == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (showGrid)
-{
-    <GenericGrid TItem="OrderDto" Items="orders" Columns="orderColumns" PageSize="10" />
-}
-else
-{
-    <GenericCards TItem="OrderDto" Items="orders" Columns="orderColumns" PageSize="12" CardColumnClass="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <CardTemplate Context="order">
-            <div class="card p-3" style="max-width:100%; word-break:break-word;">
-                <h6 class="text-truncate fw-bold">Order #@order.OrderId</h6>
-                <p class="small text-muted mb-1">Customer: @order.CustomerId</p>
-                <p class="small text-muted mb-1">Supplier: @order.SupplierId</p>
-                <p class="small mb-1">Status: <span class="badge @GetStatusBadgeClass(order.Status)">@order.Status</span></p>
-                <p class="small mb-0">Total: <strong>@order.Total.ToString("C2")</strong></p>
-            </div>
-        </CardTemplate>
-    </GenericCards>
-}
-
 @using OrderProcessingServer.Shared.Dto
-@using OrderProcessingServer.Shared.UIComponents
-@using OrderProcessingSystem.Core.Enums
+@using OrderProcessingSystem.Utilities.Extensions
+@inherits BaseDataPage<OrderDto>
+
+<BaseDataPage TItem="OrderDto" 
+              PageTitle="Orders"
+              EntityName="orders"
+              ShowCardsText="Show Cards"
+              ShowGridText="Show Grid"
+              GridPageSize="10"
+              CardPageSize="12"
+              CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3"
+              DataLoader="@LoadOrdersAsync">
+    <CardTemplate Context="order">
+        <div class="card p-3" style="max-width:100%; word-break:break-word;">
+            <h5 class="text-truncate">Order #@order.OrderId</h5>
+            <p class="small">Total: <strong>@order.Total.ToTwoDecimals(true)</strong></p>
+            @if (order.Customer != null)
+            {
+                <p class="small">Customer: @order.Customer.Name</p>
+            }
+            @if (!string.IsNullOrEmpty(order.Status))
+            {
+                <span class="badge @GetStatusBadgeClass(order.Status)">@order.Status</span>
+            }
+        </div>
+    </CardTemplate>
+</BaseDataPage>
 
 @code {
-    // grid columns for orders (initialized after statusValues available)
-    List<OrderProcessingServer.Shared.UIComponents.GridColumn> orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
-
-    List<OrderDto>? orders = null;
-    bool showGrid = true; // Start with grid view for orders by default
-   
-    protected override Task OnInitializedAsync()
+    // Data loader function for orders
+    private async Task<List<OrderDto>?> LoadOrdersAsync()
     {
-        // moved to OnAfterRenderAsync to avoid prerender-time network calls
-        return Task.CompletedTask;
+        return await DataLoadingService.LoadOrdersAsync();
     }
 
-    private bool _loaded;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    // Helper method for status badge styling
+    private string GetStatusBadgeClass(string status)
     {
-        if (!firstRender || _loaded) return;
-        _loaded = true;
-
-        try
+        return status.ToLower() switch
         {
-            // Use the centralized data loading service
-            orders = await DataService.LoadOrdersAsync();
-            Console.WriteLine($"Fetched {orders.Count} orders.");
-            // Load column metadata from API
-            await LoadColumnMetadata();
-            
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Orders fetch failed: {ex}");
-            orders = new List<OrderDto>();                    
-        }
-        finally
-        {
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    void ToggleView()
-    {
-        showGrid = !showGrid;
-    }
-
-    string GetStatusBadgeClass(string status)
-    {
-        return status?.ToLower() switch
-        {
-            "pending" => "bg-warning text-dark",
-            "completed" => "bg-success",
-            "canceled" => "bg-danger",
-            "shipped" => "bg-info",
-            "processing" => "bg-primary",
-            _ => "bg-secondary"
+            "pending" => "badge-warning",
+            "processing" => "badge-info",
+            "shipped" => "badge-primary",
+            "delivered" => "badge-success",
+            "cancelled" => "badge-danger",
+            _ => "badge-secondary"
         };
-    }
-
-    async Task LoadColumnMetadata()
-    {
-        // Orders page needs enum mappings for Status field
-        var enumMappings = new Dictionary<string, List<string>>
-        {
-            { "Status", Enum.GetNames(typeof(OrderStatus)).ToList() }
-        };
-        
-        orderColumns = await LoadUIColumnMetadataAsync("orders", enumMappings);
     }
 }

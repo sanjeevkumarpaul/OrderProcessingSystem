@@ -1,78 +1,31 @@
 @page "/suppliers"
 @using OrderProcessingServer.Shared.Dto
-@using OrderProcessingServer.Shared.UIComponents
-@using OrderProcessingServer.Services
 @using OrderProcessingSystem.Utilities.Extensions
-@using OrderProcessingSystem.Infrastructure.Models
-@using OrderProcessingSystem.Infrastructure.Interfaces
-@inherits BaseGridPage
-@inject IJSRuntime JS
-@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
-@inject DataLoadingService DataService
+@inherits BaseDataPage<SupplierDto>
 <link rel="stylesheet" href="~/css/suppliers.css" />
-<h1 class="page-title d-flex justify-content-between align-items-center">
-  <span class="title-text">Suppliers</span>
-  <div class="header-controls">
-    <button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Suppliers")</button>
-  </div>
-</h1>
 
-@if (suppliers == null)
-{
-  <p><em>Loading...</em></p>
-}
-
-@if (showGrid)
-{
-  <GenericGrid TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="10"  />
-}
-else
-{
-  <GenericCards TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="12" CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+<BaseDataPage TItem="SupplierDto" 
+              PageTitle="Suppliers"
+              EntityName="suppliers"
+              ShowCardsText="Show Cards"
+              ShowGridText="All Suppliers"
+              GridPageSize="10"
+              CardPageSize="12"
+              CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3"
+              DataLoader="@LoadSuppliersAsync">
     <CardTemplate Context="supplier">
-      <div class="card p-3" style="max-width:100%; word-break:break-word;">
-        <h5 class="text-truncate">@supplier.Name</h5>
-        <p class="small text-muted">Country: @supplier.Country</p>
-        <p class="small">Orders Supplied: <strong>@supplier.OrdersSupplied</strong></p>
-      </div>
+        <div class="card p-3" style="max-width:100%; word-break:break-word;">
+            <h5 class="text-truncate">@supplier.Name</h5>
+            <p class="small text-muted">Country: @supplier.Country</p>
+            <p class="small">Orders Supplied: <strong>@supplier.OrdersSupplied</strong></p>
+        </div>
     </CardTemplate>
-  </GenericCards>
-}
+</BaseDataPage>
 
 @code {
-  List<SupplierDto>? suppliers = null;
-
-  // Grid mode
-  bool showGrid = false;
-  
-  // grid columns - keeping UI GridColumn for component compatibility
-  List<OrderProcessingServer.Shared.UIComponents.GridColumn> supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
-
-  private bool _loaded;
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
-    if (!firstRender || _loaded) return;
-    _loaded = true;
-
-    try
+    // Data loader function for suppliers
+    private async Task<List<SupplierDto>?> LoadSuppliersAsync()
     {
-      // Use the centralized data loading service
-      suppliers = await DataService.LoadSuppliersWithCalculationsAsync();  
+        return await DataLoadingService.LoadSuppliersWithCalculationsAsync();
     }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"Error loading suppliers: {ex.Message}");      
-    }
-	finally
-	{
-      supplierColumns = await LoadUIColumnMetadataAsync("suppliers");
-      suppliers = (suppliers?.Any() == true) ? suppliers : new List<SupplierDto>();
-	  await InvokeAsync(StateHasChanged);
-	}
-  }
-
-  void ToggleGrid()
-  {
-    showGrid = !showGrid;
-  }
 }
