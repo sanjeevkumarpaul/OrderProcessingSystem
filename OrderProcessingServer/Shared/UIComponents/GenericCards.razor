@@ -48,14 +48,14 @@
                             else
                             {
                                 <div class="input-group input-group-sm">
-                                    <select class="form-select" style="max-width: 100px;" @onchange="@(e => OnTextFilterOpChanged(column.Field, e))">
+                                    <select class="form-select" style="max-width: 130px; flex-shrink: 0;" @onchange="@(e => OnTextFilterOpChanged(column.Field, e))">
                                         @foreach (var op in TextOps)
                                         {
                                             var isSelected = ColumnFilters.TryGetValue(column.Field, out var fs2) && fs2.TextOp == op;
                                             <option selected="@isSelected" value="@op">@op</option>
                                         }
                                     </select>
-                                    <input type="text" class="form-control" placeholder="Filter @column.Header..."
+                                    <input type="text" class="form-control" style="flex: 1; min-width: 120px;" placeholder="Filter @column.Header..."
                                            value="@(ColumnFilters.TryGetValue(column.Field, out var fs3) ? fs3.TextValue : "")"
                                            @onchange="@(e => OnTextFilterChanged(column.Field, e))" />
                                 </div>
