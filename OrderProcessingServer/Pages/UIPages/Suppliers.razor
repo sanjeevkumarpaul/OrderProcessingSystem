@@ -23,7 +23,7 @@
 
 @if (showGrid)
 {
-  <GenericGrid TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="gridPageSize"  />
+  <GenericGrid TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="10"  />
 }
 else
 {
@@ -62,11 +62,7 @@ else
   // Grid mode and paging
   bool showGrid = false;
   List<SupplierDto>? pagedGridSuppliers = null;
-  int gridCurrentPage = 1;
-  int gridPageSize = 10;
-  int gridTotalPages = 1;
-  int[] gridPageSizes = new[] { 5, 10, 15 };
-
+  
   // grid columns - keeping UI GridColumn for component compatibility
   List<OrderProcessingServer.Shared.UIComponents.GridColumn> supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 
@@ -96,19 +92,19 @@ else
       }
 
       await LoadColumnMetadata();
-      SetupCardsPaging();
-      SetupGridPaging();
-      await InvokeAsync(StateHasChanged);
+      SetupCardsPaging();            
     }
     catch (Exception ex)
     {
       Console.WriteLine($"Error loading suppliers: {ex.Message}");
       await LoadColumnMetadata();
       suppliers = new List<SupplierDto>();
-      SetupCardsPaging();
-      SetupGridPaging();
-      await InvokeAsync(StateHasChanged);
+      SetupCardsPaging();          
     }
+	finally
+	{
+	  await InvokeAsync(StateHasChanged);
+	}
   }
 
   void NextSuppliers()
@@ -138,74 +134,10 @@ else
     return suppliers.Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize);
   }
 
-  void SetupGridPaging()
-  {
-    gridCurrentPage = 1;
-    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)(suppliers?.Count ?? 0) / gridPageSize));
-    ApplyGridPage();
-  }
-
-  void ApplyGridPage()
-  {
-    if (suppliers == null) { pagedGridSuppliers = new List<SupplierDto>(); return; }
-    var list = suppliers.ToList();
-    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / gridPageSize));
-    if (gridCurrentPage < 1) gridCurrentPage = 1;
-    if (gridCurrentPage > gridTotalPages) gridCurrentPage = gridTotalPages;
-    pagedGridSuppliers = list.Skip((gridCurrentPage - 1) * gridPageSize).Take(gridPageSize).ToList();
-  }
-
-  void GoToGridPage(int page)
-  {
-    if (suppliers == null) return;
-    gridCurrentPage = Math.Clamp(page, 1, gridTotalPages);
-    ApplyGridPage();
-  }
-
-  async Task ExportFilteredSuppliersAsync()
-  {
-    if (suppliers == null || suppliers.Count == 0) return;
-    var list = suppliers.ToList();
-    var csv = BuildCsv(list);
-    var filename = $"suppliers_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-  }
-
-  async Task ExportAllSuppliersAsync()
-  {
-    if (suppliers == null || suppliers.Count == 0) return;
-    var csv = BuildCsv(suppliers);
-    var filename = $"suppliers_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-  }
-
-  string BuildCsv(List<SupplierDto> list)
-  {
-    var sb = new System.Text.StringBuilder();
-    sb.AppendLine("SupplierId,Name,Country,OrdersSupplied");
-    foreach (var s in list)
-    {
-      var name = EscapeCsv(s.Name ?? string.Empty);
-      var country = EscapeCsv(s.Country ?? string.Empty);
-      sb.AppendLine($"{s.SupplierId},{name},{country},{s.OrdersSupplied}");
-    }
-    return sb.ToString();
-  }
-
-  static string EscapeCsv(string input)
-  {
-    if (input == null) return string.Empty;
-    if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
-    {
-      return "\"" + input.Replace("\"", "\"\"") + "\"";
-    }
-    return input;
-  }
-
   void ToggleGrid()
   {
     showGrid = !showGrid;
-    if (showGrid) SetupGridPaging(); else SetupCardsPaging();
+    if (!showGrid) SetupCardsPaging();
   }
 
   async Task LoadColumnMetadata()
