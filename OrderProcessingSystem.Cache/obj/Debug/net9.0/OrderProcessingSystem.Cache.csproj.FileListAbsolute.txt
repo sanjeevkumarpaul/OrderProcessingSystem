@@ -11,3 +11,6 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/obj/Debug/net9.0/refint/OrderProcessingSystem.Cache.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/obj/Debug/net9.0/OrderProcessingSystem.Cache.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/obj/Debug/net9.0/ref/OrderProcessingSystem.Cache.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/bin/Debug/net9.0/OrderProcessingSystem.Contracts.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/bin/Debug/net9.0/OrderProcessingSystem.Contracts.pdb
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/obj/Debug/net9.0/OrderPro.904BD3A9.Up2Date

@@ -1,69 +1,67 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using OrderProcessingSystem.Core.Metadata;
-using OrderProcessingSystem.Contracts.Dto;
-using OrderProcessingSystem.API.Models;
 using OrderProcessingSystem.API.Services;
+using OrderProcessingSystem.Contracts.Dto;
 
-namespace OrderProcessingSystem.API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class MetadataController : ControllerBase
+namespace OrderProcessingSystem.API.Controllers
 {
-    private readonly IGridColumnMappingService _mappingService;
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MetadataController : ControllerBase
+    {
+        private readonly IGridMetadataService _gridMetadataService;
 
-    public MetadataController(IGridColumnMappingService mappingService)
-    {
-        _mappingService = mappingService ?? throw new ArgumentNullException(nameof(mappingService));
-    }
-    [HttpGet("grid-columns/{name}")]
-    public IActionResult GetGridColumns(string name)
-    {
-        var doc = GridMetadataProvider.ReadMetadata();
-        if (doc != null && doc.RootElement.TryGetProperty(name, out var arr))
+        public MetadataController(IGridMetadataService gridMetadataService)
+        {
+            _gridMetadataService = gridMetadataService ?? throw new ArgumentNullException(nameof(gridMetadataService));
+        }
+
+        /// <summary>
+        /// Get UI grid columns for a specific entity
+        /// </summary>
+        /// <param name="entityName">The entity name (customers, suppliers, orders)</param>
+        /// <returns>List of UI grid column configurations</returns>
+        [HttpGet("ui-grid-columns/{entityName}")]
+        [ProducesResponseType(typeof(List<UIGridColumnDto>), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<UIGridColumnDto>>> GetUIGridColumns(string entityName)
         {
             try
             {
-                var list = JsonSerializer.Deserialize<List<GridColumnDto>>(arr.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                if (list != null && list.Count > 0)
+                var columns = await _gridMetadataService.GetUIGridColumnsAsync(entityName);
+                
+                if (columns == null || columns.Count == 0)
                 {
-                    return Ok(list);
+                    return NotFound($"No grid columns found for entity: {entityName}");
                 }
+
+                return Ok(columns);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error deserializing metadata for grid '{name}': {ex.Message}");
+                return StatusCode(500, $"Error retrieving grid columns: {ex.Message}");
             }
         }
 
-        return NotFound($"No metadata found for grid: {name}. Please ensure the grid name exists in the metadata JSON file.");
-    }
-
-    // NEW: Direct UI-ready endpoint - no client-side mapping needed!
-    [HttpGet("ui-grid-columns/{name}")]
-    public IActionResult GetUIGridColumns(string name)
-    {
-        var doc = GridMetadataProvider.ReadMetadata();
-        if (doc != null && doc.RootElement.TryGetProperty(name, out var arr))
+        /// <summary>
+        /// Clear cache for specific entity grid columns
+        /// </summary>
+        /// <param name="entityName">The entity name to clear cache for</param>
+        /// <returns>Success message</returns>
+        [HttpDelete("cache/grid-columns/{entityName}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> ClearGridCache(string entityName)
         {
             try
             {
-                // Use AutoMapper for clean, maintainable DTO transformation
-                var dtoList = JsonSerializer.Deserialize<List<GridColumnDto>>(arr.GetRawText(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                if (dtoList != null && dtoList.Count > 0)
-                {
-                    var uiColumns = _mappingService.MapToUIColumns(dtoList);
-                    return Ok(uiColumns);
-                }
+                await _gridMetadataService.ClearGridCacheAsync(entityName);
+                return Ok($"Cache cleared for entity: {entityName}");
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error processing UI metadata for grid '{name}': {ex.Message}");
+                return StatusCode(500, $"Error clearing cache: {ex.Message}");
             }
         }
-
-        return NotFound($"No UI metadata found for grid: {name}. Please ensure the grid name exists in the metadata JSON file.");
     }
-
 }

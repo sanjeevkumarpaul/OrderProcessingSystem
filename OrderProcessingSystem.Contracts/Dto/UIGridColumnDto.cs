@@ -1,4 +1,4 @@
-namespace OrderProcessingSystem.API.Models;
+namespace OrderProcessingSystem.Contracts.Dto;
 
 /// <summary>
 /// UI-specific DTO for grid column metadata - optimized for client consumption

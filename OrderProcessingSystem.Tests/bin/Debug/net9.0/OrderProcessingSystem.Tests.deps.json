@@ -732,8 +732,10 @@
       "xunit.runner.visualstudio/2.8.2": {},
       "OrderProcessingSystem.Cache/1.0.0": {
         "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "8.0.1",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "8.0.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "OrderProcessingSystem.Contracts": "1.0.0"
         },
         "runtime": {
           "OrderProcessingSystem.Cache.dll": {

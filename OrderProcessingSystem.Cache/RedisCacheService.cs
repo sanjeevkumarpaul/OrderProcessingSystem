@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace OrderProcessingSystem.Cache;
@@ -17,4 +18,30 @@ public class RedisCacheService : ICacheService
 
     public async Task<string?> GetStringAsync(string key)
         => await _cache.GetStringAsync(key);
+
+    public async Task SetAsync<T>(string key, T value, System.TimeSpan? expiry = null)
+    {
+        var json = JsonSerializer.Serialize(value);
+        await SetStringAsync(key, json, expiry);
+    }
+
+    public async Task<T?> GetAsync<T>(string key) where T : class
+    {
+        var json = await GetStringAsync(key);
+        if (string.IsNullOrEmpty(json))
+            return null;
+        
+        return JsonSerializer.Deserialize<T>(json);
+    }
+
+    public async Task RemoveAsync(string key)
+    {
+        await _cache.RemoveAsync(key);
+    }
+
+    public async Task<bool> ExistsAsync(string key)
+    {
+        var value = await GetStringAsync(key);
+        return !string.IsNullOrEmpty(value);
+    }
 }

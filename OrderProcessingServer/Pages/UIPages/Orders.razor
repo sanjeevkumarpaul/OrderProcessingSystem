@@ -307,7 +307,7 @@ else
         try
         {
             var client = HttpFactory.CreateClient("ApiClient");
-            var response = await client.GetStringAsync("api/metadata/grid-columns/orders");
+            var response = await client.GetStringAsync("api/metadata/ui-grid-columns/orders");
             var jsonDocument = System.Text.Json.JsonDocument.Parse(response);
             
             orderColumns = jsonDocument.RootElement.EnumerateArray()

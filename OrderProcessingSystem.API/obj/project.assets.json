@@ -705,8 +705,10 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "8.0.0",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "8.0.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "OrderProcessingSystem.Contracts": "1.0.0"
         },
         "compile": {
           "bin/placeholder/OrderProcessingSystem.Cache.dll": {}
@@ -1989,6 +1991,7 @@
     "net9.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
       "Microsoft.AspNetCore.OpenApi >= 9.0.5",
+      "OrderProcessingSystem.Cache >= 1.0.0",
       "OrderProcessingSystem.Contracts >= 1.0.0",
       "OrderProcessingSystem.Core >= 1.0.0",
       "OrderProcessingSystem.Data >= 1.0.0",
@@ -2022,6 +2025,9 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
+            "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/OrderProcessingSystem.Cache.csproj": {
+              "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Cache/OrderProcessingSystem.Cache.csproj"
+            },
             "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj": {
               "projectPath": "/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj"
             },

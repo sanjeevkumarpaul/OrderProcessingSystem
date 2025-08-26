@@ -561,14 +561,26 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "8.0.0",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "8.0.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "OrderProcessingSystem.Contracts": "1.0.0"
         },
         "compile": {
           "bin/placeholder/OrderProcessingSystem.Cache.dll": {}
         },
         "runtime": {
           "bin/placeholder/OrderProcessingSystem.Cache.dll": {}
+        }
+      },
+      "OrderProcessingSystem.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/OrderProcessingSystem.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OrderProcessingSystem.Contracts.dll": {}
         }
       },
       "OrderProcessingSystem.Core/1.0.0": {
@@ -1323,6 +1335,11 @@
       "type": "project",
       "path": "../OrderProcessingSystem.Cache/OrderProcessingSystem.Cache.csproj",
       "msbuildProject": "../OrderProcessingSystem.Cache/OrderProcessingSystem.Cache.csproj"
+    },
+    "OrderProcessingSystem.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj",
+      "msbuildProject": "../OrderProcessingSystem.Contracts/OrderProcessingSystem.Contracts.csproj"
     },
     "OrderProcessingSystem.Core/1.0.0": {
       "type": "project",

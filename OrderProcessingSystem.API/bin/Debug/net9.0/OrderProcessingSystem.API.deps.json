@@ -10,6 +10,7 @@
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "Microsoft.AspNetCore.OpenApi": "9.0.5",
+          "OrderProcessingSystem.Cache": "1.0.0",
           "OrderProcessingSystem.Contracts": "1.0.0",
           "OrderProcessingSystem.Core": "1.0.0",
           "OrderProcessingSystem.Data": "1.0.0",
@@ -436,8 +437,10 @@
       "System.Memory/4.5.3": {},
       "OrderProcessingSystem.Cache/1.0.0": {
         "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "8.0.1",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "8.0.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "OrderProcessingSystem.Contracts": "1.0.0"
         },
         "runtime": {
           "OrderProcessingSystem.Cache.dll": {

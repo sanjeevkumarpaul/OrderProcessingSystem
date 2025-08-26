@@ -214,7 +214,7 @@ else
       Console.WriteLine("Loading column metadata for customers...");
       var client = HttpFactory.CreateClient("ApiClient");
       Console.WriteLine($"Created HTTP client with base address: {client.BaseAddress}");
-      var response = await client.GetStringAsync("api/metadata/grid-columns/customers");
+      var response = await client.GetStringAsync("api/metadata/ui-grid-columns/customers");
       var jsonDocument = System.Text.Json.JsonDocument.Parse(response);
       Console.WriteLine($"Retrieved JSON response from API");
       

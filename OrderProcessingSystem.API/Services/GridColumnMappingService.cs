@@ -1,6 +1,5 @@
 using AutoMapper;
 using OrderProcessingSystem.Contracts.Dto;
-using OrderProcessingSystem.API.Models;
 
 namespace OrderProcessingSystem.API.Services;
 

@@ -410,11 +410,21 @@
       "System.Memory/4.5.3": {},
       "OrderProcessingSystem.Cache/1.0.0": {
         "dependencies": {
+          "Microsoft.Extensions.Caching.Memory": "8.0.1",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "8.0.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "OrderProcessingSystem.Contracts": "1.0.0"
         },
         "runtime": {
           "OrderProcessingSystem.Cache.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "OrderProcessingSystem.Contracts/1.0.0": {
+        "runtime": {
+          "OrderProcessingSystem.Contracts.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -647,6 +657,11 @@
       "hashPath": "system.memory.4.5.3.nupkg.sha512"
     },
     "OrderProcessingSystem.Cache/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OrderProcessingSystem.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

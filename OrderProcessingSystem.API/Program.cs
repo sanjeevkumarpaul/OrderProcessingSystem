@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
 using OrderProcessingSystem.Data;
 using OrderProcessingSystem.Infrastructure;
+using OrderProcessingSystem.Cache;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,12 +22,19 @@ builder.Services.AddAutoMapper(typeof(OrderProcessingSystem.API.Mapping.ApiMappi
 builder.Services.AddScoped<OrderProcessingSystem.API.Services.IGridColumnMappingService, 
                           OrderProcessingSystem.API.Services.GridColumnMappingService>();
 
+// Register metadata services
+builder.Services.AddScoped<OrderProcessingSystem.API.Services.IGridMetadataService,
+                          OrderProcessingSystem.API.Services.GridMetadataService>();
+
 // Register Data services with SQLite file in OrderDatabase/OPSDB.db
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "..", "OrderDatabase", "OPSDB.db");
 var conn = $"Data Source={dbPath}";
 builder.Services.AddOrderProcessingData(conn);
 // Register infrastructure services (OrderService, repositories)
 builder.Services.AddInfrastructureServices();
+
+// Add caching services
+builder.Services.AddOrderProcessingCache(builder.Configuration);
 
 var app = builder.Build();
 

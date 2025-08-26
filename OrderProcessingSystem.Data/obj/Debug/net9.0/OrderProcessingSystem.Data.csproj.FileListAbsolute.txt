@@ -16,3 +16,5 @@
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/obj/Debug/net9.0/refint/OrderProcessingSystem.Data.dll
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/obj/Debug/net9.0/OrderProcessingSystem.Data.pdb
 /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/obj/Debug/net9.0/ref/OrderProcessingSystem.Data.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/bin/Debug/net9.0/OrderProcessingSystem.Contracts.dll
+/Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.Data/bin/Debug/net9.0/OrderProcessingSystem.Contracts.pdb
