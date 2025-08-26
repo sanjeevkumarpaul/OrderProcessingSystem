@@ -1,4 +1,5 @@
 @page "/orders"
+@inherits BaseGridPage
 @inject IHttpClientFactory HttpFactory
 @inject IJSRuntime JS
 @inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
@@ -306,35 +307,12 @@ else
 
     async Task LoadColumnMetadata()
     {
-        try
+        // Orders page needs enum mappings for Status field
+        var enumMappings = new Dictionary<string, List<string>>
         {
-            // Use the centralized service with enum mappings!
-            var enumMappings = new Dictionary<string, List<string>>
-            {
-                { "Status", statusValues }
-            };
-            
-            var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("orders", enumMappings);
-            
-            // Map to UI GridColumn format (until component is updated)
-            orderColumns = serviceColumns.Select(col => new OrderProcessingServer.Shared.UIComponents.GridColumn
-            {
-                Header = col.Header,
-                Field = col.Field,
-                Sortable = col.Sortable,
-                Filterable = col.Filterable,
-                IsNumeric = col.IsNumeric,
-                IsEnum = col.IsEnum,
-                EnumValues = col.EnumValues
-            }).ToList();
-            
-            Console.WriteLine($"Successfully loaded {orderColumns.Count} columns from service");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
-            // Service handles fallbacks, but provide empty list as final fallback
-            orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
-        }
+            { "Status", statusValues }
+        };
+        
+        orderColumns = await LoadUIColumnMetadataAsync("orders", enumMappings);
     }
 }

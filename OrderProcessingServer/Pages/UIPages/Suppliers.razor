@@ -4,6 +4,7 @@
 @using OrderProcessingSystem.Utilities.Extensions
 @using OrderProcessingSystem.Infrastructure.Models
 @using OrderProcessingSystem.Infrastructure.Interfaces
+@inherits BaseGridPage
 @inject IJSRuntime JS
 @inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
 @inject IHttpClientFactory HttpFactory
@@ -209,31 +210,6 @@ else
 
   async Task LoadColumnMetadata()
   {
-    try
-    {
-      Console.WriteLine("Loading column metadata for suppliers...");
-      // Use the centralized service - much cleaner!
-      var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("suppliers");
-      
-      // Map to UI GridColumn format (until component is updated)
-      supplierColumns = serviceColumns.Select(col => new OrderProcessingServer.Shared.UIComponents.GridColumn
-      {
-        Header = col.Header,
-        Field = col.Field,
-        Sortable = col.Sortable,
-        Filterable = col.Filterable,
-        IsNumeric = col.IsNumeric,
-        IsEnum = col.IsEnum,
-        EnumValues = col.EnumValues
-      }).ToList();
-      
-      Console.WriteLine($"Successfully loaded {supplierColumns.Count} columns from service");
-    }
-    catch (Exception ex)
-    {
-      Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
-      // Service handles fallbacks, but provide empty list as final fallback
-      supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
-    }
+    supplierColumns = await LoadUIColumnMetadataAsync("suppliers");
   }
 }
