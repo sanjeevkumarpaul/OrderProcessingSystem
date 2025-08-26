@@ -1,6 +1,8 @@
 @page "/orders"
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingSystem.Utilities.Extensions
+@using OrderProcessingSystem.Core.Enums
+@using OrderProcessingServer.Shared
 @inherits BaseDataPage<OrderDto>
 
 <BaseDataPage TItem="OrderDto" 
@@ -11,7 +13,8 @@
               GridPageSize="10"
               CardPageSize="12"
               CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3"
-              DataLoader="@LoadOrdersAsync">
+              DataLoader="@LoadOrdersAsync"
+              EnumMappings="@GetEnumMappings()">
     <CardTemplate Context="order">
         <div class="card p-3" style="max-width:100%; word-break:break-word;">
             <h5 class="text-truncate">Order #@order.OrderId</h5>
@@ -35,15 +38,25 @@
         return await DataLoadingService.LoadOrdersAsync();
     }
 
-    // Helper method for status badge styling
+    // Provide enum mappings for filtering
+    private Dictionary<string, List<string>> GetEnumMappings()
+    {
+        return new Dictionary<string, List<string>>
+        {
+            ["Status"] = Enum.GetNames<OrderStatus>().ToList()
+        };
+    }
+
+    // Helper method for status badge styling - updated to match enum values
     private string GetStatusBadgeClass(string status)
     {
         return status.ToLower() switch
         {
             "pending" => "badge-warning",
-            "processing" => "badge-info",
+            "processing" => "badge-info", 
             "shipped" => "badge-primary",
             "delivered" => "badge-success",
+            "completed" => "badge-success",
             "cancelled" => "badge-danger",
             _ => "badge-secondary"
         };
