@@ -28,42 +28,22 @@
 }
 else
 {
-  <div class="row g-3">
-    @foreach (var c in GetPagedCardCustomers())
-    {
-      <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
-        <div class="card p-3" style="max-width:100%; word-break:break-word;">
-          <h5 class="text-truncate">@c.Name</h5>
-          <p class="small text-muted">Orders: @c.OrdersCount</p>
-          <p class="small">Sales Total: <strong>@c.TotalSales.ToTwoDecimals(true)</strong></p>
-        </div>
+  <GenericCards TItem="CustomerDto" Items="customers" Columns="customerColumns" PageSize="12" CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+    <CardTemplate Context="customer">
+      <div class="card p-3" style="max-width:100%; word-break:break-word;">
+        <h5 class="text-truncate">@customer.Name</h5>
+        <p class="small text-muted">Orders: @customer.OrdersCount</p>
+        <p class="small">Sales Total: <strong>@customer.TotalSales.ToTwoDecimals(true)</strong></p>
       </div>
-    }
-  </div>
-
-  <div class="d-flex justify-content-between mt-2 align-items-center">
-    <div>
-      <button class="btn btn-secondary me-2" @onclick="PrevCustomers" disabled="@(customerPageIndex==0)">Previous</button>
-      <button class="btn btn-secondary" @onclick="NextCustomers" disabled="@(customerPageIndex+1>=customerTotalPages)">Next</button>
-    </div>
-    <div>
-      <small>Page @(customerPageIndex+1) of @customerTotalPages</small>
-    </div>
-  </div>
+    </CardTemplate>
+  </GenericCards>
 }
 
 @code {
   List<CustomerDto>? customers = null;
 
-  // Cards paging
-  int customerPageIndex = 0;
-  int customerPageSize = 12;
-  int customerTotalPages = 1;
-
-  // Grid mode and paging
+  // Grid mode
   bool showGrid = false;
-  List<CustomerDto>? pagedGridCustomers = null;
-  
 
   // grid columns - keeping UI GridColumn for component compatibility
   List<OrderProcessingServer.Shared.UIComponents.GridColumn> customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
@@ -86,42 +66,13 @@ else
     finally
     {
       customerColumns = await LoadUIColumnMetadataAsync("customers");
-      customers = customers.Any() ? customers : new List<CustomerDto>();
-      SetupCardsPaging();      
+      customers = (customers?.Any() == true) ? customers : new List<CustomerDto>();
       await InvokeAsync(StateHasChanged);
     }
   }
 
-  void NextCustomers()
-  {
-    if (customers == null) return;
-    if (customerPageIndex + 1 >= customerTotalPages) return;
-    customerPageIndex++;
-  }
-
-  void PrevCustomers()
-  {
-    if (customers == null) return;
-    if (customerPageIndex <= 0) return;
-    customerPageIndex--;
-  }
-
-  void SetupCardsPaging()
-  {
-    customerPageIndex = 0;
-    var total = (customers ?? Enumerable.Empty<CustomerDto>()).Count();
-    customerTotalPages = Math.Max(1, (int)Math.Ceiling((double)total / customerPageSize));
-  }
-
-  IEnumerable<CustomerDto> GetPagedCardCustomers()
-  {
-    if (customers == null) return Enumerable.Empty<CustomerDto>();
-    return customers.Skip(customerPageIndex * customerPageSize).Take(customerPageSize);
-  }
   void ToggleGrid()
   {
     showGrid = !showGrid;
-    if (!showGrid) SetupCardsPaging();
   }
-
 }

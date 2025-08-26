@@ -28,41 +28,22 @@
 }
 else
 {
-  <div class="row g-3">
-    @foreach (var s in GetPagedCardSuppliers())
-    {
-      <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
-        <div class="card p-3" style="max-width:100%; word-break:break-word;">
-          <h5 class="text-truncate">@s.Name</h5>
-          <p class="small text-muted">Country: @s.Country</p>
-          <p class="small">Orders Supplied: <strong>@s.OrdersSupplied</strong></p>
-        </div>
+  <GenericCards TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="12" CardColumnClass="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+    <CardTemplate Context="supplier">
+      <div class="card p-3" style="max-width:100%; word-break:break-word;">
+        <h5 class="text-truncate">@supplier.Name</h5>
+        <p class="small text-muted">Country: @supplier.Country</p>
+        <p class="small">Orders Supplied: <strong>@supplier.OrdersSupplied</strong></p>
       </div>
-    }
-  </div>
-
-  <div class="d-flex justify-content-between mt-2 align-items-center">
-    <div>
-      <button class="btn btn-secondary me-2" @onclick="PrevSuppliers" disabled="@(supplierPageIndex==0)">Previous</button>
-      <button class="btn btn-secondary" @onclick="NextSuppliers" disabled="@(supplierPageIndex+1>=supplierTotalPages)">Next</button>
-    </div>
-    <div>
-      <small>Page @(supplierPageIndex+1) of @supplierTotalPages</small>
-    </div>
-  </div>
+    </CardTemplate>
+  </GenericCards>
 }
 
 @code {
   List<SupplierDto>? suppliers = null;
 
-  // Cards paging
-  int supplierPageIndex = 0;
-  int supplierPageSize = 12;
-  int supplierTotalPages = 1;
-
-  // Grid mode and paging
+  // Grid mode
   bool showGrid = false;
-  List<SupplierDto>? pagedGridSuppliers = null;
   
   // grid columns - keeping UI GridColumn for component compatibility
   List<OrderProcessingServer.Shared.UIComponents.GridColumn> supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
@@ -85,44 +66,13 @@ else
 	finally
 	{
       supplierColumns = await LoadUIColumnMetadataAsync("suppliers");
-      suppliers = suppliers.Any() ? suppliers : new List<SupplierDto>();
-      SetupCardsPaging();          
+      suppliers = (suppliers?.Any() == true) ? suppliers : new List<SupplierDto>();
 	  await InvokeAsync(StateHasChanged);
 	}
-  }
-
-  void NextSuppliers()
-  {
-    if (suppliers == null) return;
-    if (supplierPageIndex + 1 >= supplierTotalPages) return;
-    supplierPageIndex++;
-  }
-
-  void PrevSuppliers()
-  {
-    if (suppliers == null) return;
-    if (supplierPageIndex <= 0) return;
-    supplierPageIndex--;
-  }
-
-  void SetupCardsPaging()
-  {
-    supplierPageIndex = 0;
-    var total = (suppliers ?? Enumerable.Empty<SupplierDto>()).Count();
-    supplierTotalPages = Math.Max(1, (int)Math.Ceiling((double)total / supplierPageSize));
-  }
-
-  IEnumerable<SupplierDto> GetPagedCardSuppliers()
-  {
-    if (suppliers == null) return Enumerable.Empty<SupplierDto>();
-    return suppliers.Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize);
   }
 
   void ToggleGrid()
   {
     showGrid = !showGrid;
-    if (!showGrid) SetupCardsPaging();
   }
-
-
 }
