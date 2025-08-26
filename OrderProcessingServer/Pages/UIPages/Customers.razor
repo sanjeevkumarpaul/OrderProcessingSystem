@@ -23,7 +23,7 @@
 
 @if (showGrid)
 {
-  <GenericGrid TItem="CustomerDto" Items="customers" Columns="customerColumns" PageSize="gridPageSize"  />
+  <GenericGrid TItem="CustomerDto" Items="customers" Columns="customerColumns" PageSize="10"  />
 }
 else
 {
@@ -62,10 +62,7 @@ else
   // Grid mode and paging
   bool showGrid = false;
   List<CustomerDto>? pagedGridCustomers = null;
-  int gridCurrentPage = 1;
-  int gridPageSize = 10;
-  int gridTotalPages = 1;
-  int[] gridPageSizes = new[] { 5, 10, 15 };
+  
 
   // grid columns - keeping UI GridColumn for component compatibility
   List<OrderProcessingServer.Shared.UIComponents.GridColumn> customerColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
@@ -96,17 +93,17 @@ else
       }
 
       await LoadColumnMetadata();
-      SetupCardsPaging();
-      SetupGridPaging();
-      await InvokeAsync(StateHasChanged);
+      SetupCardsPaging();      
     }
     catch (Exception ex)
     {
       Console.WriteLine($"Error loading customers: {ex.Message}");
       await LoadColumnMetadata();
       customers = new List<CustomerDto>();
-      SetupCardsPaging();
-      SetupGridPaging();
+      SetupCardsPaging();      
+    }
+    finally
+    {
       await InvokeAsync(StateHasChanged);
     }
   }
@@ -137,74 +134,10 @@ else
     if (customers == null) return Enumerable.Empty<CustomerDto>();
     return customers.Skip(customerPageIndex * customerPageSize).Take(customerPageSize);
   }
-
-  void SetupGridPaging()
-  {
-    gridCurrentPage = 1;
-    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)(customers?.Count ?? 0) / gridPageSize));
-    ApplyGridPage();
-  }
-
-  void ApplyGridPage()
-  {
-    if (customers == null) { pagedGridCustomers = new List<CustomerDto>(); return; }
-    var list = customers.ToList();
-    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / gridPageSize));
-    if (gridCurrentPage < 1) gridCurrentPage = 1;
-    if (gridCurrentPage > gridTotalPages) gridCurrentPage = gridTotalPages;
-    pagedGridCustomers = list.Skip((gridCurrentPage - 1) * gridPageSize).Take(gridPageSize).ToList();
-  }
-
-  void GoToGridPage(int page)
-  {
-    if (customers == null) return;
-    gridCurrentPage = Math.Clamp(page, 1, gridTotalPages);
-    ApplyGridPage();
-  }
-
-  async Task ExportFilteredCustomersAsync()
-  {
-    if (customers == null || customers.Count == 0) return;
-    var list = customers.ToList();
-    var csv = BuildCsv(list);
-    var filename = $"customers_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-  }
-
-  async Task ExportAllCustomersAsync()
-  {
-    if (customers == null || customers.Count == 0) return;
-    var csv = BuildCsv(customers);
-    var filename = $"customers_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-  }
-
-  string BuildCsv(List<CustomerDto> list)
-  {
-    var sb = new System.Text.StringBuilder();
-    sb.AppendLine("CustomerId,Name,OrdersCount,TotalSales");
-    foreach (var c in list)
-    {
-      var name = EscapeCsv(c.Name ?? string.Empty);
-      sb.AppendLine($"{c.CustomerId},{name},{c.OrdersCount},{c.TotalSales}");
-    }
-    return sb.ToString();
-  }
-
-  static string EscapeCsv(string input)
-  {
-    if (input == null) return string.Empty;
-    if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
-    {
-      return "\"" + input.Replace("\"", "\"\"") + "\"";
-    }
-    return input;
-  }
-
   void ToggleGrid()
   {
     showGrid = !showGrid;
-    if (showGrid) SetupGridPaging(); else SetupCardsPaging();
+    if (!showGrid) SetupCardsPaging();
   }
 
   async Task LoadColumnMetadata()
