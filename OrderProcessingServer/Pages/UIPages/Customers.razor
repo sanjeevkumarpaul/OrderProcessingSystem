@@ -1,11 +1,12 @@
 @page "/customers"
-@inject IHttpClientFactory HttpFactory
-@inject IJSRuntime JS
-@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingServer.Shared.UIComponents
 @using OrderProcessingSystem.Utilities.Extensions
 @using OrderProcessingSystem.Infrastructure.Models
+@using OrderProcessingSystem.Infrastructure.Interfaces
+@inject IJSRuntime JS
+@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
+@inject IHttpClientFactory HttpFactory
 <link rel="stylesheet" href="~/css/customers.css" />
 <h1 class="page-title d-flex justify-content-between align-items-center">
   <span class="title-text">Customers</span>
@@ -86,30 +87,26 @@ else
         .ToDictionary(g => g.Key, g => new { Count = g.Count(), Total = g.Sum(x => x.Total) });
       foreach (var c in customers)
       {
-        if (groups.TryGetValue(c.CustomerId, out var v))
+        if (groups.TryGetValue(c.CustomerId, out var group))
         {
-          c.OrdersCount = v.Count;
-          c.TotalSales = v.Total;
-        }
-        else
-        {
-          c.OrdersCount = 0;
-          c.TotalSales = 0;
+          c.OrdersCount = group.Count;
+          c.TotalSales = group.Total;
         }
       }
 
+      await LoadColumnMetadata();
       SetupCardsPaging();
       SetupGridPaging();
-      
-      // Load column metadata from API
-      await LoadColumnMetadata();
-      
-      StateHasChanged();
+      await InvokeAsync(StateHasChanged);
     }
     catch (Exception ex)
     {
-      Console.Error.WriteLine($"Customers fetch failed: {ex}");
+      Console.WriteLine($"Error loading customers: {ex.Message}");
+      await LoadColumnMetadata();
       customers = new List<CustomerDto>();
+      SetupCardsPaging();
+      SetupGridPaging();
+      await InvokeAsync(StateHasChanged);
     }
   }
 

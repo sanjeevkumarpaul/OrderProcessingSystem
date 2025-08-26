@@ -17,7 +17,7 @@ builder.Services.AddHttpClient("ApiClient", client =>
 // Default scoped client still available
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());
 
-// Register Grid Column Service
+// Register services
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
 
 var app = builder.Build();

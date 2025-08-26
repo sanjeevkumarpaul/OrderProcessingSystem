@@ -1,0 +1,17 @@
+.page-title {
+  display: flex;
+  flex-wrap: nowrap; /* keep title and controls on one line when possible */
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+.page-title .title-text { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+.page-title .header-controls { flex: 0 0 auto; }
+.page-title .btn { white-space: nowrap; max-width: 100%; box-sizing: border-box; }
+
+@media (max-width: 576px) {
+  .page-title { flex-wrap: wrap; align-items: flex-start; }
+  .page-title .title-text, .page-title .header-controls { width: 100%; }
+  .page-title .header-controls { margin-top: .25rem; }
+}

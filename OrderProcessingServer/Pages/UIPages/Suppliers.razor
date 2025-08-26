@@ -1,379 +1,239 @@
 @page "/suppliers"
-@inject IHttpClientFactory HttpFactory
-@inject IJSRuntime JS
-@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingSystem.Utilities.Extensions
 @using OrderProcessingSystem.Infrastructure.Models
-
-<h1 class="page-title d-flex justify-content-between align-items-center">Suppliers
-	<button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Suppliers")</button>
+@using OrderProcessingSystem.Infrastructure.Interfaces
+@inject IJSRuntime JS
+@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
+@inject IHttpClientFactory HttpFactory
+<link rel="stylesheet" href="~/css/suppliers.css" />
+<h1 class="page-title d-flex justify-content-between align-items-center">
+  <span class="title-text">Suppliers</span>
+  <div class="header-controls">
+    <button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Suppliers")</button>
+  </div>
 </h1>
 
 @if (suppliers == null)
 {
-	<p><em>Loading...</em></p>
+  <p><em>Loading...</em></p>
 }
 
-@* In-place grid: when showAllSuppliers (renamed to showGrid) is true we hide the cards and render a full grid with column-level filter icons similar to Orders page *@
 @if (showGrid)
 {
-	<GenericGrid TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="gridPageSize" PageSizes="gridPageSizes" />
+  <GenericGrid TItem="SupplierDto" Items="suppliers" Columns="supplierColumns" PageSize="gridPageSize" PageSizes="gridPageSizes" />
 }
 else
 {
-	@* Cards view (unchanged) *@
-		<div class="row g-3">
-		@foreach (var s in GetPagedCardSuppliers())
-			{
-			<div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
-				<div class="card p-3" style="max-width:100%; word-break:break-word;">
-						<h5 class="text-truncate">@s.Name</h5>
-						<p class="small text-muted">Country: @s.Country</p>
-						<p class="small">Orders supplied: <strong>@s.OrdersSupplied</strong></p>
-				</div>
-			</div>
-		}
-	</div>
+  <div class="row g-3">
+    @foreach (var s in GetPagedCardSuppliers())
+    {
+      <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3">
+        <div class="card p-3" style="max-width:100%; word-break:break-word;">
+          <h5 class="text-truncate">@s.Name</h5>
+          <p class="small text-muted">Country: @s.Country</p>
+          <p class="small">Orders Supplied: <strong>@s.OrdersSupplied</strong></p>
+        </div>
+      </div>
+    }
+  </div>
 
-	<div class="d-flex justify-content-between mt-2 align-items-center">
-		<div>
-			<button class="btn btn-secondary me-2" @onclick="PrevSuppliers" disabled="@(supplierPageIndex==0)">Previous</button>
-			<button class="btn btn-secondary" @onclick="NextSuppliers" disabled="@(supplierPageIndex+1>=supplierTotalPages)">Next</button>
-		</div>
-		<div>
-			<small>Page @(supplierPageIndex+1) of @supplierTotalPages</small>
-		</div>
-	</div>
+  <div class="d-flex justify-content-between mt-2 align-items-center">
+    <div>
+      <button class="btn btn-secondary me-2" @onclick="PrevSuppliers" disabled="@(supplierPageIndex==0)">Previous</button>
+      <button class="btn btn-secondary" @onclick="NextSuppliers" disabled="@(supplierPageIndex+1>=supplierTotalPages)">Next</button>
+    </div>
+    <div>
+      <small>Page @(supplierPageIndex+1) of @supplierTotalPages</small>
+    </div>
+  </div>
 }
 
 @code {
-	List<SupplierDto>? suppliers = null;
+  List<SupplierDto>? suppliers = null;
 
-	// Cards paging
-	int supplierPageIndex = 0;
-	int supplierPageSize = 10;
-	int supplierTotalPages = 1;
+  // Cards paging
+  int supplierPageIndex = 0;
+  int supplierPageSize = 12;
+  int supplierTotalPages = 1;
 
-	// Grid mode and paging
-	bool showGrid = false;
-	List<SupplierDto>? pagedGridSuppliers = null;
-	int gridCurrentPage = 1;
-	int gridPageSize = 10;
-	int gridTotalPages = 1;
-	int[] gridPageSizes = new[] { 5, 10, 15 };
+  // Grid mode and paging
+  bool showGrid = false;
+  List<SupplierDto>? pagedGridSuppliers = null;
+  int gridCurrentPage = 1;
+  int gridPageSize = 10;
+  int gridTotalPages = 1;
+  int[] gridPageSizes = new[] { 5, 10, 15 };
 
-	// Filters (column-level)
-	string[] textOps = new[] { "StartsWith", "EndsWith", "Equals" };
-	string supplierNameOp = "StartsWith";
-	string supplierCountryOp = "StartsWith";
-	string supplierNameFilter = string.Empty;
-	string supplierCountryFilter = string.Empty;
+  // grid columns - keeping UI GridColumn for component compatibility
+  List<OrderProcessingServer.Shared.UIComponents.GridColumn> supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 
-	bool showNameFilter = false;
-	bool showCountryFilter = false;
+  private bool _loaded;
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (!firstRender || _loaded) return;
+    _loaded = true;
 
-	// grid columns
-	List<OrderProcessingServer.Shared.UIComponents.GridColumn> supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
+    try
+    {
+      var client = HttpFactory.CreateClient("ApiClient");
+      suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("api/data/suppliers") ?? new List<SupplierDto>();
+      var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
 
-	protected override Task OnInitializedAsync()
-	{
-		return Task.CompletedTask;
-	}
+      // compute OrdersSupplied per supplier
+      var groups = orders
+        .Where(o => o.SupplierId.HasValue)
+        .GroupBy(o => o.SupplierId!.Value)
+        .ToDictionary(g => g.Key, g => g.Count());
+      foreach (var s in suppliers)
+      {
+        if (groups.TryGetValue(s.SupplierId, out var count))
+        {
+          s.OrdersSupplied = count;
+        }
+      }
 
-	private bool _loaded;
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (!firstRender || _loaded) return;
-		_loaded = true;
+      await LoadColumnMetadata();
+      SetupCardsPaging();
+      SetupGridPaging();
+      await InvokeAsync(StateHasChanged);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Error loading suppliers: {ex.Message}");
+      await LoadColumnMetadata();
+      suppliers = new List<SupplierDto>();
+      SetupCardsPaging();
+      SetupGridPaging();
+      await InvokeAsync(StateHasChanged);
+    }
+  }
 
-		try
-		{
-			var client = HttpFactory.CreateClient("ApiClient");
-			// fetch suppliers and orders so we can compute per-supplier order counts
-			suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("api/data/suppliers") ?? new List<SupplierDto>();
-			var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
-			// compute OrdersSupplied for each supplier
-			var orderCounts = orders.Where(o => o.SupplierId.HasValue).GroupBy(o => o.SupplierId!.Value)
-				.ToDictionary(g => g.Key, g => g.Count());
-			foreach (var s in suppliers)
-			{
-				s.OrdersSupplied = orderCounts.TryGetValue(s.SupplierId, out var c) ? c : 0;
-			}
-			// initialize paging and grid columns
-			SetupCardsPaging();
-			SetupGridPaging();
-			
-			// Load column metadata from API
-			await LoadColumnMetadata();
-			
-			StateHasChanged();
-		}
-		catch (Exception ex)
-		{
-			Console.Error.WriteLine($"Suppliers fetch failed: {ex}");
-			suppliers = new List<SupplierDto>();
-		}
-	}
+  void NextSuppliers()
+  {
+    if (suppliers == null) return;
+    if (supplierPageIndex + 1 >= supplierTotalPages) return;
+    supplierPageIndex++;
+  }
 
-	void NextSuppliers()
-	{
-		if (suppliers == null) return;
-		if (supplierPageIndex + 1 >= supplierTotalPages) return;
-		supplierPageIndex++;
-	}
+  void PrevSuppliers()
+  {
+    if (suppliers == null) return;
+    if (supplierPageIndex <= 0) return;
+    supplierPageIndex--;
+  }
 
-	void PrevSuppliers()
-	{
-		if (suppliers == null) return;
-		if (supplierPageIndex <= 0) return;
-		supplierPageIndex--;
-	}
+  void SetupCardsPaging()
+  {
+    supplierPageIndex = 0;
+    var total = (suppliers ?? Enumerable.Empty<SupplierDto>()).Count();
+    supplierTotalPages = Math.Max(1, (int)Math.Ceiling((double)total / supplierPageSize));
+  }
 
-	void SetupCardsPaging()
-	{
-		supplierPageIndex = 0;
-		// total pages should consider the suppliers after sorting/filtering; cards view sorts by OrdersSupplied desc
-		var total = (suppliers ?? Enumerable.Empty<SupplierDto>()).OrderByDescending(s => s.OrdersSupplied).Count();
-		supplierTotalPages = Math.Max(1, (int)Math.Ceiling((double)total / supplierPageSize));
-	}
+  IEnumerable<SupplierDto> GetPagedCardSuppliers()
+  {
+    if (suppliers == null) return Enumerable.Empty<SupplierDto>();
+    return suppliers.Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize);
+  }
 
-	IEnumerable<SupplierDto> GetPagedCardSuppliers()
-	{
-		if (suppliers == null) return Enumerable.Empty<SupplierDto>();
-		var sorted = suppliers.OrderByDescending(s => s.OrdersSupplied);
-		return sorted.Skip(supplierPageIndex * supplierPageSize).Take(supplierPageSize);
-	}
+  void SetupGridPaging()
+  {
+    gridCurrentPage = 1;
+    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)(suppliers?.Count ?? 0) / gridPageSize));
+    ApplyGridPage();
+  }
 
-	// Grid paging helpers
-	void SetupGridPaging()
-	{
-		gridCurrentPage = 1;
-		gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)(GetFilteredSuppliers().Count()) / gridPageSize));
-		ApplyGridPage();
-	}
+  void ApplyGridPage()
+  {
+    if (suppliers == null) { pagedGridSuppliers = new List<SupplierDto>(); return; }
+    var list = suppliers.ToList();
+    gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / gridPageSize));
+    if (gridCurrentPage < 1) gridCurrentPage = 1;
+    if (gridCurrentPage > gridTotalPages) gridCurrentPage = gridTotalPages;
+    pagedGridSuppliers = list.Skip((gridCurrentPage - 1) * gridPageSize).Take(gridPageSize).ToList();
+  }
 
-	void ApplyGridPage()
-	{
-		if (suppliers == null) { pagedGridSuppliers = new List<SupplierDto>(); return; }
-		var list = GetFilteredSuppliers().ToList();
-		gridTotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / gridPageSize));
-		if (gridCurrentPage < 1) gridCurrentPage = 1;
-		if (gridCurrentPage > gridTotalPages) gridCurrentPage = gridTotalPages;
-		pagedGridSuppliers = list.Skip((gridCurrentPage - 1) * gridPageSize).Take(gridPageSize).ToList();
-	}
+  void GoToGridPage(int page)
+  {
+    if (suppliers == null) return;
+    gridCurrentPage = Math.Clamp(page, 1, gridTotalPages);
+    ApplyGridPage();
+  }
 
-	void GoToGridPage(int page)
-	{
-		if (suppliers == null) return;
-		gridCurrentPage = Math.Clamp(page, 1, gridTotalPages);
-		ApplyGridPage();
-	}
+  async Task ExportFilteredSuppliersAsync()
+  {
+    if (suppliers == null || suppliers.Count == 0) return;
+    var list = suppliers.ToList();
+    var csv = BuildCsv(list);
+    var filename = $"suppliers_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+  }
 
-	void OnGridPageSizeChanged(ChangeEventArgs e)
-	{
-		if (int.TryParse(e?.Value?.ToString(), out var s))
-		{
-			gridPageSize = s;
-			SetupGridPaging();
-		}
-	}
+  async Task ExportAllSuppliersAsync()
+  {
+    if (suppliers == null || suppliers.Count == 0) return;
+    var csv = BuildCsv(suppliers);
+    var filename = $"suppliers_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+    await JS.InvokeVoidAsync("blazorDownload", filename, csv);
+  }
 
-	void ApplySupplierFilters()
-	{
-		// reset both pagers
-		supplierPageIndex = 0;
-		SetupGridPaging();
-	}
+  string BuildCsv(List<SupplierDto> list)
+  {
+    var sb = new System.Text.StringBuilder();
+    sb.AppendLine("SupplierId,Name,Country,OrdersSupplied");
+    foreach (var s in list)
+    {
+      var name = EscapeCsv(s.Name ?? string.Empty);
+      var country = EscapeCsv(s.Country ?? string.Empty);
+      sb.AppendLine($"{s.SupplierId},{name},{country},{s.OrdersSupplied}");
+    }
+    return sb.ToString();
+  }
 
-	void ClearSupplierFilters()
-	{
-		supplierNameFilter = supplierCountryFilter = string.Empty;
-		supplierNameOp = supplierCountryOp = "StartsWith";
-		supplierPageIndex = 0;
-		SetupGridPaging();
-	}
+  static string EscapeCsv(string input)
+  {
+    if (input == null) return string.Empty;
+    if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
+    {
+      return "\"" + input.Replace("\"", "\"\"") + "\"";
+    }
+    return input;
+  }
 
-	IEnumerable<SupplierDto> GetFilteredSuppliers()
-	{
-		if (suppliers == null) return Enumerable.Empty<SupplierDto>();
-		IEnumerable<SupplierDto> q = suppliers;
+  void ToggleGrid()
+  {
+    showGrid = !showGrid;
+    if (showGrid) SetupGridPaging(); else SetupCardsPaging();
+  }
 
-		if (!string.IsNullOrWhiteSpace(supplierNameFilter))
-		{
-			var t = supplierNameFilter.Trim();
-			q = q.Where(s => MatchText(s.Name ?? string.Empty, t, supplierNameOp));
-		}
-
-		if (!string.IsNullOrWhiteSpace(supplierCountryFilter))
-		{
-			var t = supplierCountryFilter.Trim();
-			q = q.Where(s => MatchText(s.Country ?? string.Empty, t, supplierCountryOp));
-		}
-
-		return q;
-	}
-
-	static bool MatchText(string value, string term, string op)
-	{
-		if (value == null) return false;
-		return op switch
-		{
-			"StartsWith" => value.StartsWith(term, StringComparison.OrdinalIgnoreCase),
-			"EndsWith" => value.EndsWith(term, StringComparison.OrdinalIgnoreCase),
-			"Equals" => string.Equals(value, term, StringComparison.OrdinalIgnoreCase),
-			_ => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
-		};
-	}
-
-	async Task ExportSuppliers()
-	{
-		var list = GetFilteredSuppliers().ToList();
-		var csv = BuildCsv(list);
-		var filename = $"suppliers_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-		await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-	}
-
-	bool IsSupplierFilterActive()
-	{
-		return !string.IsNullOrWhiteSpace(supplierNameFilter)
-			|| !string.IsNullOrWhiteSpace(supplierCountryFilter);
-	}
-
-	async Task ExportAllSuppliersAsync()
-	{
-		if (suppliers == null || suppliers.Count == 0) return;
-		var csv = BuildCsv(suppliers);
-		var filename = $"suppliers_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-		await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-	}
-
-	async Task ExportFilteredSuppliersAsync()
-	{
-		if (suppliers == null || suppliers.Count == 0) return;
-		var list = GetFilteredSuppliers().ToList();
-		var csv = BuildCsv(list);
-		var filename = $"suppliers_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-		await JS.InvokeVoidAsync("blazorDownload", filename, csv);
-	}
-
-	// Column-level filter toggle/handlers
-	async Task ToggleNameFilter()
-	{
-		showNameFilter = !showNameFilter;
-		if (showNameFilter) showCountryFilter = false;
-		await InvokeAsync(StateHasChanged);
-		if (showNameFilter) await JS.InvokeVoidAsync("showPopup", "nameFilterBtn", "nameFilterPopup");
-	}
-
-	async Task ApplyNameFilter()
-	{
-		showNameFilter = false;
-		ApplySupplierFilters();
-		await InvokeAsync(StateHasChanged);
-		await JS.InvokeVoidAsync("hidePopup", "nameFilterPopup");
-	}
-
-	async Task ClearNameFilter()
-	{
-		supplierNameFilter = string.Empty;
-		supplierNameOp = "StartsWith";
-		showNameFilter = false;
-		ApplySupplierFilters();
-		await InvokeAsync(StateHasChanged);
-		await JS.InvokeVoidAsync("hidePopup", "nameFilterPopup");
-	}
-
-	async Task ToggleCountryFilter()
-	{
-		showCountryFilter = !showCountryFilter;
-		if (showCountryFilter) showNameFilter = false;
-		await InvokeAsync(StateHasChanged);
-		if (showCountryFilter) await JS.InvokeVoidAsync("showPopup", "countryFilterBtn", "countryFilterPopup");
-	}
-
-	async Task ApplyCountryFilter()
-	{
-		showCountryFilter = false;
-		ApplySupplierFilters();
-		await InvokeAsync(StateHasChanged);
-		await JS.InvokeVoidAsync("hidePopup", "countryFilterPopup");
-	}
-
-	async Task ClearCountryFilter()
-	{
-		supplierCountryFilter = string.Empty;
-		supplierCountryOp = "StartsWith";
-		showCountryFilter = false;
-		ApplySupplierFilters();
-		await InvokeAsync(StateHasChanged);
-		await JS.InvokeVoidAsync("hidePopup", "countryFilterPopup");
-	}
-
-	void ToggleGrid()
-	{
-		showGrid = !showGrid;
-		if (showGrid)
-		{
-			// entering grid view
-			SetupGridPaging();
-		}
-		else
-		{
-			// returning to cards
-			SetupCardsPaging();
-		}
-	}
-
-	string BuildCsv(List<SupplierDto> list)
-	{
-		var sb = new System.Text.StringBuilder();
-			sb.AppendLine("SupplierId,Name,Country,OrdersSupplied");
-			foreach (var s in list)
-			{
-				var name = EscapeCsv(s.Name ?? string.Empty);
-				var country = EscapeCsv(s.Country ?? string.Empty);
-				sb.AppendLine($"{s.SupplierId},{name},{country},{s.OrdersSupplied}");
-			}
-		return sb.ToString();
-	}
-
-	static string EscapeCsv(string input)
-	{
-		if (input == null) return string.Empty;
-		if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
-		{
-			return "\"" + input.Replace("\"", "\"\"") + "\"";
-		}
-		return input;
-	}
-
-	async Task LoadColumnMetadata()
-	{
-		try
-		{
-			// Use the centralized service - much cleaner!
-			var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("suppliers");
-			
-			// Map to UI GridColumn format (until component is updated)
-			supplierColumns = serviceColumns.Select(col => new OrderProcessingServer.Shared.UIComponents.GridColumn
-			{
-				Header = col.Header,
-				Field = col.Field,
-				Sortable = col.Sortable,
-				Filterable = col.Filterable,
-				IsNumeric = col.IsNumeric,
-				IsEnum = col.IsEnum,
-				EnumValues = col.EnumValues
-			}).ToList();
-			
-			Console.WriteLine($"Successfully loaded {supplierColumns.Count} columns from service");
-		}
-		catch (Exception ex)
-		{
-			Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
-			// Service handles fallbacks, but provide empty list as final fallback
-			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
-		}
-	}
+  async Task LoadColumnMetadata()
+  {
+    try
+    {
+      Console.WriteLine("Loading column metadata for suppliers...");
+      // Use the centralized service - much cleaner!
+      var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("suppliers");
+      
+      // Map to UI GridColumn format (until component is updated)
+      supplierColumns = serviceColumns.Select(col => new OrderProcessingServer.Shared.UIComponents.GridColumn
+      {
+        Header = col.Header,
+        Field = col.Field,
+        Sortable = col.Sortable,
+        Filterable = col.Filterable,
+        IsNumeric = col.IsNumeric,
+        IsEnum = col.IsEnum,
+        EnumValues = col.EnumValues
+      }).ToList();
+      
+      Console.WriteLine($"Successfully loaded {supplierColumns.Count} columns from service");
+    }
+    catch (Exception ex)
+    {
+      Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
+      // Service handles fallbacks, but provide empty list as final fallback
+      supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
+    }
+  }
 }
