@@ -1,6 +1,8 @@
 @page "/orders"
 @inject IHttpClientFactory HttpFactory
 @inject IJSRuntime JS
+@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
+@using OrderProcessingSystem.Infrastructure.Models
 
 <h1 class="page-title">Orders</h1>
 
@@ -306,26 +308,32 @@ else
     {
         try
         {
-            var client = HttpFactory.CreateClient("ApiClient");
-            var response = await client.GetStringAsync("api/metadata/ui-grid-columns/orders");
-            var jsonDocument = System.Text.Json.JsonDocument.Parse(response);
+            // Use the centralized service with enum mappings!
+            var enumMappings = new Dictionary<string, List<string>>
+            {
+                { "Status", statusValues }
+            };
             
-            orderColumns = jsonDocument.RootElement.EnumerateArray()
-                .Select(element => new OrderProcessingServer.Shared.UIComponents.GridColumn
-                {
-                    Header = element.GetProperty("header").GetString() ?? "",
-                    Field = element.GetProperty("field").GetString() ?? "",
-                    Sortable = element.GetProperty("sortable").GetBoolean(),
-                    Filterable = element.GetProperty("filterable").GetBoolean(),
-                    IsNumeric = element.GetProperty("isNumeric").GetBoolean(),
-                    IsEnum = element.GetProperty("isEnum").GetBoolean(),
-                    EnumValues = element.GetProperty("isEnum").GetBoolean() ? statusValues : null
-                }).ToList();
+            var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("orders", enumMappings);
+            
+            // Map to UI GridColumn format (until component is updated)
+            orderColumns = serviceColumns.Select(col => new OrderProcessingServer.Shared.UIComponents.GridColumn
+            {
+                Header = col.Header,
+                Field = col.Field,
+                Sortable = col.Sortable,
+                Filterable = col.Filterable,
+                IsNumeric = col.IsNumeric,
+                IsEnum = col.IsEnum,
+                EnumValues = col.EnumValues
+            }).ToList();
+            
+            Console.WriteLine($"Successfully loaded {orderColumns.Count} columns from service");
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
-            // API should handle fallbacks, so this should not happen in normal operations
+            // Service handles fallbacks, but provide empty list as final fallback
             orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
         }
     }

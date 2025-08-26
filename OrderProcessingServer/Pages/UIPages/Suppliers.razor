@@ -1,8 +1,10 @@
 @page "/suppliers"
 @inject IHttpClientFactory HttpFactory
 @inject IJSRuntime JS
+@inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingSystem.Infrastructure.Models
 
 <h1 class="page-title d-flex justify-content-between align-items-center">Suppliers
 	<button class="btn btn-sm btn-primary" @onclick="ToggleGrid">@((showGrid) ? "Show Cards" : "All Suppliers")</button>
@@ -350,15 +352,27 @@ else
 	{
 		try
 		{
-			var client = HttpFactory.CreateClient("ApiClient");
-			// Use the new UI-optimized endpoint - NO client-side mapping needed!
-			supplierColumns = await client.GetFromJsonAsync<List<OrderProcessingServer.Shared.UIComponents.GridColumn>>("api/metadata/ui-grid-columns/suppliers")
-				?? new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
+			// Use the centralized service - much cleaner!
+			var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("suppliers");
+			
+			// Map to UI GridColumn format (until component is updated)
+			supplierColumns = serviceColumns.Select(col => new OrderProcessingServer.Shared.UIComponents.GridColumn
+			{
+				Header = col.Header,
+				Field = col.Field,
+				Sortable = col.Sortable,
+				Filterable = col.Filterable,
+				IsNumeric = col.IsNumeric,
+				IsEnum = col.IsEnum,
+				EnumValues = col.EnumValues
+			}).ToList();
+			
+			Console.WriteLine($"Successfully loaded {supplierColumns.Count} columns from service");
 		}
 		catch (Exception ex)
 		{
 			Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
-			// API should handle fallbacks, so this should not happen in normal operations
+			// Service handles fallbacks, but provide empty list as final fallback
 			supplierColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 		}
 	}

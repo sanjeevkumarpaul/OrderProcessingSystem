@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OrderProcessingSystem.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,9 @@ builder.Services.AddHttpClient("ApiClient", client =>
 });
 // Default scoped client still available
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());
+
+// Register Grid Column Service
+builder.Services.AddScoped<IGridColumnService, GridColumnService>();
 
 var app = builder.Build();
 
