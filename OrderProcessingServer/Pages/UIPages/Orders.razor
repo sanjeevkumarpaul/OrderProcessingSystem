@@ -13,7 +13,7 @@
 }
 else
 {
-    <GenericGrid TItem="OrderDto" Items="orders" Columns="orderColumns" PageSize="pageSize" PageSizes="pageSizes" />
+    <GenericGrid TItem="OrderDto" Items="orders" Columns="orderColumns" PageSize="10" />
 }
 
 @using OrderProcessingServer.Shared.Dto
@@ -25,13 +25,7 @@ else
     List<OrderProcessingServer.Shared.UIComponents.GridColumn> orderColumns = new List<OrderProcessingServer.Shared.UIComponents.GridColumn>();
 
     List<OrderDto>? orders = null;
-    List<OrderDto>? pagedOrders = null;
-
-    int currentPage = 1;
-    int pageSize = 10;
-    int totalPages = 1;
-    int[] pageSizes = new[] { 5, 10, 15 };
-
+   
     protected override Task OnInitializedAsync()
     {
         // moved to OnAfterRenderAsync to avoid prerender-time network calls
@@ -49,260 +43,19 @@ else
             var client = HttpFactory.CreateClient("ApiClient");
             orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
             Console.WriteLine($"Fetched {orders.Count} orders.");
-            SetupPaging();
             // Load column metadata from API
             await LoadColumnMetadata();
-            await InvokeAsync(StateHasChanged);
+            
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Orders fetch failed: {ex}");
-            orders = new List<OrderDto>();
-            SetupPaging();
+            orders = new List<OrderDto>();                    
+        }
+        finally
+        {
             await InvokeAsync(StateHasChanged);
         }
-    }
-
-    void SetupPaging()
-    {
-        currentPage = 1;
-        totalPages = Math.Max(1, (int)Math.Ceiling((double)(orders?.Count ?? 0) / pageSize));
-        ApplyPage();
-    }
-
-    void ApplyPage()
-    {
-        if (orders == null) { pagedOrders = new List<OrderDto>(); return; }
-        var list = ApplyFilterList(orders);
-        totalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / pageSize));
-        if (currentPage < 1) currentPage = 1;
-        if (currentPage > totalPages) currentPage = totalPages;
-        pagedOrders = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
-    }
-
-    void GoToPage(int page)
-    {
-        if (orders == null) return;
-        currentPage = Math.Clamp(page, 1, totalPages);
-        ApplyPage();
-    }
-
-    void OnPageSizeChanged(ChangeEventArgs e)
-    {
-        if (int.TryParse(e?.Value?.ToString(), out var s))
-        {
-            pageSize = s;
-            SetupPaging();
-        }
-    }
-
-    // Filtering state
-    string customerFilterOp = "StartsWith";
-    string supplierFilterOp = "StartsWith";
-    string customerFilterText = string.Empty;
-    string supplierFilterText = string.Empty;
-    string statusFilter = string.Empty; // empty means Any
-
-    string[] textOps = new[] { "StartsWith", "EndsWith", "Equals" };
-    List<string> statusValues = Enum.GetNames(typeof(OrderStatus)).ToList();
-
-    // UI dropdown visibility for header filters
-    bool showCustomerFilter = false;
-    bool showSupplierFilter = false;
-    bool showStatusFilter = false;
-
-    async Task ToggleCustomerFilter()
-    {
-        showCustomerFilter = !showCustomerFilter;
-        // close others
-        if (showCustomerFilter) { showSupplierFilter = false; showStatusFilter = false; }
-        await InvokeAsync(StateHasChanged);
-        if (showCustomerFilter)
-        {
-            await JS.InvokeVoidAsync("showPopup", "customerFilterBtn", "customerFilterPopup");
-        }
-    }
-
-    async Task ApplyCustomerFilter()
-    {
-        showCustomerFilter = false;
-        ApplyFilters();
-        await InvokeAsync(StateHasChanged);
-        await JS.InvokeVoidAsync("hidePopup", "customerFilterPopup");
-    }
-
-    async Task ClearCustomerFilter()
-    {
-        customerFilterText = string.Empty;
-        customerFilterOp = "StartsWith";
-        showCustomerFilter = false;
-        ApplyFilters();
-        await InvokeAsync(StateHasChanged);
-        await JS.InvokeVoidAsync("hidePopup", "customerFilterPopup");
-    }
-
-    async Task ToggleSupplierFilter()
-    {
-        showSupplierFilter = !showSupplierFilter;
-        if (showSupplierFilter) { showCustomerFilter = false; showStatusFilter = false; }
-        await InvokeAsync(StateHasChanged);
-        if (showSupplierFilter)
-        {
-            await JS.InvokeVoidAsync("showPopup", "supplierFilterBtn", "supplierFilterPopup");
-        }
-    }
-
-    async Task ApplySupplierFilter()
-    {
-        showSupplierFilter = false;
-        ApplyFilters();
-        await InvokeAsync(StateHasChanged);
-        await JS.InvokeVoidAsync("hidePopup", "supplierFilterPopup");
-    }
-
-    async Task ClearSupplierFilter()
-    {
-        supplierFilterText = string.Empty;
-        supplierFilterOp = "StartsWith";
-        showSupplierFilter = false;
-        ApplyFilters();
-        await InvokeAsync(StateHasChanged);
-        await JS.InvokeVoidAsync("hidePopup", "supplierFilterPopup");
-    }
-
-    async Task ToggleStatusFilter()
-    {
-        showStatusFilter = !showStatusFilter;
-        if (showStatusFilter) { showCustomerFilter = false; showSupplierFilter = false; }
-        await InvokeAsync(StateHasChanged);
-        if (showStatusFilter)
-        {
-            await JS.InvokeVoidAsync("showPopup", "statusFilterBtn", "statusFilterPopup");
-        }
-    }
-
-    async Task ApplyStatusFilter()
-    {
-        showStatusFilter = false;
-        ApplyFilters();
-        await InvokeAsync(StateHasChanged);
-        await JS.InvokeVoidAsync("hidePopup", "statusFilterPopup");
-    }
-
-    async Task ClearStatusFilter()
-    {
-        statusFilter = string.Empty;
-        showStatusFilter = false;
-        ApplyFilters();
-        await InvokeAsync(StateHasChanged);
-        await JS.InvokeVoidAsync("hidePopup", "statusFilterPopup");
-    }
-
-    void ApplyFilters()
-    {
-        currentPage = 1;
-        ApplyPage();
-    }
-
-    void ClearFilters()
-    {
-        customerFilterText = supplierFilterText = string.Empty;
-        customerFilterOp = supplierFilterOp = "StartsWith";
-        statusFilter = string.Empty;
-        currentPage = 1;
-        ApplyPage();
-    }
-
-    List<OrderDto> ApplyFilterList(List<OrderDto> input)
-    {
-        if (input == null) return new List<OrderDto>();
-        IEnumerable<OrderDto> q = input;
-
-        if (!string.IsNullOrWhiteSpace(customerFilterText))
-        {
-            var t = customerFilterText.Trim();
-            q = q.Where(o => o.Customer != null && MatchText(o.Customer.Name ?? string.Empty, t, customerFilterOp));
-        }
-
-        if (!string.IsNullOrWhiteSpace(supplierFilterText))
-        {
-            var t = supplierFilterText.Trim();
-            q = q.Where(o => o.Supplier != null && MatchText(o.Supplier.Name ?? string.Empty, t, supplierFilterOp));
-        }
-
-        if (!string.IsNullOrWhiteSpace(statusFilter))
-        {
-            q = q.Where(o => string.Equals(o.Status ?? string.Empty, statusFilter, StringComparison.OrdinalIgnoreCase));
-        }
-
-        return q.ToList();
-    }
-
-    static bool MatchText(string value, string term, string op)
-    {
-        if (value == null) return false;
-        return op switch
-        {
-            "StartsWith" => value.StartsWith(term, StringComparison.OrdinalIgnoreCase),
-            "EndsWith" => value.EndsWith(term, StringComparison.OrdinalIgnoreCase),
-            "Equals" => string.Equals(value, term, StringComparison.OrdinalIgnoreCase),
-            _ => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
-        };
-    }
-
-    bool IsFilterActive()
-    {
-        return !string.IsNullOrWhiteSpace(customerFilterText)
-            || !string.IsNullOrWhiteSpace(supplierFilterText)
-            || !string.IsNullOrWhiteSpace(statusFilter);
-    }
-
-    async Task ExportAllAsync()
-    {
-        if (orders == null || orders.Count == 0) return;
-        var csv = BuildCsv(orders);
-        var filename = $"orders_all_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-        await DownloadStringAsync(csv, filename);
-    }
-
-    async Task ExportFilteredAsync()
-    {
-        if (orders == null || orders.Count == 0) return;
-        var filtered = ApplyFilterList(orders);
-        var csv = BuildCsv(filtered);
-        var filename = $"orders_filtered_{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
-        await DownloadStringAsync(csv, filename);
-    }
-
-    string BuildCsv(List<OrderDto> list)
-    {
-        var sb = new System.Text.StringBuilder();
-        sb.AppendLine("OrderId,Customer,Supplier,Total,Status");
-        foreach (var o in list)
-        {
-            var customer = EscapeCsv(o.Customer?.Name ?? string.Empty);
-            var supplier = EscapeCsv(o.Supplier?.Name ?? string.Empty);
-            var total = o.Total.ToString();
-            var status = EscapeCsv(o.Status ?? string.Empty);
-            sb.AppendLine($"{o.OrderId},{customer},{supplier},{total},{status}");
-        }
-        return sb.ToString();
-    }
-
-    static string EscapeCsv(string input)
-    {
-        if (input == null) return string.Empty;
-        if (input.Contains(",") || input.Contains("\"") || input.Contains('\n'))
-        {
-            return "\"" + input.Replace("\"", "\"\"") + "\"";
-        }
-        return input;
-    }
-
-    async Task DownloadStringAsync(string content, string filename)
-    {
-        // Use JS interop to trigger a file download in the browser
-        await JS.InvokeVoidAsync("blazorDownload", filename, content);
     }
 
     async Task LoadColumnMetadata()
@@ -310,7 +63,7 @@ else
         // Orders page needs enum mappings for Status field
         var enumMappings = new Dictionary<string, List<string>>
         {
-            { "Status", statusValues }
+            { "Status", Enum.GetNames(typeof(OrderStatus)).ToList() }
         };
         
         orderColumns = await LoadUIColumnMetadataAsync("orders", enumMappings);

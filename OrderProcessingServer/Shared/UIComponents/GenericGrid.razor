@@ -167,7 +167,7 @@
     [Parameter] public IEnumerable<TItem>? Items { get; set; }
     [Parameter] public List<GridColumn> Columns { get; set; } = new List<GridColumn>();
     [Parameter] public int PageSize { get; set; } = 10;
-    [Parameter] public int[] PageSizes { get; set; } = new[] {5,10,15};
+    public int[] PageSizes { get; set; } = new[] {5,10,15};
 
     List<TItem>? PagedItems;
     int CurrentPage = 1;
