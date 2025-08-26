@@ -1,13 +1,14 @@
 @page "/suppliers"
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingServer.Services
 @using OrderProcessingSystem.Utilities.Extensions
 @using OrderProcessingSystem.Infrastructure.Models
 @using OrderProcessingSystem.Infrastructure.Interfaces
 @inherits BaseGridPage
 @inject IJSRuntime JS
 @inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
-@inject IHttpClientFactory HttpFactory
+@inject DataLoadingService DataService
 <link rel="stylesheet" href="~/css/suppliers.css" />
 <h1 class="page-title d-flex justify-content-between align-items-center">
   <span class="title-text">Suppliers</span>
@@ -74,35 +75,18 @@ else
 
     try
     {
-      var client = HttpFactory.CreateClient("ApiClient");
-      suppliers = await client.GetFromJsonAsync<List<SupplierDto>>("api/data/suppliers") ?? new List<SupplierDto>();
-      var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
-
-      // compute OrdersSupplied per supplier
-      var groups = orders
-        .Where(o => o.SupplierId.HasValue)
-        .GroupBy(o => o.SupplierId!.Value)
-        .ToDictionary(g => g.Key, g => g.Count());
-      foreach (var s in suppliers)
-      {
-        if (groups.TryGetValue(s.SupplierId, out var count))
-        {
-          s.OrdersSupplied = count;
-        }
-      }
-
-      await LoadColumnMetadata();
-      SetupCardsPaging();            
+      // Use the centralized data loading service
+      suppliers = await DataService.LoadSuppliersWithCalculationsAsync();  
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Error loading suppliers: {ex.Message}");
-      await LoadColumnMetadata();
-      suppliers = new List<SupplierDto>();
-      SetupCardsPaging();          
+      Console.WriteLine($"Error loading suppliers: {ex.Message}");      
     }
 	finally
 	{
+      supplierColumns = await LoadUIColumnMetadataAsync("suppliers");
+      suppliers = suppliers.Any() ? suppliers : new List<SupplierDto>();
+      SetupCardsPaging();          
 	  await InvokeAsync(StateHasChanged);
 	}
   }
@@ -140,8 +124,5 @@ else
     if (!showGrid) SetupCardsPaging();
   }
 
-  async Task LoadColumnMetadata()
-  {
-    supplierColumns = await LoadUIColumnMetadataAsync("suppliers");
-  }
+
 }

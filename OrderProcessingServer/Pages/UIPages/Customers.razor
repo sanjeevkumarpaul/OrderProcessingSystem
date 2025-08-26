@@ -1,13 +1,14 @@
 @page "/customers"
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingServer.Services
 @using OrderProcessingSystem.Utilities.Extensions
 @using OrderProcessingSystem.Infrastructure.Models
 @using OrderProcessingSystem.Infrastructure.Interfaces
 @inherits BaseGridPage
 @inject IJSRuntime JS
 @inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
-@inject IHttpClientFactory HttpFactory
+@inject DataLoadingService DataService
 <link rel="stylesheet" href="~/css/customers.css" />
 <h1 class="page-title d-flex justify-content-between align-items-center">
   <span class="title-text">Customers</span>
@@ -75,35 +76,18 @@ else
 
     try
     {
-      var client = HttpFactory.CreateClient("ApiClient");
-      customers = await client.GetFromJsonAsync<List<CustomerDto>>("api/data/customers") ?? new List<CustomerDto>();
-      var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
-
-      // compute OrdersCount and TotalSales per customer
-      var groups = orders
-        .GroupBy(o => o.CustomerId)
-        .ToDictionary(g => g.Key, g => new { Count = g.Count(), Total = g.Sum(x => x.Total) });
-      foreach (var c in customers)
-      {
-        if (groups.TryGetValue(c.CustomerId, out var group))
-        {
-          c.OrdersCount = group.Count;
-          c.TotalSales = group.Total;
-        }
-      }
-
-      await LoadColumnMetadata();
-      SetupCardsPaging();      
+      // Use the centralized data loading service
+      customers = await DataService.LoadCustomersWithCalculationsAsync();
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Error loading customers: {ex.Message}");
-      await LoadColumnMetadata();
-      customers = new List<CustomerDto>();
-      SetupCardsPaging();      
+      Console.WriteLine($"Error loading customers: {ex.Message}");      
     }
     finally
     {
+      customerColumns = await LoadUIColumnMetadataAsync("customers");
+      customers = customers.Any() ? customers : new List<CustomerDto>();
+      SetupCardsPaging();      
       await InvokeAsync(StateHasChanged);
     }
   }
@@ -140,8 +124,4 @@ else
     if (!showGrid) SetupCardsPaging();
   }
 
-  async Task LoadColumnMetadata()
-  {
-    customerColumns = await LoadUIColumnMetadataAsync("customers");
-  }
 }

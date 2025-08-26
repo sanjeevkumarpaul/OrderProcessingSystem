@@ -19,6 +19,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 // Register services
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
+builder.Services.AddScoped<OrderProcessingServer.Services.DataLoadingService>();
 
 var app = builder.Build();
 

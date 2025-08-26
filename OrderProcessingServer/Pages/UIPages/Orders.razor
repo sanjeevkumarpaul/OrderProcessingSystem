@@ -1,8 +1,10 @@
 @page "/orders"
 @inherits BaseGridPage
+@inject DataLoadingService DataService
 @inject IHttpClientFactory HttpFactory
 @inject IJSRuntime JS
 @inject OrderProcessingSystem.Infrastructure.Services.IGridColumnService GridColumnService
+@using OrderProcessingServer.Services
 @using OrderProcessingSystem.Infrastructure.Models
 
 <h1 class="page-title">Orders</h1>
@@ -40,8 +42,8 @@ else
 
         try
         {
-            var client = HttpFactory.CreateClient("ApiClient");
-            orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
+            // Use the centralized data loading service
+            orders = await DataService.LoadOrdersAsync();
             Console.WriteLine($"Fetched {orders.Count} orders.");
             // Load column metadata from API
             await LoadColumnMetadata();
