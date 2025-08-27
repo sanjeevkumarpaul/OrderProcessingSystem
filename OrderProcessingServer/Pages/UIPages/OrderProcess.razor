@@ -1,6 +1,5 @@
 @page "/orderprocess"
 @page "/process-order"
-@using OrderProcessingServer.Services
 @using OrderProcessingServer.Shared.Dto
 @using Microsoft.AspNetCore.Components.Web
 @inject DataLoadingService DataService
@@ -141,8 +140,8 @@
 
 @code {
     // Data properties
-    private List<CustomerDto>? customers;
-    private List<SupplierDto>? suppliers;
+    private List<CustomerWithOrdersDto>? customers;
+    private List<SupplierWithOrdersDto>? suppliers;
     private bool isLoading = true;
   
     // Form properties
@@ -181,8 +180,8 @@
         try
         {
             // Use optimized methods without calculations for dropdown population
-            var customersTask = DataService.LoadCustomersAsync();
-            var suppliersTask = DataService.LoadSuppliersAsync();
+            var customersTask = DataService.LoadCustomersWithOrdersAsync();
+            var suppliersTask = DataService.LoadSuppliersWithOrdersAsync();
             
             await Task.WhenAll(customersTask, suppliersTask);
             

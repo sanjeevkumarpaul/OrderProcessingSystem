@@ -1,7 +1,7 @@
 using OrderProcessingServer.Shared.Dto;
 using System.Text.Json;
 
-namespace OrderProcessingServer.Services;
+namespace OrderProcessingServer;
 
 /// <summary>
 /// Service for loading and processing data with calculations from API

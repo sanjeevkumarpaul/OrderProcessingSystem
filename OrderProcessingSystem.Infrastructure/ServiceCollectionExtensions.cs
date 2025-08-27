@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using OrderProcessingSystem.Core.Entities;
-using OrderProcessingSystem.Infrastructure.Interfaces;
 using OrderProcessingSystem.Core.Interfaces;
 using OrderProcessingSystem.Infrastructure.Repositories;
 using OrderProcessingSystem.Infrastructure.Services;
@@ -14,8 +13,8 @@ public static class ServiceCollectionExtensions
         // register in-memory repository and domain services for now
         services.AddSingleton<IRepository<Order>, OrderProcessingSystem.Infrastructure.Repositories.OrderRepository>();
         services.AddScoped<IOrderService, OrderService>();
-    // register API-facing data service which returns Contracts DTOs
-    services.AddScoped<OrderProcessingSystem.Infrastructure.Interfaces.IApiDataService, OrderProcessingSystem.Infrastructure.Services.ApiDataService>();
+        // register API-facing data service which returns Contracts DTOs
+        services.AddScoped<ApiDataService>();
         return services;
     }
 }

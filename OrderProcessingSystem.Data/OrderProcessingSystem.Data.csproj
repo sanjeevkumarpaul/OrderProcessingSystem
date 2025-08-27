@@ -16,8 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\OrderProcessingSystem.Contracts\OrderProcessingSystem.Contracts.csproj" />
     <ProjectReference Include="..\OrderProcessingSystem.Cache\OrderProcessingSystem.Cache.csproj" />
   </ItemGroup>
 

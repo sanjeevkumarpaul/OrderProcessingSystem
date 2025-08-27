@@ -1,52 +1,67 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OrderProcessingSystem.Infrastructure.Interfaces;
 using MediatR;
+using AutoMapper;
 using OrderProcessingSystem.Data.Features.Orders;
 using OrderProcessingSystem.Data.Features.Suppliers;
 using OrderProcessingSystem.Data.Features.Customers;
 using OrderProcessingSystem.Data.Features.Reports;
-// using Data.Features.* so the service can send queries via IMediator
+using OrderProcessingSystem.Infrastructure.Interfaces;
+using ContractsDto = OrderProcessingSystem.Contracts.Dto;
 
 namespace OrderProcessingSystem.Infrastructure.Services
 {
     public class ApiDataService : IApiDataService
     {
-        
-    private readonly IMediator _mediator;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ApiDataService(IMediator mediator)
+        public ApiDataService(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
-        public async Task<System.Collections.Generic.List<OrderProcessingSystem.Data.Entities.Order>> GetOrdersAsync()
+        public async Task<List<ContractsDto.OrderDto>> GetOrdersAsync()
         {
-            var orders = await _mediator.Send(new OrderProcessingSystem.Data.Features.Orders.GetOrdersQuery());
-            return orders;
+            var orders = await _mediator.Send(new GetOrdersQuery());
+            return _mapper.Map<List<ContractsDto.OrderDto>>(orders);
         }
 
-        public async Task<System.Collections.Generic.List<OrderProcessingSystem.Data.Entities.Supplier>> GetSuppliersAsync()
+        public async Task<List<ContractsDto.SupplierDto>> GetSuppliersAsync()
         {
-            var suppliers = await _mediator.Send(new OrderProcessingSystem.Data.Features.Suppliers.GetSuppliersQuery());
-            return suppliers;
+            var suppliers = await _mediator.Send(new GetSuppliersQuery());
+            return _mapper.Map<List<ContractsDto.SupplierDto>>(suppliers);
         }
 
-        public async Task<System.Collections.Generic.List<OrderProcessingSystem.Data.Entities.Customer>> GetCustomersAsync()
+        public async Task<List<ContractsDto.CustomerDto>> GetCustomersAsync()
         {
-            var customers = await _mediator.Send(new OrderProcessingSystem.Data.Features.Customers.GetCustomersQuery());
-            return customers;
+            var customers = await _mediator.Send(new GetCustomersQuery());
+            return _mapper.Map<List<ContractsDto.CustomerDto>>(customers);
         }
 
-    public async Task<System.Collections.Generic.List<OrderProcessingSystem.Data.Features.Reports.SalesByCustomerDto>> GetSalesByCustomerAsync(int? customerId = null, int? top = null)
+        public async Task<List<ContractsDto.SalesByCustomerDto>> GetSalesByCustomerAsync(int? customerId = null, int? top = null)
         {
-            var query = new OrderProcessingSystem.Data.Features.Reports.SalesByCustomerQuery
+            var query = new SalesByCustomerQuery
             {
                 CustomerId = customerId,
                 Top = top
             };
             var report = await _mediator.Send(query);
-            return report;
+            // Map from Data.Features.Reports.SalesByCustomerDto to Contracts.Dto.SalesByCustomerDto
+            return _mapper.Map<List<ContractsDto.SalesByCustomerDto>>(report);
+        }
+
+        public async Task<List<CustomerWithOrdersDto>> GetCustomersWithOrdersAsync()
+        {
+            var customers = await _mediator.Send(new GetCustomersWithOrdersQuery());
+            return customers;
+        }
+
+        public async Task<List<SupplierWithOrdersDto>> GetSuppliersWithOrdersAsync()
+        {
+            var suppliers = await _mediator.Send(new GetSuppliersWithOrdersQuery());
+            return suppliers;
         }
     }
 }

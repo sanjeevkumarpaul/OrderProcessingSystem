@@ -15,8 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // AutoMapper - Register all mapping profiles from this assembly
-builder.Services.AddAutoMapper(typeof(OrderProcessingSystem.API.Mapping.ApiMappingProfile).Assembly,
-                                typeof(OrderProcessingSystem.API.Mapping.GridColumnMappingProfile).Assembly);
+// Fix for AutoMapper version compatibility issue
+builder.Services.AddAutoMapper(typeof(Program));
 
 // Register mapping services
 builder.Services.AddScoped<OrderProcessingSystem.API.Services.IGridColumnMappingService, 
