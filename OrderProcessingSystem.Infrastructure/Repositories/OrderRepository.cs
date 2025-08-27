@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OrderProcessingSystem.Core.Entities;
 using OrderProcessingSystem.Core.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.Infrastructure.Repositories
 {

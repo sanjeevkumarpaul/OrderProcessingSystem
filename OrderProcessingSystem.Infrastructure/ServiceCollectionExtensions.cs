@@ -3,6 +3,7 @@ using OrderProcessingSystem.Core.Entities;
 using OrderProcessingSystem.Core.Interfaces;
 using OrderProcessingSystem.Infrastructure.Repositories;
 using OrderProcessingSystem.Infrastructure.Services;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.Infrastructure;
 
