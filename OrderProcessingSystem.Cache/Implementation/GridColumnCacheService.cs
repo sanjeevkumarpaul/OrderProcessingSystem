@@ -1,6 +1,7 @@
 using OrderProcessingSystem.Contracts.Dto;
+using OrderProcessingSystem.Cache.Interfaces;
 
-namespace OrderProcessingSystem.Cache;
+namespace OrderProcessingSystem.Cache.Implementation;
 
 public class GridColumnCacheService : IGridColumnCacheService
 {

@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using OrderProcessingSystem.Contracts.Dto;
 
-namespace OrderProcessingSystem.Cache;
+namespace OrderProcessingSystem.Cache.Implementation;
 
 /// <summary>
 /// In-memory implementation of grid column cache service for when Redis is not available

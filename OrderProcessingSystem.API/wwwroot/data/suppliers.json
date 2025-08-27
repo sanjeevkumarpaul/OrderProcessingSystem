@@ -1,5 +1,0 @@
-[
-  { "supplierId": 501, "name": "SupplyCo", "country": "USA" },
-  { "supplierId": 502, "name": "PartsRUs", "country": "Germany" },
-  { "supplierId": 503, "name": "MakersLtd", "country": "India" }
-]

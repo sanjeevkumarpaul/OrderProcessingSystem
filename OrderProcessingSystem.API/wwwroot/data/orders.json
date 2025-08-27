@@ -1,5 +1,0 @@
-[
-  { "orderId": 1001, "customer": "Acme Corp", "total": 1240.50, "status": "Shipped" },
-  { "orderId": 1002, "customer": "Globex", "total": 540.00, "status": "Pending" },
-  { "orderId": 1003, "customer": "Umbrella", "total": 230.00, "status": "Processing" }
-]

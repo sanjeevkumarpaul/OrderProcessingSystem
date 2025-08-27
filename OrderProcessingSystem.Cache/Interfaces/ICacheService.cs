@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace OrderProcessingSystem.Cache;
+namespace OrderProcessingSystem.Cache.Interfaces;
 
 public interface ICacheService
 {

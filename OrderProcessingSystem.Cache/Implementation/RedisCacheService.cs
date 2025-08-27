@@ -1,8 +1,9 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using OrderProcessingSystem.Cache.Interfaces;
 
-namespace OrderProcessingSystem.Cache;
+namespace OrderProcessingSystem.Cache.Implementation;
 
 public class RedisCacheService : ICacheService
 {
