@@ -5,8 +5,8 @@
 .order-process-page {
     background: transparent;
     min-height: 100vh;
-    margin: -20px -15px -20px -15px;
-    padding: 40px 15px 40px 30px;
+    /* margin: -20px -15px -20px -15px;
+    padding: 40px 15px 40px 30px; */
     position: relative;
     font-family: 'Poppins', sans-serif;
 }
@@ -21,40 +21,12 @@
     line-height: 1.3;
     margin-bottom: 2rem;
     text-align: left;
-    position: relative;
+     position: relative; 
 }
-
-.custom-process-heading::before {
-    content: "minimal";
-    background: #f7df1e;
-    color: #333333;
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    position: absolute;
-    top: -1.5rem;
-    left: 0;
-}
-
-.custom-process-heading::after {
-    content: "dream aesthetic ↗";
-    background: #f7df1e;
-    color: #333333;
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    position: absolute;
-    bottom: -1.8rem;
-    left: 0;
-}
-
-
 
 /* Order Capture Section - Graphic Card Style */
 .order-capture-section {
-    max-width: 680px;
+    max-width: 1000px;
     margin: 0 auto;
     position: relative;
 }
@@ -127,7 +99,7 @@
     letter-spacing: -0.01em;
     text-align: left;
     font-family: 'Poppins', sans-serif;
-    color: #555555;
+    color: #5b17e2;
     padding: 0;
 }
 
@@ -140,7 +112,7 @@
 
 .inline-select {
     background: rgba(247, 223, 30, 0.2);
-    border: 1px solid rgba(247, 223, 30, 0.5);
+    border: 0px solid rgba(247, 223, 30, 0.5);
     border-radius: 4px;
     color: #333333;
     font-family: 'Poppins', sans-serif;
@@ -341,19 +313,6 @@
 .loading-state .spinner-border {
     border-color: rgba(247, 223, 30, 0.3);
     border-top-color: #f7df1e;
-}
-
-/* Text Styling Updates */
-.narrative-text {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    margin: 0;
-    letter-spacing: -0.01em;
-    text-align: left;
 }
 
 /* Fallback for browsers that don't support background-clip: text */
