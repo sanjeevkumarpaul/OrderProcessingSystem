@@ -6,7 +6,7 @@ using OrderProcessingSystem.Data.Features.Orders;
 using OrderProcessingSystem.Data.Features.Suppliers;
 using OrderProcessingSystem.Data.Features.Customers;
 using OrderProcessingSystem.Data.Features.Reports;
-using OrderProcessingSystem.Infrastructure.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 using ContractsDto = OrderProcessingSystem.Contracts.Dto;
 
 namespace OrderProcessingSystem.Infrastructure.Services
@@ -52,16 +52,16 @@ namespace OrderProcessingSystem.Infrastructure.Services
             return _mapper.Map<List<ContractsDto.SalesByCustomerDto>>(report);
         }
 
-        public async Task<List<CustomerWithOrdersDto>> GetCustomersWithOrdersAsync()
+        public async Task<List<ContractsDto.CustomerWithOrdersDto>> GetCustomersWithOrdersAsync()
         {
             var customers = await _mediator.Send(new GetCustomersWithOrdersQuery());
-            return customers; // Already returns List<CustomerWithOrdersDto> from Contracts
+            return _mapper.Map<List<ContractsDto.CustomerWithOrdersDto>>(customers);
         }
 
-        public async Task<List<SupplierWithOrdersDto>> GetSuppliersWithOrdersAsync()
+        public async Task<List<ContractsDto.SupplierWithOrdersDto>> GetSuppliersWithOrdersAsync()
         {
             var suppliers = await _mediator.Send(new GetSuppliersWithOrdersQuery());
-            return suppliers;
+            return _mapper.Map<List<ContractsDto.SupplierWithOrdersDto>>(suppliers);
         }
     }
 }
