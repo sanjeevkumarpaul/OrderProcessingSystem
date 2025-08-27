@@ -35,16 +35,35 @@
                             <p class="narrative-text">
                                 Message for delivery related to Order Capture Application, where 
                                 <span class="inline-control-wrapper">
-                                    <select class="inline-select" @bind="selectedCustomerId">
-                                        <option value="0">Customer</option>
-                                        @if (customers != null)
-                                        {
-                                            @foreach (var customer in customers)
+                                    <div class="custom-dropdown tag-style-select @(isCustomerDropdownOpen ? "open" : "")" @onclick="ToggleCustomerDropdown" @onclick:stopPropagation="true">
+                                        <div class="dropdown-selected">
+                                            @if (selectedCustomerId == 0)
                                             {
-                                                <option value="@customer.CustomerId">@customer.Name</option>
+                                                <span>Customer</span>
                                             }
+                                            else
+                                            {
+                                                <span>@customers?.FirstOrDefault(c => c.CustomerId == selectedCustomerId)?.Name</span>
+                                            }
+                                        </div>
+                                        @if (isCustomerDropdownOpen)
+                                        {
+                                            <div class="dropdown-options">
+                                                <div class="dropdown-option @(selectedCustomerId == 0 ? "selected" : "")" @onclick="@(() => SelectCustomer(0))" @onclick:stopPropagation="true">
+                                                    Customer
+                                                </div>
+                                                @if (customers != null)
+                                                {
+                                                    @foreach (var customer in customers)
+                                                    {
+                                                        <div class="dropdown-option @(selectedCustomerId == customer.CustomerId ? "selected" : "")" @onclick="@(() => SelectCustomer(customer.CustomerId))" @onclick:stopPropagation="true">
+                                                            @customer.Name
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
                                         }
-                                    </select>
+                                    </div>
                                 </span>
                                 has a Order no.of 
                                 <span class="inline-control-wrapper">
@@ -63,16 +82,35 @@
                                 </span>
                                 items from the supplier 
                                 <span class="inline-control-wrapper">
-                                    <select class="inline-select" @bind="selectedSupplierId">
-                                        <option value="0">Supplier</option>
-                                        @if (suppliers != null)
-                                        {
-                                            @foreach (var supplier in suppliers)
+                                    <div class="custom-dropdown tag-style-select @(isSupplierDropdownOpen ? "open" : "")" @onclick="ToggleSupplierDropdown" @onclick:stopPropagation="true">
+                                        <div class="dropdown-selected">
+                                            @if (selectedSupplierId == 0)
                                             {
-                                                <option value="@supplier.SupplierId">@supplier.Name</option>
+                                                <span>Supplier</span>
                                             }
+                                            else
+                                            {
+                                                <span>@suppliers?.FirstOrDefault(s => s.SupplierId == selectedSupplierId)?.Name</span>
+                                            }
+                                        </div>
+                                        @if (isSupplierDropdownOpen)
+                                        {
+                                            <div class="dropdown-options">
+                                                <div class="dropdown-option @(selectedSupplierId == 0 ? "selected" : "")" @onclick="@(() => SelectSupplier(0))" @onclick:stopPropagation="true">
+                                                    Supplier
+                                                </div>
+                                                @if (suppliers != null)
+                                                {
+                                                    @foreach (var supplier in suppliers)
+                                                    {
+                                                        <div class="dropdown-option @(selectedSupplierId == supplier.SupplierId ? "selected" : "")" @onclick="@(() => SelectSupplier(supplier.SupplierId))" @onclick:stopPropagation="true">
+                                                            @supplier.Name
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
                                         }
-                                    </select>
+                                    </div>
                                 </span>
                                 .
                             </p>
@@ -110,6 +148,10 @@
     private int selectedSupplierId = 0;
     private int orderQuantity = 1;
     
+    // Custom dropdown states
+    private bool isCustomerDropdownOpen = false;
+    private bool isSupplierDropdownOpen = false;
+    
     // Computed properties
     private bool CanProcessOrder => 
         selectedCustomerId > 0 && 
@@ -120,6 +162,14 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadFormData();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("setupDropdownHandlers", DotNetObjectReference.Create(this));
+        }
     }
     
     private async Task LoadFormData()
@@ -195,4 +245,67 @@
         selectedSupplierId = 0;
         orderQuantity = 1;        
     }
+    
+    // Custom dropdown methods
+    private void ToggleCustomerDropdown()
+    {
+        isCustomerDropdownOpen = !isCustomerDropdownOpen;
+        if (isCustomerDropdownOpen)
+        {
+            isSupplierDropdownOpen = false; // Close other dropdown
+        }
+    }
+    
+    private void ToggleSupplierDropdown()
+    {
+        isSupplierDropdownOpen = !isSupplierDropdownOpen;
+        if (isSupplierDropdownOpen)
+        {
+            isCustomerDropdownOpen = false; // Close other dropdown
+        }
+    }
+    
+    private void SelectCustomer(int customerId)
+    {
+        selectedCustomerId = customerId;
+        isCustomerDropdownOpen = false;
+    }
+    
+    private void SelectSupplier(int supplierId)
+    {
+        selectedSupplierId = supplierId;
+        isSupplierDropdownOpen = false;
+    }
+    
+    [JSInvokable]
+    public void CloseDropdowns()
+    {
+        isCustomerDropdownOpen = false;
+        isSupplierDropdownOpen = false;
+        InvokeAsync(StateHasChanged);
+    }
 }
+
+<script>
+    window.setupDropdownHandlers = function (dotNetRef) {
+        // Use jQuery for cleaner, cross-browser compatible code
+        $(document).ready(function() {
+            
+            // Click outside handler using jQuery
+            $(document).on('click', function(e) {
+                // Check if the clicked element is outside any dropdown using jQuery
+                if (!$(e.target).closest('.custom-dropdown').length) {
+                    dotNetRef.invokeMethodAsync('CloseDropdowns');
+                }
+            });
+            
+            // Keyboard handler for Escape key using jQuery
+            $(document).on('keydown', function(e) {
+                if (e.which === 27 || e.key === 'Escape') { // jQuery uses e.which for key codes
+                    dotNetRef.invokeMethodAsync('CloseDropdowns');
+                }
+            });
+            
+        });
+    };
+</script>

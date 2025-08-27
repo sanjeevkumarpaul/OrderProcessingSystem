@@ -36,7 +36,7 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to allow dropdown to extend beyond card */
     color: #333333;
     position: relative;
 }
@@ -111,37 +111,136 @@
 }
 
 .inline-select {
-    background: rgba(247, 223, 30, 0.2);
-    border: 0px solid rgba(247, 223, 30, 0.5);
-    border-radius: 4px;
-    color: #333333;
+    background: #fdd835;  /* Bright yellow like in csstest.html */
+    border: 0px solid #fdd835;
+    border-radius: 6px;   /* Match csstest.html border radius */
+    color: black;         /* Black text like in csstest.html */
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.4rem 0.8rem;
+    font-weight: 700;     /* Bold weight like in csstest.html */
+    padding: 4px 10px;    /* Clean padding without extra space for custom arrow */
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 100px;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23333333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1rem;
-    padding-right: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+    /* Use native dropdown arrow - no custom styling needed */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;  /* Prevent text wrapping like csstest.html */
 }
 
 .inline-select:focus {
     outline: none;
-    border-color: #f7df1e;
-    background: rgba(247, 223, 30, 0.3);
-    box-shadow: 0 0 0 2px rgba(247, 223, 30, 0.2);
+    background: #ffed4e;  /* Slightly lighter yellow on focus */
+    box-shadow: 0 0 0 2px rgba(253, 216, 53, 0.3);
+    transform: translateY(-1px);
 }
 
 .inline-select:hover {
-    background: rgba(247, 223, 30, 0.25);
-    border-color: rgba(247, 223, 30, 0.6);
+    background: #ffed4e;  /* Slightly lighter yellow on hover */
     transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Alternative tag-style combo boxes inspired by csstest.html */
+.tag-style-select {
+    background-color: #fdd835;  /* Exact color from csstest.html */
+    color: black;
+    padding: 4px 10px;    /* Clean padding without extra space for custom arrow */
+    border-radius: 6px;
+    margin-right: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-width: 120px;
+    /* Use native dropdown arrow - no custom styling needed */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.tag-style-select:hover {
+    background-color: #ffed4e;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tag-style-select:focus {
+    outline: none;
+    background-color: #ffed4e;
+    box-shadow: 0 0 0 2px rgba(253, 216, 53, 0.3);
+}
+
+/* Enhanced dropdown styling for better cross-browser support */
+.tag-style-select,
+.inline-select {
+    /* Force custom styling in some browsers */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Remove old background image - we'll use ::after for custom dropdown */
+}
+
+/* Style the dropdown container for webkit browsers */
+.tag-style-select::-webkit-scrollbar,
+.inline-select::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tag-style-select::-webkit-scrollbar-track,
+.inline-select::-webkit-scrollbar-track {
+    background: #fdd835;
+    border-radius: 4px;
+}
+
+.tag-style-select::-webkit-scrollbar-thumb,
+.inline-select::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.tag-style-select::-webkit-scrollbar-thumb:hover,
+.inline-select::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+.tag-style-select option {
+    background-color: #fdd835;  /* Same yellow background */
+    color: black;               /* Black text for contrast */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;           /* Slightly less bold than main select */
+    padding: 8px 12px;          /* More padding for options */
+    border: none;
+}
+
+.tag-style-select option:hover {
+    background-color: #ffed4e;  /* Lighter yellow on hover */
+    color: black;
+}
+
+.tag-style-select option:checked {
+    background-color: #f7df1e;  /* Even more distinct for selected */
+    color: black;
+    font-weight: 700;           /* Bold for selected option */
+}
+
+.inline-select option {
+    background-color: #fdd835;  /* Same yellow background */
+    color: black;               /* Black text for contrast */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;           /* Slightly less bold than main select */
+    padding: 8px 12px;          /* More padding for options */
+    border: none;
+}
+
+.inline-select option:hover {
+    background-color: #ffed4e;  /* Lighter yellow on hover */
+    color: black;
+}
+
+.inline-select option:checked {
+    background-color: #f7df1e;  /* Even more distinct for selected */
+    color: black;
+    font-weight: 700;           /* Bold for selected option */
 }
 
 .inline-quantity-group {
@@ -150,30 +249,37 @@
 }
 
 .inline-input {
-    background: rgba(247, 223, 30, 0.2);
-    border: 1px solid rgba(247, 223, 30, 0.5);
-    border-radius: 4px;
-    color: #333333;
+    background: #fdd835;        /* Bright yellow to match combo boxes */
+    border: 0px solid #fdd835;  /* Remove border for cleaner look */
+    border-radius: 6px;         /* Match combo box border radius */
+    color: black;               /* Bold black text like combo boxes */
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.4rem 2rem 0.4rem 0.8rem;
+    font-weight: 700;           /* Bold weight like combo boxes */
+    padding: 4px 20px 4px 10px; /* Right padding for micro controls */
     width: 80px;
     text-align: center;
     transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Match combo box shadow */
+    white-space: nowrap;        /* Prevent text issues */
 }
 
 .inline-input:focus {
     outline: none;
-    border-color: #f7df1e;
-    background: rgba(247, 223, 30, 0.3);
-    box-shadow: 0 0 0 2px rgba(247, 223, 30, 0.2);
+    background: #ffed4e;        /* Slightly lighter yellow on focus */
+    box-shadow: 0 0 0 2px rgba(253, 216, 53, 0.3);
+    transform: translateY(-1px); /* Slight lift like combo boxes */
+}
+
+.inline-input:hover {
+    background: #ffed4e;        /* Lighter yellow on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .micro-controls {
     position: absolute;
-    right: 4px;
+    right: 2px;              /* Closer to edge since padding changed */
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -182,12 +288,12 @@
 }
 
 .micro-btn {
-    background: rgba(247, 223, 30, 0.3) !important;
-    border: none !important;
-    color: #f7df1e !important;
-    width: 18px;
-    height: 14px;
-    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.1);     /* Subtle dark background */
+    border: none;
+    color: black;                        /* Black text to match input */
+    width: 16px;                        /* Slightly smaller */
+    height: 12px;                       /* Slightly smaller */
+    font-size: 0.6rem;
     line-height: 1;
     cursor: pointer;
     border-radius: 2px;
@@ -199,8 +305,8 @@
 }
 
 .micro-btn:hover {
-    background: rgba(247, 223, 30, 0.5) !important;
-    color: #2d2d30 !important;
+    background: rgba(0, 0, 0, 0.2);     /* Darker on hover */
+    color: black;
     transform: scale(1.1);
 }
 
@@ -347,4 +453,105 @@
     .section-title {
         font-size: 1.2rem;
     }
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    z-index: 999; /* Ensure dropdown container is above other elements */
+}
+
+.dropdown-selected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: inherit;
+    background: inherit;
+    border: inherit;
+    border-radius: inherit;
+    font: inherit;
+    color: inherit;
+    position: relative;
+}
+
+/* Clean CSS arrow using ::after */
+.custom-dropdown .dropdown-selected::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid black;
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.custom-dropdown.open .dropdown-selected::after {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px; /* Minimum width to accommodate longer names */
+    width: max-content; /* Expand to fit content width */
+    max-width: 400px; /* Maximum width to prevent excessive expansion */
+    background: #fdd835;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 300px; /* Increased to show ~12 elements before scrolling */
+    overflow-y: auto;
+    overflow-x: hidden; /* Hide horizontal scroll - we'll fit content instead */
+    z-index: 9999; /* Much higher z-index to appear above all viewports */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-option {
+    padding: 10px 12px;
+    background: #fdd835;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap; /* Prevent text wrapping - dropdown will expand to fit */
+}
+
+.dropdown-option:hover {
+    background-color: #ffed4e;
+}
+
+.dropdown-option.selected {
+    background-color: #ffed4e;
+    font-weight: 700;
+}
+
+.dropdown-option:last-child {
+    border-bottom: none;
+    border-radius: 0 0 6px 6px;
+}
+
+/* Custom scrollbar for dropdown options */
+.dropdown-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-options::-webkit-scrollbar-track {
+    background: #fdd835;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
 }
