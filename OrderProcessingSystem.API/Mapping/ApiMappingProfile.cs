@@ -1,7 +1,7 @@
 using AutoMapper;
 using OrderProcessingSystem.Data.Entities;
 using OrderProcessingSystem.Core.Entities;
-using OrderProcessingSystem.Infrastructure.Dto;
+//using OrderProcessingSystem.Infrastructure.Dto;
 using OrderProcessingSystem.Contracts.Dto;
 using OrderProcessingSystem.Data.MediatorCQRS.Customers;
 using OrderProcessingSystem.Data.MediatorCQRS.Suppliers;
@@ -17,7 +17,7 @@ public class ApiMappingProfile : Profile
         CreateMap<OrderProcessingSystem.Data.Entities.Order, OrderDto>();
         CreateMap<OrderProcessingSystem.Core.Entities.Order, OrderDto>();
         CreateMap<OrderProcessingSystem.Data.MediatorCQRS.Reports.SalesByCustomerDto, SalesByCustomerDto>();
-        CreateMap<OrderProcessingSystem.Infrastructure.Dto.SalesByCustomerReportDto, SalesByCustomerDto>();
+        //CreateMap<OrderProcessingSystem.Infrastructure.Dto.SalesByCustomerReportDto, SalesByCustomerDto>();
         
         // Add mappings between Data layer DTOs and Contract layer DTOs
         CreateMap<OrderProcessingSystem.Data.MediatorCQRS.Customers.CustomerWithOrdersDto, OrderProcessingSystem.Contracts.Dto.CustomerWithOrdersDto>();
