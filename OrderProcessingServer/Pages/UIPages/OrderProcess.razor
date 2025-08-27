@@ -2,6 +2,7 @@
 @page "/process-order"
 @using OrderProcessingServer.Services
 @using OrderProcessingServer.Shared.Dto
+@using Microsoft.AspNetCore.Components.Web
 @inject DataLoadingService DataService
 @inject IJSRuntime JSRuntime
 
@@ -71,6 +72,7 @@
                                         <input type="number" 
                                                class="inline-input" 
                                                @bind="orderQuantity" 
+                                               @onkeydown="HandleQuantityKeyDown"
                                                min="1" 
                                                max="5000" 
                                                placeholder="qty">
@@ -178,8 +180,9 @@
                 
         try
         {
-            var customersTask = DataService.LoadCustomersWithCalculationsAsync();
-            var suppliersTask = DataService.LoadSuppliersWithCalculationsAsync();
+            // Use optimized methods without calculations for dropdown population
+            var customersTask = DataService.LoadCustomersAsync();
+            var suppliersTask = DataService.LoadSuppliersAsync();
             
             await Task.WhenAll(customersTask, suppliersTask);
             
@@ -210,6 +213,20 @@
         if (orderQuantity > 1)
         {
             orderQuantity--;
+        }
+    }
+    
+    private void HandleQuantityKeyDown(KeyboardEventArgs e)
+    {
+        // Handle arrow key navigation for quantity spinner using Code property for reliability
+        // Code property provides the physical key code (e.g., "ArrowUp", "ArrowDown")
+        if (e.Code == "ArrowUp")
+        {
+            IncrementQuantity();
+        }
+        else if (e.Code == "ArrowDown")
+        {
+            DecrementQuantity();
         }
     }
     

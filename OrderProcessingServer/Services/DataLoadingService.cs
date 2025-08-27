@@ -9,6 +9,8 @@ namespace OrderProcessingServer.Services;
 /// </summary>
 public class DataLoadingService
 {
+
+    private const string _ApiClient = "ApiClient";
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DataLoadingService> _logger;
 
@@ -16,6 +18,21 @@ public class DataLoadingService
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+    }
+
+    private async Task<(List<T> data, HttpClient client)> GetDataFromApiAsync<T>(string endpoint, HttpClient? client = null) where T : class
+    {
+        try
+        {
+            var httpClient = client ?? _httpClientFactory.CreateClient(_ApiClient);
+            var data = await httpClient.GetFromJsonAsync<List<T>>(endpoint) ?? new List<T>();
+            return (data, httpClient);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load data from API endpoint: {Endpoint}", endpoint);
+            return (new List<T>(), client ?? _httpClientFactory.CreateClient(_ApiClient));
+        }
     }
 
     /// <summary>
@@ -26,17 +43,10 @@ public class DataLoadingService
         try
         {
             _logger.LogInformation("Loading customers with order calculations");
-            
-            var client = _httpClientFactory.CreateClient("ApiClient");
-            
-            // Load base data in parallel for better performance
-            var customersTask = client.GetFromJsonAsync<List<CustomerDto>>("api/data/customers");
-            var ordersTask = client.GetFromJsonAsync<List<OrderDto>>("api/data/orders");
-            
-            await Task.WhenAll(customersTask, ordersTask);
-            
-            var customers = await customersTask ?? new List<CustomerDto>();
-            var orders = await ordersTask ?? new List<OrderDto>();
+
+            // Load base data in parallel for better performance, reusing the same client
+            var (customers, client) = await GetDataFromApiAsync<CustomerDto>("api/data/customers");
+            var (orders, _) = await GetDataFromApiAsync<OrderDto>("api/data/orders", client);
 
             // Calculate OrdersCount and TotalSales per customer
             var customerGroups = orders
@@ -71,16 +81,9 @@ public class DataLoadingService
         {
             _logger.LogInformation("Loading suppliers with order calculations");
             
-            var client = _httpClientFactory.CreateClient("ApiClient");
-            
-            // Load base data in parallel for better performance
-            var suppliersTask = client.GetFromJsonAsync<List<SupplierDto>>("api/data/suppliers");
-            var ordersTask = client.GetFromJsonAsync<List<OrderDto>>("api/data/orders");
-            
-            await Task.WhenAll(suppliersTask, ordersTask);
-            
-            var suppliers = await suppliersTask ?? new List<SupplierDto>();
-            var orders = await ordersTask ?? new List<OrderDto>();
+            // Load base data in parallel for better performance, reusing the same client
+            var (suppliers, client) = await GetDataFromApiAsync<SupplierDto>("api/data/suppliers");
+            var (orders, _) = await GetDataFromApiAsync<OrderDto>("api/data/orders", client);
 
             // Calculate OrdersSupplied per supplier
             var supplierGroups = orders
@@ -107,6 +110,48 @@ public class DataLoadingService
     }
 
     /// <summary>
+    /// Load basic customer data without calculations (optimized for dropdowns)
+    /// </summary>
+    public async Task<List<CustomerDto>> LoadCustomersAsync()
+    {
+        try
+        {
+            _logger.LogInformation("Loading basic customers data");
+            
+            var (customers, _) = await GetDataFromApiAsync<CustomerDto>("api/data/customers");
+
+            _logger.LogInformation("Successfully loaded {CustomerCount} customers", customers.Count);
+            return customers;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load customers");
+            return new List<CustomerDto>();
+        }
+    }
+
+    /// <summary>
+    /// Load basic supplier data without calculations (optimized for dropdowns)
+    /// </summary>
+    public async Task<List<SupplierDto>> LoadSuppliersAsync()
+    {
+        try
+        {
+            _logger.LogInformation("Loading basic suppliers data");
+            
+            var (suppliers, _) = await GetDataFromApiAsync<SupplierDto>("api/data/suppliers");
+
+            _logger.LogInformation("Successfully loaded {SupplierCount} suppliers", suppliers.Count);
+            return suppliers;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load suppliers");
+            return new List<SupplierDto>();
+        }
+    }
+
+    /// <summary>
     /// Load orders (no additional calculations needed currently)
     /// </summary>
     public async Task<List<OrderDto>> LoadOrdersAsync()
@@ -115,8 +160,7 @@ public class DataLoadingService
         {
             _logger.LogInformation("Loading orders");
             
-            var client = _httpClientFactory.CreateClient("ApiClient");
-            var orders = await client.GetFromJsonAsync<List<OrderDto>>("api/data/orders") ?? new List<OrderDto>();
+            var (orders, _) = await GetDataFromApiAsync<OrderDto>("api/data/orders");
 
             _logger.LogInformation("Successfully loaded {OrderCount} orders", orders.Count);
             return orders;
