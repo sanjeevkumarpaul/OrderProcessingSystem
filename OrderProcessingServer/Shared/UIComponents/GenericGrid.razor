@@ -1,6 +1,6 @@
 @typeparam TItem
 @using System.Linq.Expressions
-@using OrderProcessingServer.Shared.UIComponents
+@using OrderProcessingServer.Shared.Dto
 @using OrderProcessingSystem.Utilities.Extensions
 @inject IJSRuntime JS
 
@@ -165,7 +165,7 @@
 
 @code {
     [Parameter] public IEnumerable<TItem>? Items { get; set; }
-    [Parameter] public List<GridColumn> Columns { get; set; } = new List<GridColumn>();
+    [Parameter] public List<GridColumnDto> Columns { get; set; } = new List<GridColumnDto>();
     [Parameter] public int PageSize { get; set; } = 10;
     public int[] PageSizes { get; set; } = new[] {5,10,15};
 
@@ -175,7 +175,7 @@
     int FilteredTotalCount = 0;
 
     // filtering state
-    GridColumn? ActiveFilterColumn;
+    GridColumnDto? ActiveFilterColumn;
     string[] TextOps = new[] {"StartsWith","EndsWith","Equals"};
     // temporary inputs for the currently-open filter popup
     string TextFilterOp = "StartsWith";
@@ -192,7 +192,7 @@
     Dictionary<string, FilterState> ColumnFilters = new Dictionary<string, FilterState>();
 
     // sorting
-    GridColumn? SortColumn;
+    GridColumnDto? SortColumn;
     bool SortAsc = true;
 
     protected override void OnParametersSet()
@@ -249,7 +249,7 @@
         return q.ToList();
     }
 
-    List<TItem> ApplySort(List<TItem> input, GridColumn col, bool asc)
+    List<TItem> ApplySort(List<TItem> input, GridColumnDto col, bool asc)
     {
         var sampleItem = input.FirstOrDefault(i => GetValue(i, col.Field) != null);
         var sampleVal = sampleItem != null ? GetValue(sampleItem, col.Field) : null;
@@ -325,7 +325,7 @@
         };
     }
 
-    bool IsNumericColumn(GridColumn c)
+    bool IsNumericColumn(GridColumnDto c)
     {
         if (c == null) return false;
         // explicit override from column definition
@@ -338,7 +338,7 @@
         return raw.GetType().IsNumericType();
     }
 
-    async Task ToggleFilter(GridColumn c)
+    async Task ToggleFilter(GridColumnDto c)
     {
         var btnId = $"{_gridId}-btn-{c.Field}";
         var popupId = $"{_gridId}-popup-{c.Field}";
@@ -416,7 +416,7 @@
         ApplyPage();
     }
 
-    void ToggleSort(GridColumn c)
+    void ToggleSort(GridColumnDto c)
     {
         if (SortColumn == c) SortAsc = !SortAsc;
         else { SortColumn = c; SortAsc = true; }

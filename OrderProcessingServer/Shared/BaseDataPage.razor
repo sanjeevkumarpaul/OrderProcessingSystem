@@ -43,7 +43,7 @@ else
     // Data and UI state
     protected List<TItem>? Items { get; set; } = null;
     protected bool showGrid = false; // Start with cards by default
-    protected List<GridColumn> Columns { get; set; } = new List<GridColumn>();
+    protected List<GridColumnDto> Columns { get; set; } = new List<GridColumnDto>();
     
     // Parameters for customization
     [Parameter] public string PageTitle { get; set; } = "Data";
@@ -102,7 +102,7 @@ else
     /// Common method to load column metadata and map to UI GridColumn format
     /// Eliminates duplication across Customers, Suppliers, Orders pages
     /// </summary>
-    protected async Task<List<GridColumn>> LoadUIColumnMetadataAsync(string entityName, Dictionary<string, List<string>>? enumMappings = null)
+    protected async Task<List<GridColumnDto>> LoadUIColumnMetadataAsync(string entityName, Dictionary<string, List<string>>? enumMappings = null)
     {
         try
         {
@@ -112,7 +112,7 @@ else
             var serviceColumns = await GridColumnService.LoadColumnMetadataAsync(entityName, enumMappings);
             
             // Map to UI GridColumn format (until component is updated)
-            var uiColumns = serviceColumns.Select(col => new GridColumn
+            var uiColumns = serviceColumns.Select(col => new GridColumnDto
             {
                 Header = col.Header,
                 Field = col.Field,
@@ -130,7 +130,7 @@ else
         {
             Console.Error.WriteLine($"Failed to load column metadata: {ex.Message}");
             // Service handles fallbacks, but provide empty list as final fallback
-            return new List<GridColumn>();
+            return new List<GridColumnDto>();
         }
     }
 
