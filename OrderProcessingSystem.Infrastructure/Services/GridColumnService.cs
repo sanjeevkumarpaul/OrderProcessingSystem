@@ -1,6 +1,6 @@
 using OrderProcessingSystem.Infrastructure.Models;
-using OrderProcessingSystem.Infrastructure.Interfaces;
 using OrderProcessingSystem.Contracts.Dto;
+using OrderProcessingSystem.Contracts.Interfaces;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 
@@ -20,12 +20,12 @@ public class GridColumnService : IGridColumnService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<List<GridColumn>> LoadColumnMetadataAsync(string entityName)
+    public async Task<List<GridColumnDto>> LoadColumnMetadataAsync(string entityName)
     {
         return await LoadColumnMetadataAsync(entityName, null);
     }
 
-    public async Task<List<GridColumn>> LoadColumnMetadataAsync(string entityName, Dictionary<string, List<string>>? enumMappings)
+    public async Task<List<GridColumnDto>> LoadColumnMetadataAsync(string entityName, Dictionary<string, List<string>>? enumMappings)
     {
         try
         {
@@ -39,7 +39,7 @@ public class GridColumnService : IGridColumnService
                 ?? new List<UIGridColumnDto>();
 
             // Map to GridColumn models
-            var columns = dtoColumns.Select(dto => new GridColumn
+            var columns = dtoColumns.Select(dto => new GridColumnDto
             {
                 Header = dto.Header,
                 Field = dto.Field,
@@ -61,7 +61,7 @@ public class GridColumnService : IGridColumnService
         {
             _logger.LogError(ex, "Failed to load column metadata for entity: {EntityName}", entityName);
             // Return empty list as fallback
-            return new List<GridColumn>();
+            return new List<GridColumnDto>();
         }
     }
 }

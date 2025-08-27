@@ -7,13 +7,13 @@ namespace OrderProcessingSystem.Contracts.Interfaces;
 /// </summary>
 public interface IGridColumnService
 {
-    /// <summary>
+    // <summary>
     /// Load grid column metadata for a specific entity
     /// </summary>
     /// <param name="entityName">Entity name (customers, suppliers, orders)</param>
     /// <returns>List of grid columns for the entity</returns>
     Task<List<GridColumnDto>> LoadColumnMetadataAsync(string entityName);
-    
+
     /// <summary>
     /// Load grid column metadata for a specific entity with enum values mapping
     /// </summary>

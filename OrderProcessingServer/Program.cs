@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OrderProcessingSystem.Infrastructure.Services;
-using OrderProcessingSystem.Infrastructure.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -8,4 +8,5 @@ public class GridColumnDto
     public bool Filterable { get; set; } = false;
     public bool IsNumeric { get; set; } = false;
     public bool IsEnum { get; set; } = false;
+    public List<string>? EnumValues { get; set; }
 }
