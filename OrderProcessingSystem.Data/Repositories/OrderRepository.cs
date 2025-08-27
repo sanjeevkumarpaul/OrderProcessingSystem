@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using OrderProcessingSystem.Data.Entities;
+using OrderProcessingSystem.Data.Interfaces;
 
 namespace OrderProcessingSystem.Data.Repositories;
 

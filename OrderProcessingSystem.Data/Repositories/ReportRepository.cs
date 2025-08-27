@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using OrderProcessingSystem.Data.Features.Reports;
+using OrderProcessingSystem.Data.MediatorCQRS.Reports;
+using OrderProcessingSystem.Data.Interfaces;
 using Dapper;
 
 namespace OrderProcessingSystem.Data.Repositories;

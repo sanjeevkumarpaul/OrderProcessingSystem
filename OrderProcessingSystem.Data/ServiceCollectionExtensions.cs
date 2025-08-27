@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MediatR;
 using OrderProcessingSystem.Data.Repositories;
+using OrderProcessingSystem.Data.Interfaces;
+
 
 namespace OrderProcessingSystem.Data;
 

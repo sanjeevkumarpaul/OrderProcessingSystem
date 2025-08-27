@@ -7,13 +7,9 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 using OrderProcessingSystem.Data.Entities;
 
-namespace OrderProcessingSystem.Data.Repositories;
+using OrderProcessingSystem.Data.Interfaces;
 
-public interface ICustomerRepository
-{
-    Task<List<Customer>> GetAllAsync(CancellationToken ct = default);
-    Task AddAsync(Customer customer, CancellationToken ct = default);
-}
+namespace OrderProcessingSystem.Data.Repositories;
 
 public class CustomerRepository : ICustomerRepository
 {
@@ -23,8 +19,8 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<List<Customer>> GetAllAsync(CancellationToken ct = default)
     {
-    var sql = _sqlProvider.GetSql("Customers.SelectAll");
-    return await OrderProcessingSystem.Data.Common.DapperExecutor.QueryAsync<Customer>(_db, sql, null, ct);
+        var sql = _sqlProvider.GetSql("Customers.SelectAll");
+        return await OrderProcessingSystem.Data.Common.DapperExecutor.QueryAsync<Customer>(_db, sql, null, ct);
     }
 
     public async Task AddAsync(Customer customer, CancellationToken ct = default)

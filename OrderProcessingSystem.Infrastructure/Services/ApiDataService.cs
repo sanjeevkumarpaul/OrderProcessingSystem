@@ -1,9 +1,9 @@
 using MediatR;
 using AutoMapper;
-using OrderProcessingSystem.Data.Features.Orders;
-using OrderProcessingSystem.Data.Features.Suppliers;
-using OrderProcessingSystem.Data.Features.Customers;
-using OrderProcessingSystem.Data.Features.Reports;
+using OrderProcessingSystem.Data.MediatorCQRS.Orders;
+using OrderProcessingSystem.Data.MediatorCQRS.Suppliers;
+using OrderProcessingSystem.Data.MediatorCQRS.Customers;
+using OrderProcessingSystem.Data.MediatorCQRS.Reports;
 using OrderProcessingSystem.Contracts.Interfaces;
 using ContractsDto = OrderProcessingSystem.Contracts.Dto;
 
@@ -46,7 +46,7 @@ namespace OrderProcessingSystem.Infrastructure.Services
                 Top = top
             };
             var report = await _mediator.Send(query);
-            // Map from Data.Features.Reports.SalesByCustomerDto to Contracts.Dto.SalesByCustomerDto
+            // Map from Data.MediatorCQRS.Reports.SalesByCustomerDto to Contracts.Dto.SalesByCustomerDto
             return _mapper.Map<List<ContractsDto.SalesByCustomerDto>>(report);
         }
 
