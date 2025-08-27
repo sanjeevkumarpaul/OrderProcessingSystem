@@ -1,4 +1,4 @@
-using OrderProcessingSystem.Infrastructure.Models;
+
 using OrderProcessingSystem.Contracts.Dto;
 using OrderProcessingSystem.Contracts.Interfaces;
 using System.Net.Http.Json;
