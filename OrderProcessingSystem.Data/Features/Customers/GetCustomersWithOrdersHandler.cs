@@ -17,14 +17,14 @@ public class GetCustomersWithOrdersHandler : IRequestHandler<GetCustomersWithOrd
             SELECT 
                 c.CustomerId,
                 c.Name,
-                c.Country,
-                c.Email,
-                c.Phone,
+                '' as Country,
+                '' as Email,
+                '' as Phone,
                 COALESCE(COUNT(o.OrderId), 0) as OrdersCount,
                 COALESCE(SUM(o.Total), 0) as TotalSales
             FROM Customers c
             LEFT JOIN Orders o ON c.CustomerId = o.CustomerId
-            GROUP BY c.CustomerId, c.Name, c.Country, c.Email, c.Phone
+            GROUP BY c.CustomerId, c.Name
             ORDER BY c.Name
             """;
             

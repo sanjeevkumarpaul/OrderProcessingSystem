@@ -38,6 +38,20 @@ public class DataController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("customers-with-orders")]
+    public async Task<IActionResult> CustomersWithOrders()
+    {
+        var customers = await _apiDataService.GetCustomersWithOrdersAsync();
+        return Ok(customers); // No need to map since ApiDataService already returns the correct DTO
+    }
+
+    [HttpGet("suppliers-with-orders")]
+    public async Task<IActionResult> SuppliersWithOrders()
+    {
+        var suppliers = await _apiDataService.GetSuppliersWithOrdersAsync();
+        return Ok(suppliers); // No need to map since ApiDataService already returns the correct DTO
+    }
+
     [HttpGet("reports/sales-by-customer")]
     public async Task<IActionResult> SalesByCustomer([FromQuery] int? customerId = null, [FromQuery] int? top = null)
     {

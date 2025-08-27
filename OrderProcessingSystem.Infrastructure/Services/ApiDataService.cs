@@ -55,7 +55,7 @@ namespace OrderProcessingSystem.Infrastructure.Services
         public async Task<List<CustomerWithOrdersDto>> GetCustomersWithOrdersAsync()
         {
             var customers = await _mediator.Send(new GetCustomersWithOrdersQuery());
-            return customers;
+            return customers; // Already returns List<CustomerWithOrdersDto> from Contracts
         }
 
         public async Task<List<SupplierWithOrdersDto>> GetSuppliersWithOrdersAsync()
