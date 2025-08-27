@@ -1,6 +1,6 @@
 using OrderProcessingSystem.Infrastructure.Models;
 
-namespace OrderProcessingSystem.Infrastructure.Services;
+namespace OrderProcessingSystem.Infrastructure.Interfaces;
 
 /// <summary>
 /// Service for loading grid column metadata from API endpoints

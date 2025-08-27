@@ -1,5 +1,5 @@
 using OrderProcessingSystem.Infrastructure.Models;
-using OrderProcessingSystem.Infrastructure.Services;
+using OrderProcessingSystem.Infrastructure.Interfaces;
 using OrderProcessingSystem.Contracts.Dto;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
