@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OrderProcessingSystem.Infrastructure.Services;
 using OrderProcessingSystem.Contracts.Interfaces;
+using OrderProcessingServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +21,11 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 // Register services
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
-builder.Services.AddScoped<OrderProcessingServer.DataLoadingService>(provider =>
+builder.Services.AddScoped<DataLoadingService>(provider =>
 {
     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var logger = provider.GetRequiredService<ILogger<OrderProcessingServer.DataLoadingService>>();
-    return new OrderProcessingServer.DataLoadingService(httpClientFactory, logger);
+    var logger = provider.GetRequiredService<ILogger<DataLoadingService>>();
+    return new DataLoadingService(httpClientFactory, logger);
 });
 
 var app = builder.Build();

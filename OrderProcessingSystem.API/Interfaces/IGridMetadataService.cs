@@ -1,6 +1,6 @@
 using OrderProcessingSystem.Contracts.Dto;
 
-namespace OrderProcessingSystem.API.Services;
+namespace OrderProcessingSystem.API.Interfaces;
 
 /// <summary>
 /// Service interface for managing grid metadata operations

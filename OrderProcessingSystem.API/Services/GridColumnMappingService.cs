@@ -1,5 +1,6 @@
 using AutoMapper;
 using OrderProcessingSystem.Contracts.Dto;
+using OrderProcessingSystem.API.Interfaces;
 
 namespace OrderProcessingSystem.API.Services;
 
@@ -7,11 +8,6 @@ namespace OrderProcessingSystem.API.Services;
 /// Service for handling DTO transformations using AutoMapper
 /// Encapsulates mapping logic for better separation of concerns
 /// </summary>
-public interface IGridColumnMappingService
-{
-    List<UIGridColumnDto> MapToUIColumns(List<GridColumnDto> contractDtos);
-    UIGridColumnDto MapToUIColumn(GridColumnDto contractDto);
-}
 
 public class GridColumnMappingService : IGridColumnMappingService
 {

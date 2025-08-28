@@ -3,6 +3,8 @@ using Microsoft.Extensions.FileProviders;
 using OrderProcessingSystem.Data;
 using OrderProcessingSystem.Infrastructure;
 using OrderProcessingSystem.Cache;
+using OrderProcessingSystem.API.Interfaces;
+using OrderProcessingSystem.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +21,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 
 // Register mapping services
-builder.Services.AddScoped<OrderProcessingSystem.API.Services.IGridColumnMappingService, 
-                          OrderProcessingSystem.API.Services.GridColumnMappingService>();
+builder.Services.AddScoped<IGridColumnMappingService, GridColumnMappingService>();
 
 // Register metadata services
-builder.Services.AddScoped<OrderProcessingSystem.API.Services.IGridMetadataService,
-                          OrderProcessingSystem.API.Services.GridMetadataService>();
+builder.Services.AddScoped<IGridMetadataService,GridMetadataService>();
 
 // Register Data services with SQLite file in OrderDatabase/OPSDB.db
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "..", "OrderDatabase", "OPSDB.db");
