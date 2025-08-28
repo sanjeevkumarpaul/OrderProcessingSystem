@@ -1,4 +1,4 @@
-namespace OrderProcessingServer.Shared.Dto;
+namespace OrderProcessingServer.Shared.UIViewModels;
 
 /// <summary>
 /// DTO for supplier data with pre-calculated statistics from database

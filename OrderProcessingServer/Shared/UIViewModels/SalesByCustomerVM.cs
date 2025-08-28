@@ -1,4 +1,4 @@
-namespace OrderProcessingServer.Shared.Dto;
+namespace OrderProcessingServer.Shared.UIViewModels;
 
 public class SalesByCustomerVM
 {

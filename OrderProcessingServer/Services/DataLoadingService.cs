@@ -1,4 +1,4 @@
-using OrderProcessingServer.Shared.Dto;
+using OrderProcessingServer.Shared.UIViewModels;
 using System.Text.Json;
 
 namespace OrderProcessingServer.Services;

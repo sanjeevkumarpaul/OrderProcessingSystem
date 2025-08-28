@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace OrderProcessingServer.Shared.Dto;
+namespace OrderProcessingServer.Shared.UIViewModels;
     
 public class GridColumnVM
 {

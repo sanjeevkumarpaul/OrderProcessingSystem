@@ -1,4 +1,4 @@
-namespace OrderProcessingServer.Shared.Dto;
+namespace OrderProcessingServer.Shared.UIViewModels;
 
 /// <summary>
 /// DTO for customer data with pre-calculated statistics from database
