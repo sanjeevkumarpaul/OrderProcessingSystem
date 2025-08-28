@@ -3,8 +3,13 @@ using Microsoft.AspNetCore.Components.Web;
 using OrderProcessingSystem.Infrastructure.Services;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingServer.Services;
+using OrderProcessingServer.BackgroundTasks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure options
+builder.Services.Configure<BlobStorageSimulationOptions>(
+    builder.Configuration.GetSection(BlobStorageSimulationOptions.SectionName));
 
 // Add services
 builder.Services.AddRazorPages();
@@ -27,6 +32,9 @@ builder.Services.AddScoped<DataLoadingService>(provider =>
     var logger = provider.GetRequiredService<ILogger<DataLoadingService>>();
     return new DataLoadingService(httpClientFactory, logger);
 });
+
+// Register background services
+builder.Services.AddHostedService<BlobStorageMonitorService>();
 
 var app = builder.Build();
 
