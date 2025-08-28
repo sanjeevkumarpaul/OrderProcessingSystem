@@ -160,18 +160,11 @@
     int TotalPages = 1;
     int FilteredTotalCount = 0;
 
-    // filtering state
-    string[] TextOps = new[] { "StartsWith", "EndsWith", "Equals", "Contains" };
+    // filtering state using shared service
+    string[] TextOps = FilteringService<TItem>.TextOperations;
 
     // persistent per-column filters (field -> FilterState)
-    class FilterState
-    {
-        public string TextOp { get; set; } = "StartsWith";
-        public string TextValue { get; set; } = string.Empty;
-        public string EnumValue { get; set; } = string.Empty;
-        public bool IsEnum { get; set; } = false;
-    }
-    Dictionary<string, FilterState> ColumnFilters = new Dictionary<string, FilterState>();
+    Dictionary<string, FilteringService<TItem>.FilterState> ColumnFilters = new Dictionary<string, FilteringService<TItem>.FilterState>();
 
     // sorting
     GridColumnDto? SortColumn;
@@ -205,135 +198,43 @@
 
     List<TItem> ApplyFilterList(List<TItem> input)
     {
-        if (input == null) return new List<TItem>();
-        IEnumerable<TItem> q = input;
-        // Apply all column filters present in ColumnFilters (persisted per-column state)
-        foreach (var kv in ColumnFilters)
-        {
-            var field = kv.Key;
-            var fs = kv.Value;
-            if (fs.IsEnum)
-            {
-                if (!string.IsNullOrWhiteSpace(fs.EnumValue))
-                {
-                    q = q.Where(i => string.Equals(GetValue(i, field)?.ToString() ?? string.Empty, fs.EnumValue, StringComparison.OrdinalIgnoreCase));
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(fs.TextValue))
-                {
-                    var t = fs.TextValue.Trim();
-                    q = q.Where(i => MatchText(GetValue(i, field)?.ToString() ?? string.Empty, t, fs.TextOp));
-                }
-            }
-        }
-        return q.ToList();
+        return FilteringService<TItem>.ApplyFilters(input, ColumnFilters);
     }
 
     List<TItem> ApplySort(List<TItem> input, GridColumnDto col, bool asc)
     {
-        var sampleItem = input.FirstOrDefault(i => GetValue(i, col.Field) != null);
-        var sampleVal = sampleItem != null ? GetValue(sampleItem, col.Field) : null;
-
-        if (sampleVal != null)
-        {
-            var t = sampleVal.GetType();
-            var typeCode = System.Type.GetTypeCode(t);
-
-            bool isNumeric = typeCode == TypeCode.Byte || typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 ||
-                             typeCode == TypeCode.UInt16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.UInt32 ||
-                             typeCode == TypeCode.Int64 || typeCode == TypeCode.UInt64 || typeCode == TypeCode.Single ||
-                             typeCode == TypeCode.Double || typeCode == TypeCode.Decimal;
-
-            if (isNumeric)
-            {
-                if (asc)
-                    return input.OrderBy(i =>
-                    {
-                        var v = GetValue(i, col.Field);
-                        try { return Convert.ToDecimal(v ?? 0); }
-                        catch { return decimal.MinValue; }
-                    }).ToList();
-                else
-                    return input.OrderByDescending(i =>
-                    {
-                        var v = GetValue(i, col.Field);
-                        try { return Convert.ToDecimal(v ?? 0); }
-                        catch { return decimal.MinValue; }
-                    }).ToList();
-            }
-
-            if (typeCode == TypeCode.DateTime)
-            {
-                if (asc)
-                    return input.OrderBy(i =>
-                    {
-                        var v = GetValue(i, col.Field);
-                        return v is DateTime dt ? dt : DateTime.MinValue;
-                    }).ToList();
-                else
-                    return input.OrderByDescending(i =>
-                    {
-                        var v = GetValue(i, col.Field);
-                        return v is DateTime dt ? dt : DateTime.MinValue;
-                    }).ToList();
-            }
-        }
-
-        return asc
-            ? input.OrderBy(i => (GetValue(i, col.Field)?.ToString() ?? string.Empty)).ToList()
-            : input.OrderByDescending(i => (GetValue(i, col.Field)?.ToString() ?? string.Empty)).ToList();
+        return FilteringService<TItem>.ApplySort(input, col, asc);
     }
 
     object? GetValue(TItem? item, string field)
     {
-        if (item == null) return null;
-        var parts = (field ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
-        object? cur = item as object;
-        foreach (var p in parts)
-        {
-            if (cur == null) return null;
-            var prop = cur.GetType().GetProperty(p);
-            if (prop == null) return null;
-            cur = prop.GetValue(cur);
-        }
-        return cur;
+        return FilteringService<TItem>.GetValue(item, field);
     }
 
     static bool MatchText(string value, string term, string op)
     {
-        if (value == null) return false;
-        return op switch
-        {
-            "StartsWith" => value.StartsWith(term, StringComparison.OrdinalIgnoreCase),
-            "EndsWith" => value.EndsWith(term, StringComparison.OrdinalIgnoreCase),
-            "Equals" => string.Equals(value, term, StringComparison.OrdinalIgnoreCase),
-            "Contains" => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0,
-            _ => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
-        };
+        return FilteringService<TItem>.MatchText(value, term, op);
     }
 
     void OnTextFilterChanged(string field, ChangeEventArgs e)
     {
         var value = e.Value?.ToString() ?? string.Empty;
-        if (!ColumnFilters.ContainsKey(field))
-        {
-            ColumnFilters[field] = new FilterState { IsEnum = false };
-        }
-        ColumnFilters[field].TextValue = value;
+        FilteringService<TItem>.UpdateTextFilter(ColumnFilters, field, value);
         CurrentPage = 1;
         ApplyPage();
     }
 
     void OnTextFilterOpChanged(string field, ChangeEventArgs e)
     {
-        var op = e.Value?.ToString() ?? "StartsWith";
+        var op = e.Value?.ToString() ?? "Contains";
         if (!ColumnFilters.ContainsKey(field))
         {
-            ColumnFilters[field] = new FilterState { IsEnum = false };
+            FilteringService<TItem>.UpdateTextFilter(ColumnFilters, field, string.Empty, op);
         }
-        ColumnFilters[field].TextOp = op;
+        else
+        {
+            ColumnFilters[field].TextOp = op;
+        }
         CurrentPage = 1;
         ApplyPage();
     }
@@ -341,24 +242,20 @@
     void OnEnumFilterChanged(string field, ChangeEventArgs e)
     {
         var value = e.Value?.ToString() ?? string.Empty;
-        if (!ColumnFilters.ContainsKey(field))
-        {
-            ColumnFilters[field] = new FilterState { IsEnum = true };
-        }
-        ColumnFilters[field].EnumValue = value;
+        FilteringService<TItem>.UpdateEnumFilter(ColumnFilters, field, value);
         CurrentPage = 1;
         ApplyPage();
     }
 
     void ClearColumnFilter(string field)
     {
-        ColumnFilters.Remove(field);
+        FilteringService<TItem>.ClearColumnFilter(ColumnFilters, field);
         ApplyPage();
     }
 
     void ClearAllFilters()
     {
-        ColumnFilters.Clear();
+        FilteringService<TItem>.ClearAllFilters(ColumnFilters);
         CurrentPage = 1;
         ApplyPage();
     }
@@ -405,7 +302,7 @@
 
     bool IsFilterActive()
     {
-        return ColumnFilters.Any(kv => !string.IsNullOrWhiteSpace(kv.Value.TextValue) || !string.IsNullOrWhiteSpace(kv.Value.EnumValue));
+        return FilteringService<TItem>.HasActiveFilters(ColumnFilters);
     }
 
     async Task ExportAll()
