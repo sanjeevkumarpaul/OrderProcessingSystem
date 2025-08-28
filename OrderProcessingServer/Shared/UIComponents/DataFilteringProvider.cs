@@ -8,7 +8,7 @@ namespace OrderProcessingServer.Shared.UIComponents
     /// <summary>
     /// Shared filtering service for GenericGrid and GenericCards components
     /// </summary>
-    public class FilteringService<TItem>
+    public class DataFilteringProvider<TItem>
     {
         public static readonly string[] TextOperations = { "Contains", "StartsWith", "EndsWith", "Equals" };
 
