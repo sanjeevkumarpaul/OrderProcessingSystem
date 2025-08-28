@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using System.Text.Json;
+using OrderProcessingServer.BackgroundTasks.Models;
 
 namespace OrderProcessingServer.BackgroundTasks;
 
@@ -45,7 +46,7 @@ public class BlobStorageMonitorService : BackgroundService
         {
             try
             {
-                await CheckForOrderTransactionFiles();
+                await CheckForJsonFiles();
                 await Task.Delay(TimeSpan.FromSeconds(_options.PollingIntervalSeconds), stoppingToken);
             }
             catch (OperationCanceledException)
@@ -69,7 +70,7 @@ public class BlobStorageMonitorService : BackgroundService
         {
             _fileWatcher = new FileSystemWatcher(_fullFolderPath)
             {
-                Filter = _options.MonitoredFileName,
+                Filter = "*.json", // Monitor all JSON files
                 NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.Size,
                 EnableRaisingEvents = true
             };
@@ -77,8 +78,7 @@ public class BlobStorageMonitorService : BackgroundService
             _fileWatcher.Created += OnFileCreated;
             _fileWatcher.Changed += OnFileChanged;
             
-            _logger.LogInformation("File system watcher setup complete for {FileName} in {FolderPath}", 
-                _options.MonitoredFileName, _fullFolderPath);
+            _logger.LogInformation("File system watcher setup complete for JSON files in {FolderPath}", _fullFolderPath);
         }
         catch (Exception ex)
         {
@@ -89,33 +89,67 @@ public class BlobStorageMonitorService : BackgroundService
     private async void OnFileCreated(object sender, FileSystemEventArgs e)
     {
         _logger.LogInformation("File created: {FilePath}", e.FullPath);
-        await ProcessOrderTransactionFile(e.FullPath);
+        await ProcessJsonFile(e.FullPath);
     }
 
     private async void OnFileChanged(object sender, FileSystemEventArgs e)
     {
         _logger.LogInformation("File changed: {FilePath}", e.FullPath);
-        await ProcessOrderTransactionFile(e.FullPath);
+        await ProcessJsonFile(e.FullPath);
     }
 
-    private async Task CheckForOrderTransactionFiles()
+    private async Task CheckForJsonFiles()
     {
         try
         {
-            var filePath = Path.Combine(_fullFolderPath, _options.MonitoredFileName);
+            var jsonFiles = Directory.GetFiles(_fullFolderPath, "*.json");
             
-            if (File.Exists(filePath))
+            foreach (var filePath in jsonFiles)
             {
-                var fileInfo = new FileInfo(filePath);
-                _logger.LogDebug("Found {FileName} - Size: {Size} bytes, Last Modified: {LastModified}",
-                    _options.MonitoredFileName, fileInfo.Length, fileInfo.LastWriteTime);
+                var fileName = Path.GetFileName(filePath);
+                _logger.LogDebug("Found JSON file: {FileName}", fileName);
                 
-                await ProcessOrderTransactionFile(filePath);
+                await ProcessJsonFile(filePath);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error checking for order transaction files");
+            _logger.LogError(ex, "Error checking for JSON files");
+        }
+    }
+
+    private async Task ProcessJsonFile(string filePath)
+    {
+        try
+        {
+            var fileName = Path.GetFileName(filePath).ToLower();
+            
+            // Wait a bit to ensure file write is complete
+            await Task.Delay(100);
+
+            // Check if file is still being written to
+            if (IsFileLocked(filePath))
+            {
+                _logger.LogWarning("File is locked, skipping: {FilePath}", filePath);
+                return;
+            }
+
+            if (fileName == "ordertransaction.json")
+            {
+                await ProcessOrderTransactionFile(filePath);
+            }
+            else if (fileName == "ordercancellation.json")
+            {
+                await ProcessOrderCancellationFile(filePath);
+            }
+            else
+            {
+                _logger.LogInformation("Unknown JSON file type: {FileName}", fileName);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing JSON file: {FilePath}", filePath);
         }
     }
 
@@ -149,56 +183,215 @@ public class BlobStorageMonitorService : BackgroundService
             _logger.LogInformation("Processing order transaction file: {FilePath}", filePath);
             _logger.LogDebug("File content: {Content}", fileContent);
 
-            // Try to parse JSON to validate format
+            // Try to parse JSON and validate schema
             try
             {
-                using var jsonDocument = JsonDocument.Parse(fileContent);
-                _logger.LogInformation("Successfully parsed JSON from {FilePath}", filePath);
+                var orderTransaction = JsonSerializer.Deserialize<OrderTransactionModel>(fileContent);
                 
-                // Here you can add logic to process the order transaction
-                // For example, you might want to:
-                // 1. Validate the order data
-                // 2. Save it to database
-                // 3. Send notifications
-                // 4. Update order status
+                if (orderTransaction == null)
+                {
+                    _logger.LogError("Failed to deserialize order transaction from {FilePath}", filePath);
+                    return;
+                }
+
+                // Validate the schema
+                if (!ValidateOrderTransaction(orderTransaction))
+                {
+                    _logger.LogError("Order transaction validation failed for {FilePath}", filePath);
+                    return;
+                }
+
+                _logger.LogInformation("Successfully validated and parsed order transaction from {FilePath}", filePath);
+                _logger.LogInformation("Order Transaction - Supplier: {SupplierName}, Customer: {CustomerName}, Quantity: {Quantity}, Price: {Price}", 
+                    orderTransaction.Supplier.Name, orderTransaction.Customer.Name, 
+                    orderTransaction.Supplier.Quantity, orderTransaction.Supplier.Price);
                 
-                await ProcessOrderTransaction(jsonDocument, filePath);
+                await ProcessOrderTransaction(orderTransaction, filePath);
             }
             catch (JsonException ex)
             {
-                _logger.LogError(ex, "Invalid JSON format in file {FilePath}", filePath);
+                _logger.LogError(ex, "Invalid JSON format in order transaction file {FilePath}", filePath);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing file {FilePath}", filePath);
+            _logger.LogError(ex, "Error processing order transaction file {FilePath}", filePath);
         }
     }
 
-    private Task ProcessOrderTransaction(JsonDocument orderTransaction, string filePath)
+    private async Task ProcessOrderCancellationFile(string filePath)
     {
         try
         {
-            // Extract order information
-            var root = orderTransaction.RootElement;
+            // Wait a bit to ensure file write is complete
+            await Task.Delay(100);
+
+            // Check if file is still being written to
+            if (IsFileLocked(filePath))
+            {
+                _logger.LogDebug("File {FilePath} is locked, waiting...", filePath);
+                await Task.Delay(1000);
+                if (IsFileLocked(filePath))
+                {
+                    _logger.LogWarning("File {FilePath} still locked after waiting", filePath);
+                    return;
+                }
+            }
+
+            var fileContent = await File.ReadAllTextAsync(filePath);
             
-            if (root.TryGetProperty("orderId", out var orderIdElement))
+            if (string.IsNullOrWhiteSpace(fileContent))
             {
-                var orderId = orderIdElement.GetString();
-                _logger.LogInformation("Processing order transaction for Order ID: {OrderId}", orderId);
+                _logger.LogWarning("File {FilePath} is empty", filePath);
+                return;
             }
 
-            if (root.TryGetProperty("transactionType", out var transactionTypeElement))
+            _logger.LogInformation("Processing order cancellation file: {FilePath}", filePath);
+            _logger.LogDebug("File content: {Content}", fileContent);
+
+            // Try to parse JSON and validate schema
+            try
             {
-                var transactionType = transactionTypeElement.GetString();
-                _logger.LogInformation("Transaction type: {TransactionType}", transactionType);
+                var orderCancellation = JsonSerializer.Deserialize<OrderCancellationModel>(fileContent);
+                
+                if (orderCancellation == null)
+                {
+                    _logger.LogError("Failed to deserialize order cancellation from {FilePath}", filePath);
+                    return;
+                }
+
+                // Validate the schema
+                if (!ValidateOrderCancellation(orderCancellation))
+                {
+                    _logger.LogError("Order cancellation validation failed for {FilePath}", filePath);
+                    return;
+                }
+
+                _logger.LogInformation("Successfully validated and parsed order cancellation from {FilePath}", filePath);
+                _logger.LogInformation("Order Cancellation - Customer: {Customer}, Supplier: {Supplier}, Quantity: {Quantity}", 
+                    orderCancellation.Customer, orderCancellation.Supplier, orderCancellation.Quantity);
+                
+                await ProcessOrderCancellation(orderCancellation, filePath);
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "Invalid JSON format in order cancellation file {FilePath}", filePath);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing order cancellation file {FilePath}", filePath);
+        }
+    }
+
+    private bool ValidateOrderTransaction(OrderTransactionModel orderTransaction)
+    {
+        try
+        {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(orderTransaction.Supplier.Name))
+            {
+                _logger.LogError("Supplier name is required");
+                return false;
             }
 
-            // Here you can add specific business logic based on your needs
-            // For now, we'll just log the successful processing
+            if (string.IsNullOrWhiteSpace(orderTransaction.Customer.Name))
+            {
+                _logger.LogError("Customer name is required");
+                return false;
+            }
+
+            // Validate quantities match
+            if (orderTransaction.Supplier.Quantity != orderTransaction.Customer.Quantity)
+            {
+                _logger.LogError("Supplier and customer quantities must match. Supplier: {SupplierQty}, Customer: {CustomerQty}", 
+                    orderTransaction.Supplier.Quantity, orderTransaction.Customer.Quantity);
+                return false;
+            }
+
+            // Validate prices match
+            if (orderTransaction.Supplier.Price != orderTransaction.Customer.Price)
+            {
+                _logger.LogError("Supplier and customer prices must match. Supplier: {SupplierPrice}, Customer: {CustomerPrice}", 
+                    orderTransaction.Supplier.Price, orderTransaction.Customer.Price);
+                return false;
+            }
+
+            // Validate quantity is positive
+            if (orderTransaction.Supplier.Quantity <= 0)
+            {
+                _logger.LogError("Quantity must be greater than 0. Current: {Quantity}", orderTransaction.Supplier.Quantity);
+                return false;
+            }
+
+            // Validate price is within expected range (200-1000)
+            if (orderTransaction.Supplier.Price < 200 || orderTransaction.Supplier.Price > 1000)
+            {
+                _logger.LogError("Price must be between 200 and 1000. Current: {Price}", orderTransaction.Supplier.Price);
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error validating order transaction");
+            return false;
+        }
+    }
+
+    private bool ValidateOrderCancellation(OrderCancellationModel orderCancellation)
+    {
+        try
+        {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(orderCancellation.Customer))
+            {
+                _logger.LogError("Customer name is required for cancellation");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(orderCancellation.Supplier))
+            {
+                _logger.LogError("Supplier name is required for cancellation");
+                return false;
+            }
+
+            // Validate quantity is positive
+            if (orderCancellation.Quantity <= 0)
+            {
+                _logger.LogError("Quantity must be greater than 0 for cancellation. Current: {Quantity}", orderCancellation.Quantity);
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error validating order cancellation");
+            return false;
+        }
+    }
+
+    private Task ProcessOrderTransaction(OrderTransactionModel orderTransaction, string filePath)
+    {
+        try
+        {
+            _logger.LogInformation("Processing validated order transaction:");
+            _logger.LogInformation("  Supplier: {SupplierName} - Quantity: {Quantity}, Price: {Price}", 
+                orderTransaction.Supplier.Name, orderTransaction.Supplier.Quantity, orderTransaction.Supplier.Price);
+            _logger.LogInformation("  Customer: {CustomerName} - Quantity: {Quantity}, Price: {Price}", 
+                orderTransaction.Customer.Name, orderTransaction.Customer.Quantity, orderTransaction.Customer.Price);
+
+            // Here you can add specific business logic such as:
+            // 1. Create order in database
+            // 2. Update inventory
+            // 3. Send notifications
+            // 4. Generate invoices
+            
             _logger.LogInformation("Order transaction processed successfully from file: {FilePath}", filePath);
 
-            // Optionally, you might want to move or delete the processed file
+            // Optionally, archive or delete the processed file
             // await ArchiveProcessedFile(filePath);
             
             return Task.CompletedTask;
@@ -206,6 +399,35 @@ public class BlobStorageMonitorService : BackgroundService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing order transaction from {FilePath}", filePath);
+            return Task.CompletedTask;
+        }
+    }
+
+    private Task ProcessOrderCancellation(OrderCancellationModel orderCancellation, string filePath)
+    {
+        try
+        {
+            _logger.LogInformation("Processing validated order cancellation:");
+            _logger.LogInformation("  Customer: {Customer}", orderCancellation.Customer);
+            _logger.LogInformation("  Supplier: {Supplier}", orderCancellation.Supplier);
+            _logger.LogInformation("  Quantity: {Quantity}", orderCancellation.Quantity);
+
+            // Here you can add specific business logic such as:
+            // 1. Find and cancel existing orders
+            // 2. Update inventory
+            // 3. Process refunds
+            // 4. Send cancellation notifications
+            
+            _logger.LogInformation("Order cancellation processed successfully from file: {FilePath}", filePath);
+
+            // Optionally, archive or delete the processed file
+            // await ArchiveProcessedFile(filePath);
+            
+            return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing order cancellation from {FilePath}", filePath);
             return Task.CompletedTask;
         }
     }

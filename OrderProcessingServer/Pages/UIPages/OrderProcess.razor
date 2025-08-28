@@ -121,13 +121,13 @@
                             <div class="process-narrative">
                                 <span class="flow-text">initiate the dream sequence</span>
                                 <button class="flow-btn" 
-                                        @onclick="ProcessOrderCapture" 
+                                        @onclick="InitializeOrder" 
                                         disabled="@(!CanProcessOrder)">
-                                    ✨ process
+                                    Initialize Order
                                 </button>
                                 <span class="flow-text">or</span>
-                                <button class="secondary-flow-btn" @onclick="ResetForm">
-                                    reset reality
+                                <button class="flow-btn" @onclick="CancelOrder" disabled="@(!CanProcessOrder)">
+                                    Cancel Order
                                 </button>
                             </div>
                         </div>                       
@@ -228,7 +228,7 @@
         }
     }
     
-    private async Task ProcessOrderCapture()
+    private async Task InitializeOrder()
     {
         if (!CanProcessOrder) return;
         
@@ -237,10 +237,10 @@
             var selectedCustomer = customers?.FirstOrDefault(c => c.CustomerId == selectedCustomerId);
             var selectedSupplier = suppliers?.FirstOrDefault(s => s.SupplierId == selectedSupplierId);
             
-            // Simulate order processing
+            // Simulate order initialization
             await Task.Delay(1500);
             
-            await JSRuntime.InvokeVoidAsync("console.log", "Order processed:", new {
+            await JSRuntime.InvokeVoidAsync("console.log", "Order initialized:", new {
                 CustomerId = selectedCustomerId,
                 CustomerName = selectedCustomer?.Name,
                 SupplierId = selectedSupplierId,
@@ -250,11 +250,11 @@
         }
         catch (Exception ex)
         {
-            await JSRuntime.InvokeVoidAsync("console.error", "Error processing order:", ex.Message);
+            await JSRuntime.InvokeVoidAsync("console.error", "Error initializing order:", ex.Message);
         }
     }
     
-    private void ResetForm()
+    private void CancelOrder()
     {
         selectedCustomerId = 0;
         selectedSupplierId = 0;

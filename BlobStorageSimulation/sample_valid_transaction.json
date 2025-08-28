@@ -1,0 +1,12 @@
+{
+    "Supplier": {
+        "Name": "Global Supply Co",
+        "Quantity": 100,
+        "Price": 299.99
+    },
+    "Customer": {
+        "Name": "Retail Chain LLC",
+        "Quantity": 100,
+        "Price": 299.99
+    }
+}

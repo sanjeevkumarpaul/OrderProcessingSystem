@@ -1,23 +1,12 @@
 {
-  "orderId": "ORDER-2025-001",
-  "transactionType": "CREATE",
-  "timestamp": "2025-08-28T10:30:00Z",
-  "customerName": "John Doe",
-  "items": [
-    {
-      "productName": "Laptop Computer",
-      "quantity": 1,
-      "unitPrice": 999.99,
-      "total": 999.99
+    "Supplier": {
+        "Name": "ABC Electronics Ltd",
+        "Quantity": 25,
+        "Price": 750.50
     },
-    {
-      "productName": "Wireless Mouse",
-      "quantity": 2,
-      "unitPrice": 29.99,
-      "total": 59.98
+    "Customer": {
+        "Name": "Tech Solutions Inc",
+        "Quantity": 25,
+        "Price": 750.50
     }
-  ],
-  "orderTotal": 1059.97,
-  "status": "PENDING",
-  "notes": "Sample order transaction for testing blob storage monitoring"
 }
