@@ -17,139 +17,60 @@ public class DataLoadingService
         _logger = logger;
     }
 
-    public async Task<List<CustomerWithOrdersDto>> LoadCustomersWithOrdersAsync()
+    /// <summary>
+    /// Generic method to handle API calls with consistent error handling
+    /// </summary>
+    private async Task<List<T>> LoadDataAsync<T>(string endpoint, string dataTypeName) where T : class
     {
         try
         {
-            _logger.LogInformation("Loading customers with orders from API...");
+            _logger.LogInformation($"Loading {dataTypeName} from API...");
             
-            var customers = await _httpClient.GetFromJsonAsync<List<CustomerWithOrdersDto>>("api/data/customers-with-orders");
+            var data = await _httpClient.GetFromJsonAsync<List<T>>(endpoint);
             
-            if (customers == null)
+            if (data == null)
             {
-                _logger.LogWarning("No customers data received from API");
-                return new List<CustomerWithOrdersDto>();
+                _logger.LogWarning($"No {dataTypeName} data received from API");
+                return new List<T>();
             }
 
-            _logger.LogInformation($"Successfully loaded {customers.Count} customers with orders from API");
-            return customers;
+            _logger.LogInformation($"Successfully loaded {data.Count} {dataTypeName} from API");
+            return data;
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "HTTP error while loading customers with orders from API");
-            return new List<CustomerWithOrdersDto>();
+            _logger.LogError(ex, $"HTTP error while loading {dataTypeName} from API");
+            return new List<T>();
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, "JSON deserialization error while loading customers with orders from API");
-            return new List<CustomerWithOrdersDto>();
+            _logger.LogError(ex, $"JSON deserialization error while loading {dataTypeName} from API");
+            return new List<T>();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error while loading customers with orders from API");
-            return new List<CustomerWithOrdersDto>();
+            _logger.LogError(ex, $"Unexpected error while loading {dataTypeName} from API");
+            return new List<T>();
         }
+    }
+
+    public async Task<List<CustomerWithOrdersDto>> LoadCustomersWithOrdersAsync()
+    {
+        return await LoadDataAsync<CustomerWithOrdersDto>("api/data/customers-with-orders", "customers with orders");
     }
 
     public async Task<List<SupplierWithOrdersDto>> LoadSuppliersWithOrdersAsync()
     {
-        try
-        {
-            _logger.LogInformation("Loading suppliers with orders from API...");
-            
-            var suppliers = await _httpClient.GetFromJsonAsync<List<SupplierWithOrdersDto>>("api/data/suppliers-with-orders");
-            
-            if (suppliers == null)
-            {
-                _logger.LogWarning("No suppliers data received from API");
-                return new List<SupplierWithOrdersDto>();
-            }
-
-            _logger.LogInformation($"Successfully loaded {suppliers.Count} suppliers with orders from API");
-            return suppliers;
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError(ex, "HTTP error while loading suppliers with orders from API");
-            return new List<SupplierWithOrdersDto>();
-        }
-        catch (JsonException ex)
-        {
-            _logger.LogError(ex, "JSON deserialization error while loading suppliers with orders from API");
-            return new List<SupplierWithOrdersDto>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error while loading suppliers with orders from API");
-            return new List<SupplierWithOrdersDto>();
-        }
+        return await LoadDataAsync<SupplierWithOrdersDto>("api/data/suppliers-with-orders", "suppliers with orders");
     }
 
     public async Task<List<OrderDto>> LoadOrdersAsync()
     {
-        try
-        {
-            _logger.LogInformation("Loading orders from API...");
-            
-            var orders = await _httpClient.GetFromJsonAsync<List<OrderDto>>("api/data/orders");
-            
-            if (orders == null)
-            {
-                _logger.LogWarning("No orders data received from API");
-                return new List<OrderDto>();
-            }
-
-            _logger.LogInformation($"Successfully loaded {orders.Count} orders from API");
-            return orders;
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError(ex, "HTTP error while loading orders from API");
-            return new List<OrderDto>();
-        }
-        catch (JsonException ex)
-        {
-            _logger.LogError(ex, "JSON deserialization error while loading orders from API");
-            return new List<OrderDto>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error while loading orders from API");
-            return new List<OrderDto>();
-        }
+        return await LoadDataAsync<OrderDto>("api/data/orders", "orders");
     }
 
     public async Task<List<SalesByCustomerDto>> LoadSalesByCustomerAsync()
     {
-        try
-        {
-            _logger.LogInformation("Loading sales by customer from API...");
-            
-            var salesData = await _httpClient.GetFromJsonAsync<List<SalesByCustomerDto>>("api/data/sales-by-customer");
-            
-            if (salesData == null)
-            {
-                _logger.LogWarning("No sales by customer data received from API");
-                return new List<SalesByCustomerDto>();
-            }
-
-            _logger.LogInformation($"Successfully loaded {salesData.Count} sales by customer records from API");
-            return salesData;
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError(ex, "HTTP error while loading sales by customer from API");
-            return new List<SalesByCustomerDto>();
-        }
-        catch (JsonException ex)
-        {
-            _logger.LogError(ex, "JSON deserialization error while loading sales by customer from API");
-            return new List<SalesByCustomerDto>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error while loading sales by customer from API");
-            return new List<SalesByCustomerDto>();
-        }
+        return await LoadDataAsync<SalesByCustomerDto>("api/data/sales-by-customer", "sales by customer");
     }
 }
