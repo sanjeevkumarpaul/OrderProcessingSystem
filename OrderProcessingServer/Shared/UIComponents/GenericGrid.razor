@@ -168,15 +168,15 @@
 
     // filtering state
     GridColumnDto? ActiveFilterColumn;
-    string[] TextOps = new[] {"StartsWith","EndsWith","Equals"};
+    string[] TextOps = new[] {"Contains", "StartsWith", "EndsWith", "Equals"};
     // temporary inputs for the currently-open filter popup
-    string TextFilterOp = "StartsWith";
+    string TextFilterOp = "Contains";
     string TextFilterValue = string.Empty;
     string EnumFilterValue = string.Empty;
 
     // persistent per-column filters (field -> FilterState)
     class FilterState {
-        public string TextOp { get; set; } = "StartsWith";
+        public string TextOp { get; set; } = "Contains";
         public string TextValue { get; set; } = string.Empty;
         public string EnumValue { get; set; } = string.Empty;
         public bool IsEnum { get; set; } = false;
@@ -310,6 +310,7 @@
         if (value == null) return false;
         return op switch
         {
+            "Contains" => value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0,
             "StartsWith" => value.StartsWith(term, StringComparison.OrdinalIgnoreCase),
             "EndsWith" => value.EndsWith(term, StringComparison.OrdinalIgnoreCase),
             "Equals" => string.Equals(value, term, StringComparison.OrdinalIgnoreCase),
@@ -354,7 +355,7 @@
         }
         else
         {
-            TextFilterOp = "StartsWith";
+            TextFilterOp = "Contains";
             TextFilterValue = string.Empty;
             EnumFilterValue = string.Empty;
         }
@@ -403,7 +404,7 @@
             ColumnFilters.Remove(ActiveFilterColumn.Field);
         }
         TextFilterValue = EnumFilterValue = string.Empty;
-        TextFilterOp = "StartsWith";
+        TextFilterOp = "Contains";
         ActiveFilterColumn = null;
         ApplyPage();
     }
