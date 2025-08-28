@@ -3,7 +3,7 @@ using System.Linq;
 using System;
 using OrderProcessingServer.Shared.Dto;
 
-namespace OrderProcessingServer.Shared.UIComponents
+namespace OrderProcessingServer.Shared.UIProviders
 {
     /// <summary>
     /// Shared filtering service for GenericGrid and GenericCards components
