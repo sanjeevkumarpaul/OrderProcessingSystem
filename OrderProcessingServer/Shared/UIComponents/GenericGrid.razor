@@ -74,7 +74,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (PagedItems != null)
+                @if (PagedItems != null && PagedItems.Any())
                 {
                     @foreach(var item in PagedItems)
                     {
@@ -121,23 +121,15 @@
                             }
                         </tr>
                     }
-                    // Ensure the table body keeps a minimum height by rendering empty placeholder rows.
-                    // If there are no displayed items, render exactly 1 placeholder row; otherwise keep the
-                    // existing behavior (minRows = 5) so the grid doesn't collapse.
-                    var displayed = PagedItems.Count;
-                    var minRows = (displayed == 0) ? 1 : 5;
-                    if (displayed < minRows)
-                    {
-                        for (int r = displayed; r < minRows; r++)
-                        {
-                            <tr class="table-placeholder-row">
-                                @foreach (var c in Columns)
-                                {
-                                    <td>&nbsp;</td>
-                                }
-                            </tr>
-                        }
-                    }
+                }
+                else
+                {
+                    <!-- Show "No data available" message when there are no rows -->
+                    <tr>
+                        <td colspan="@Columns.Count" class="text-center text-muted py-4">
+                            <em>No data available</em>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
