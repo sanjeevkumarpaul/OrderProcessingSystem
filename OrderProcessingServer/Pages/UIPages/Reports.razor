@@ -101,7 +101,7 @@
       <label class="form-label">Customer</label>
       <select class="form-select" @bind="selectedCustomerId">
         <option value="">(All)</option>
-        @foreach(var c in customers ?? Enumerable.Empty<CustomerDto>())
+        @foreach(var c in customers ?? Enumerable.Empty<CustomerVM>())
         {
           <option value="@c.CustomerId">@c.Name</option>
         }
@@ -228,9 +228,9 @@
   int reportPagesCount = 1;
   string? selectedCustomerId;
 
-  List<SalesByCustomerDto>? salesReport = null;
-  List<OrderDto>? ordersPreview = null;
-  List<CustomerDto>? customers = null;
+  List<SalesByCustomerVM>? salesReport = null;
+  List<OrderVM>? ordersPreview = null;
+  List<CustomerVM>? customers = null;
 
   protected override Task OnInitializedAsync() => Task.CompletedTask;
 
@@ -240,7 +240,7 @@
     try
     {
       var client = HttpFactory.CreateClient("ApiClient");
-      customers = await client.GetFromJsonAsync<List<CustomerDto>>("api/data/customers") ?? new List<CustomerDto>();
+      customers = await client.GetFromJsonAsync<List<CustomerVM>>("api/data/customers") ?? new List<CustomerVM>();
       await RunReport();
       hasLoaded = true;
       StateHasChanged();
@@ -286,11 +286,11 @@
         var content = await salesResp.Content.ReadAsStringAsync();
         lastError = $"Sales report request failed: {(int)salesResp.StatusCode} {salesResp.ReasonPhrase}: {content}";
         Console.Error.WriteLine(lastError);
-        salesReport = new List<SalesByCustomerDto>();
-        ordersPreview = ordersPreview ?? new List<OrderDto>();
+        salesReport = new List<SalesByCustomerVM>();
+        ordersPreview = ordersPreview ?? new List<OrderVM>();
         return;
       }
-      var sales = await salesResp.Content.ReadFromJsonAsync<List<SalesByCustomerDto>>();
+      var sales = await salesResp.Content.ReadFromJsonAsync<List<SalesByCustomerVM>>();
 
       var ordersResp = await client.GetAsync(ordersUrl);
       if (!ordersResp.IsSuccessStatusCode)
@@ -298,14 +298,14 @@
         var content = await ordersResp.Content.ReadAsStringAsync();
         lastError = $"Orders request failed: {(int)ordersResp.StatusCode} {ordersResp.ReasonPhrase}: {content}";
         Console.Error.WriteLine(lastError);
-        ordersPreview = new List<OrderDto>();
-        salesReport = sales ?? new List<SalesByCustomerDto>();
+        ordersPreview = new List<OrderVM>();
+        salesReport = sales ?? new List<SalesByCustomerVM>();
         return;
       }
-      var orders = await ordersResp.Content.ReadFromJsonAsync<List<OrderDto>>();
+      var orders = await ordersResp.Content.ReadFromJsonAsync<List<OrderVM>>();
 
-      salesReport = sales ?? new List<SalesByCustomerDto>();
-      ordersPreview = orders ?? new List<OrderDto>();
+      salesReport = sales ?? new List<SalesByCustomerVM>();
+      ordersPreview = orders ?? new List<OrderVM>();
       reportPagesCount = 1; // stub — paging/layout calculation would go here
       lastRunAt = DateTime.Now;
       // ensure UI updates on the UI thread
@@ -315,8 +315,8 @@
     {
       lastError = ex.Message;
       Console.Error.WriteLine($"RunReport failed: {ex}");
-      salesReport = salesReport ?? new List<SalesByCustomerDto>();
-      ordersPreview = ordersPreview ?? new List<OrderDto>();
+      salesReport = salesReport ?? new List<SalesByCustomerVM>();
+      ordersPreview = ordersPreview ?? new List<OrderVM>();
       await InvokeAsync(StateHasChanged);
     }
     finally

@@ -1,10 +1,10 @@
 @page "/customers"
 @using OrderProcessingServer.Shared.Dto
 @using OrderProcessingSystem.Utilities.Extensions
-@inherits BaseDataPage<CustomerWithOrdersDto>
+@inherits BaseDataPage<CustomerWithOrdersVM>
 <link rel="stylesheet" href="~/css/customers.css" />
 
-<BaseDataPage TItem="CustomerWithOrdersDto" 
+<BaseDataPage TItem="CustomerWithOrdersVM" 
               PageTitle="Customers"
               EntityName="customers"
               ShowCardsText="Show Cards"
@@ -24,7 +24,7 @@
 
 @code {
     // Data loader function for customers
-    private async Task<List<CustomerWithOrdersDto>?> LoadCustomersAsync()
+    private async Task<List<CustomerWithOrdersVM>?> LoadCustomersAsync()
     {
         return await DataLoadingService.LoadCustomersWithOrdersAsync();
     }

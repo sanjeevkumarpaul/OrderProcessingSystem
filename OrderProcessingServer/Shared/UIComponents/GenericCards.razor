@@ -148,7 +148,7 @@
 
 @code {
     [Parameter] public IEnumerable<TItem>? Items { get; set; }
-    [Parameter] public List<GridColumnDto> Columns { get; set; } = new List<GridColumnDto>();
+    [Parameter] public List<GridColumnVM> Columns { get; set; } = new List<GridColumnVM>();
     [Parameter] public int PageSize { get; set; } = 12;
     [Parameter] public string CardColumnClass { get; set; } = "col-12 col-sm-6 col-md-4 col-xl-3 mb-3";
     [Parameter] public RenderFragment<TItem> CardTemplate { get; set; } = default!;
@@ -176,7 +176,7 @@
     Dictionary<string, FilterState> ColumnFilters = new();
 
     // sorting
-    GridColumnDto? SortColumn;
+    GridColumnVM? SortColumn;
     bool SortAsc = true;
 
     protected override void OnParametersSet()
@@ -231,7 +231,7 @@
             }
         }
         return q.ToList();
-    }    List<TItem> ApplySort(List<TItem> input, GridColumnDto col, bool asc)
+    }    List<TItem> ApplySort(List<TItem> input, GridColumnVM col, bool asc)
     {
         var sampleItem = input.FirstOrDefault(i => GetValue(i, col.Field) != null);
         var sampleVal = sampleItem != null ? GetValue(sampleItem, col.Field) : null;

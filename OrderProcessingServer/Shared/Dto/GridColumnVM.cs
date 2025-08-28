@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace OrderProcessingServer.Shared.Dto;
     
-public class GridColumnDto
+public class GridColumnVM
 {
     public string Header { get; set; } = string.Empty;
     // Field supports dotted path like Customer.Name
@@ -14,4 +14,3 @@ public class GridColumnDto
     public bool IsEnum { get; set; } = false;
     public IEnumerable<string>? EnumValues { get; set; }
 }
-

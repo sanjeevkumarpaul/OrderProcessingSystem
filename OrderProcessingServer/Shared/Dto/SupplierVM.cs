@@ -1,6 +1,6 @@
 namespace OrderProcessingServer.Shared.Dto;
 
-public class SupplierDto
+public class SupplierVM
 {
     public int SupplierId { get; set; }
     public string? Name { get; set; }

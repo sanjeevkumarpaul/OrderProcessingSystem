@@ -67,7 +67,7 @@ namespace OrderProcessingServer.Shared.UIProviders
         /// <summary>
         /// Applies sorting to the given items
         /// </summary>
-        public static List<TItem> ApplySort(List<TItem> items, GridColumnDto sortColumn, bool ascending)
+        public static List<TItem> ApplySort(List<TItem> items, GridColumnVM sortColumn, bool ascending)
         {
             if (items == null || !items.Any() || sortColumn == null) 
                 return items ?? new List<TItem>();

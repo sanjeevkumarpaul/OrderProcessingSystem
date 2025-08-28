@@ -54,23 +54,23 @@ public class DataLoadingService
         }
     }
 
-    public async Task<List<CustomerWithOrdersDto>> LoadCustomersWithOrdersAsync()
+    public async Task<List<CustomerWithOrdersVM>> LoadCustomersWithOrdersAsync()
     {
-        return await LoadDataAsync<CustomerWithOrdersDto>("api/data/customers-with-orders", "customers with orders");
+        return await LoadDataAsync<CustomerWithOrdersVM>("api/data/customers-with-orders", "customers with orders");
     }
 
-    public async Task<List<SupplierWithOrdersDto>> LoadSuppliersWithOrdersAsync()
+    public async Task<List<SupplierWithOrdersVM>> LoadSuppliersWithOrdersAsync()
     {
-        return await LoadDataAsync<SupplierWithOrdersDto>("api/data/suppliers-with-orders", "suppliers with orders");
+        return await LoadDataAsync<SupplierWithOrdersVM>("api/data/suppliers-with-orders", "suppliers with orders");
     }
 
-    public async Task<List<OrderDto>> LoadOrdersAsync()
+    public async Task<List<OrderVM>> LoadOrdersAsync()
     {
-        return await LoadDataAsync<OrderDto>("api/data/orders", "orders");
+        return await LoadDataAsync<OrderVM>("api/data/orders", "orders");
     }
 
-    public async Task<List<SalesByCustomerDto>> LoadSalesByCustomerAsync()
+    public async Task<List<SalesByCustomerVM>> LoadSalesByCustomerAsync()
     {
-        return await LoadDataAsync<SalesByCustomerDto>("api/data/sales-by-customer", "sales by customer");
+        return await LoadDataAsync<SalesByCustomerVM>("api/data/sales-by-customer", "sales by customer");
     }
 }

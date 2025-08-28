@@ -3,9 +3,9 @@
 @using OrderProcessingSystem.Utilities.Extensions
 @using OrderProcessingSystem.Core.Enums
 @using OrderProcessingServer.Shared
-@inherits BaseDataPage<OrderDto>
+@inherits BaseDataPage<OrderVM>
 
-<BaseDataPage TItem="OrderDto" 
+<BaseDataPage TItem="OrderVM" 
               PageTitle="Orders"
               EntityName="orders"
               ShowCardsText="Show Cards"
@@ -33,7 +33,7 @@
 
 @code {
     // Data loader function for orders
-    private async Task<List<OrderDto>?> LoadOrdersAsync()
+    private async Task<List<OrderVM>?> LoadOrdersAsync()
     {
         return await DataLoadingService.LoadOrdersAsync();
     }

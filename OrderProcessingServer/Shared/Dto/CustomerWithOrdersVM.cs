@@ -3,7 +3,7 @@ namespace OrderProcessingServer.Shared.Dto;
 /// <summary>
 /// DTO for customer data with pre-calculated statistics from database
 /// </summary>
-public class CustomerWithCalculationsDto
+public class CustomerWithOrdersVM
 {
     public int CustomerId { get; set; }
     public string? Name { get; set; }
