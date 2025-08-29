@@ -45,15 +45,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_ValidData_ReturnsTrue()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -72,15 +72,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_EmptySupplierName_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "", // Empty name
                 Quantity = 25,
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -99,15 +99,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_EmptyCustomerName_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = string.Empty, // Empty name
                 Quantity = 25,
@@ -126,15 +126,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_MismatchedQuantities_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 30, // Different quantity
@@ -153,15 +153,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_MismatchedPrices_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -180,15 +180,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_ZeroQuantity_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 0, // Zero quantity
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 0,
@@ -207,15 +207,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_NegativeQuantity_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = -5, // Negative quantity
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = -5,
@@ -234,15 +234,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_PriceBelowMinimum_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 150.00m // Below minimum of 200
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -261,15 +261,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_PriceAboveMaximum_ReturnsFalse()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 1500.00m // Above maximum of 1000
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -288,15 +288,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_PriceAtMinimum_ReturnsTrue()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 200.00m // Exactly at minimum
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -315,15 +315,15 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_PriceAtMaximum_ReturnsTrue()
     {
         // Arrange
-        var orderTransaction = new OrderTransactionModel
+        var orderTransaction = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 1000.00m // Exactly at maximum
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -346,7 +346,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_ValidData_ReturnsTrue()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = "Tech Solutions Inc",
             Supplier = "ABC Electronics Ltd",
@@ -364,7 +364,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_EmptyCustomerName_ReturnsFalse()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = "", // Empty customer name
             Supplier = "ABC Electronics Ltd",
@@ -382,7 +382,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_NullCustomerName_ReturnsFalse()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = string.Empty, // Empty customer name
             Supplier = "ABC Electronics Ltd",
@@ -400,7 +400,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_EmptySupplierName_ReturnsFalse()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = "Tech Solutions Inc",
             Supplier = "", // Empty supplier name
@@ -418,7 +418,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_NullSupplierName_ReturnsFalse()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = "Tech Solutions Inc",
             Supplier = string.Empty, // Empty supplier name
@@ -436,7 +436,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_ZeroQuantity_ReturnsFalse()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = "Tech Solutions Inc",
             Supplier = "ABC Electronics Ltd",
@@ -454,7 +454,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_NegativeQuantity_ReturnsFalse()
     {
         // Arrange
-        var orderCancellation = new OrderCancellationModel
+        var orderCancellation = new OrderCancellationSchema
         {
             Customer = "Tech Solutions Inc",
             Supplier = "ABC Electronics Ltd",
@@ -473,18 +473,18 @@ public class BlobStorageMonitorServiceTests
     #region JSON Serialization Tests
 
     [Fact]
-    public void OrderTransactionModel_SerializeDeserialize_MaintainsData()
+    public void OrderTransactionSchema_SerializeDeserialize_MaintainsData()
     {
         // Arrange
-        var original = new OrderTransactionModel
+        var original = new OrderTransactionSchema
         {
-            Supplier = new SupplierInfo
+            Supplier = new SupplierInfoSchema
             {
                 Name = "ABC Electronics Ltd",
                 Quantity = 25,
                 Price = 750.50m
             },
-            Customer = new CustomerInfo
+            Customer = new CustomerInfoSchema
             {
                 Name = "Tech Solutions Inc",
                 Quantity = 25,
@@ -494,7 +494,7 @@ public class BlobStorageMonitorServiceTests
 
         // Act
         var json = JsonSerializer.Serialize(original);
-        var deserialized = JsonSerializer.Deserialize<OrderTransactionModel>(json);
+        var deserialized = JsonSerializer.Deserialize<OrderTransactionSchema>(json);
 
         // Assert
         Assert.NotNull(deserialized);
@@ -507,10 +507,10 @@ public class BlobStorageMonitorServiceTests
     }
 
     [Fact]
-    public void OrderCancellationModel_SerializeDeserialize_MaintainsData()
+    public void OrderCancellationSchema_SerializeDeserialize_MaintainsData()
     {
         // Arrange
-        var original = new OrderCancellationModel
+        var original = new OrderCancellationSchema
         {
             Customer = "Tech Solutions Inc",
             Supplier = "ABC Electronics Ltd",
@@ -519,7 +519,7 @@ public class BlobStorageMonitorServiceTests
 
         // Act
         var json = JsonSerializer.Serialize(original);
-        var deserialized = JsonSerializer.Deserialize<OrderCancellationModel>(json);
+        var deserialized = JsonSerializer.Deserialize<OrderCancellationSchema>(json);
 
         // Assert
         Assert.NotNull(deserialized);
@@ -529,7 +529,7 @@ public class BlobStorageMonitorServiceTests
     }
 
     [Fact]
-    public void OrderTransactionModel_DeserializeInvalidJson_ThrowsJsonException()
+    public void OrderTransactionSchema_DeserializeInvalidJson_ThrowsJsonException()
     {
         // Arrange
         var invalidJson = @"{
@@ -546,11 +546,11 @@ public class BlobStorageMonitorServiceTests
         }";
 
         // Act & Assert
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<OrderTransactionModel>(invalidJson));
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<OrderTransactionSchema>(invalidJson));
     }
 
     [Fact]
-    public void OrderCancellationModel_DeserializeInvalidJson_ThrowsJsonException()
+    public void OrderCancellationSchema_DeserializeInvalidJson_ThrowsJsonException()
     {
         // Arrange
         var invalidJson = @"{
@@ -560,7 +560,7 @@ public class BlobStorageMonitorServiceTests
         }";
 
         // Act & Assert
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<OrderCancellationModel>(invalidJson));
+        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<OrderCancellationSchema>(invalidJson));
     }
 
     #endregion
@@ -578,7 +578,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderTransaction_JsonString_ReturnsExpectedResult(string jsonString, bool expectedResult)
     {
         // Arrange
-        var orderTransaction = JsonSerializer.Deserialize<OrderTransactionModel>(jsonString);
+        var orderTransaction = JsonSerializer.Deserialize<OrderTransactionSchema>(jsonString);
 
         // Act
         var result = InvokePrivateMethod<bool>("ValidateOrderTransaction", orderTransaction!);
@@ -596,7 +596,7 @@ public class BlobStorageMonitorServiceTests
     public void ValidateOrderCancellation_JsonString_ReturnsExpectedResult(string jsonString, bool expectedResult)
     {
         // Arrange
-        var orderCancellation = JsonSerializer.Deserialize<OrderCancellationModel>(jsonString);
+        var orderCancellation = JsonSerializer.Deserialize<OrderCancellationSchema>(jsonString);
 
         // Act
         var result = InvokePrivateMethod<bool>("ValidateOrderCancellation", orderCancellation!);

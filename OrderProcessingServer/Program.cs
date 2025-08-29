@@ -27,6 +27,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 // Register services
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
+builder.Services.AddScoped<OrderFileService>();
 builder.Services.AddScoped(provider =>
 {
     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();

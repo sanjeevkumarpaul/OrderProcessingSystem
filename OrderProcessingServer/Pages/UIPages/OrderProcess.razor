@@ -2,7 +2,10 @@
 @page "/process-order"
 
 @inject DataLoadingService DataService
+@inject OrderFileService OrderFileService
 @inject IJSRuntime JSRuntime
+@using OrderProcessingServer.Services
+@using OrderProcessingServer.Shared.UIViewModels
 
 <PageTitle>Process Order - OrderProcessingServer</PageTitle>
 
@@ -126,7 +129,7 @@
                                     Initialize Order
                                 </button>
                                 <span class="flow-text">or</span>
-                                <button class="flow-btn" @onclick="CancelOrder" disabled="@(!CanProcessOrder)">
+                                <button class="flow-btn secondary-flow-btn" @onclick="CancelOrder" disabled="@(!CanProcessOrder)">
                                     Cancel Order
                                 </button>
                             </div>
@@ -237,28 +240,48 @@
             var selectedCustomer = customers?.FirstOrDefault(c => c.CustomerId == selectedCustomerId);
             var selectedSupplier = suppliers?.FirstOrDefault(s => s.SupplierId == selectedSupplierId);
             
-            // Simulate order initialization
-            await Task.Delay(1500);
+            if (selectedCustomer == null || selectedSupplier == null) return;
             
-            await JSRuntime.InvokeVoidAsync("console.log", "Order initialized:", new {
-                CustomerId = selectedCustomerId,
-                CustomerName = selectedCustomer?.Name,
-                SupplierId = selectedSupplierId,
-                SupplierName = selectedSupplier?.Name,
-                Quantity = orderQuantity
-            });
+            await OrderFileService.CreateOrderTransactionFileAsync(
+                selectedCustomer.Name ?? string.Empty, 
+                selectedSupplier.Name ?? string.Empty, 
+                orderQuantity);
+            
+            await JSRuntime.InvokeVoidAsync("console.log", "OrderTransaction.json created successfully");
         }
         catch (Exception ex)
         {
-            await JSRuntime.InvokeVoidAsync("console.error", "Error initializing order:", ex.Message);
+            await JSRuntime.InvokeVoidAsync("console.error", "Error creating OrderTransaction.json:", ex.Message);
         }
     }
     
-    private void CancelOrder()
+    private async Task CancelOrder()
     {
-        selectedCustomerId = 0;
-        selectedSupplierId = 0;
-        orderQuantity = 1;        
+        if (!CanProcessOrder) return;
+        
+        try
+        {
+            var selectedCustomer = customers?.FirstOrDefault(c => c.CustomerId == selectedCustomerId);
+            var selectedSupplier = suppliers?.FirstOrDefault(s => s.SupplierId == selectedSupplierId);
+            
+            if (selectedCustomer == null || selectedSupplier == null) return;
+            
+            await OrderFileService.CreateOrderCancellationFileAsync(
+                selectedCustomer.Name ?? string.Empty, 
+                selectedSupplier.Name ?? string.Empty, 
+                orderQuantity);
+            
+            await JSRuntime.InvokeVoidAsync("console.log", "OrderCancellation.json created successfully");
+            
+            // Reset form after cancellation
+            selectedCustomerId = 0;
+            selectedSupplierId = 0;
+            orderQuantity = 1;
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Error creating OrderCancellation.json:", ex.Message);
+        }
     }
     
     // Custom dropdown methods
