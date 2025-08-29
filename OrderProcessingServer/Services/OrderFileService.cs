@@ -1,5 +1,5 @@
 using OrderProcessingSystem.Events.Models;
-using System.Text.Json;
+using OrderProcessingSystem.Utilities.Helpers;
 
 namespace OrderProcessingServer.Services;
 
@@ -14,21 +14,7 @@ public class OrderFileService
 
     private string GetBlobStorageSimulationPath()
     {
-        // Get solution root directory (go up from OrderProcessingServer/bin/Debug/net9.0 to solution root)
-        var currentDir = Directory.GetCurrentDirectory();
-        var solutionRoot = currentDir;
-        
-        // Keep going up until we find the solution root (contains OrderProcessingSystem.sln)
-        while (solutionRoot != null && !File.Exists(Path.Combine(solutionRoot, "OrderProcessingSystem.sln")))
-        {
-            solutionRoot = Directory.GetParent(solutionRoot)?.FullName;
-        }
-        
-        if (solutionRoot == null)
-        {
-            throw new DirectoryNotFoundException("Could not find solution root directory");
-        }
-        
+        var solutionRoot = FileHelper.FindSolutionRoot(solutionFileName: "OrderProcessingSystem.sln");
         var blobPath = Path.Combine(solutionRoot, "BlobStorageSimulation");
         
         if (!Directory.Exists(blobPath))
@@ -42,9 +28,7 @@ public class OrderFileService
 
     public async Task CreateOrderTransactionFileAsync(string customerName, string supplierName, int quantity)
     {
-        // Generate a random price between 200 and 1000 (validation range)
-        var random = new Random();
-        var price = Math.Round((decimal)(random.NextDouble() * 800 + 200), 2); // 200-1000 range
+        var price = RandomHelper.GenerateRandomPrice();
         
         // Create OrderTransaction model
         var orderTransaction = new OrderTransactionSchema
@@ -63,20 +47,9 @@ public class OrderFileService
             }
         };
         
-        // Serialize to JSON
-        var jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-        var jsonContent = JsonSerializer.Serialize(orderTransaction, jsonOptions);
-        
-        // Write to file in BlobStorageSimulation folder
+        var jsonContent = JsonHelper.SerializeToJson(orderTransaction);
         var blobStoragePath = GetBlobStorageSimulationPath();
-        var filePath = Path.Combine(blobStoragePath, "OrderTransaction.json");
-        
-        _logger.LogInformation($"Creating OrderTransaction.json at: {filePath}");
-        await File.WriteAllTextAsync(filePath, jsonContent);
-        _logger.LogInformation("OrderTransaction.json created successfully");
+        await FileHelper.WriteJsonFileAsync(blobStoragePath, "OrderTransaction.json", jsonContent, _logger);
     }
     
     public async Task CreateOrderCancellationFileAsync(string customerName, string supplierName, int quantity)
@@ -89,19 +62,8 @@ public class OrderFileService
             Quantity = quantity
         };
         
-        // Serialize to JSON
-        var jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-        var jsonContent = JsonSerializer.Serialize(orderCancellation, jsonOptions);
-        
-        // Write to file in BlobStorageSimulation folder
+        var jsonContent = JsonHelper.SerializeToJson(orderCancellation);
         var blobStoragePath = GetBlobStorageSimulationPath();
-        var filePath = Path.Combine(blobStoragePath, "OrderCancellation.json");
-        
-        _logger.LogInformation($"Creating OrderCancellation.json at: {filePath}");
-        await File.WriteAllTextAsync(filePath, jsonContent);
-        _logger.LogInformation("OrderCancellation.json created successfully");
+        await FileHelper.WriteJsonFileAsync(blobStoragePath, "OrderCancellation.json", jsonContent, _logger);
     }
 }

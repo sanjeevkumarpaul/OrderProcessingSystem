@@ -8,6 +8,7 @@ using OrderProcessingSystem.Events.Models;
 
 namespace OrderProcessingSystem.Tests.FileCreations;
 
+[Collection("FileCreation Tests")]
 public class OrderFileServiceTests : IDisposable
 {
     private readonly Mock<ILogger<OrderFileService>> _mockLogger;

@@ -6,6 +6,7 @@ using Xunit;
 
 namespace OrderProcessingSystem.Tests.FileCreations;
 
+[Collection("FileCreation Tests")]
 public class BlobStorageSimulationIntegrationTests
 {
     [Fact]
