@@ -3,7 +3,6 @@ using Moq;
 using OrderProcessingServer.Services;
 using System.IO;
 using Xunit;
-using OrderProcessingSystem.Core.Constants;
 
 namespace OrderProcessingSystem.Tests.FileCreations;
 
@@ -37,7 +36,7 @@ public class BlobStorageSimulationIntegrationTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Creating {FileNames.BlobStorage.OrderTransaction}")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderTransaction.json")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.AtLeastOnce);
@@ -46,7 +45,7 @@ public class BlobStorageSimulationIntegrationTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Creating {FileNames.BlobStorage.OrderCancellation}")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderCancellation.json")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.AtLeastOnce);
@@ -70,7 +69,7 @@ public class BlobStorageSimulationIntegrationTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"{FileNames.BlobStorage.OrderTransaction} created successfully")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("OrderTransaction.json created successfully")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -85,7 +84,7 @@ public class BlobStorageSimulationIntegrationTests
         // Assert
         Assert.NotNull(solutionRoot);
         Assert.True(File.Exists(Path.Combine(solutionRoot!, "OrderProcessingSystem.sln")));
-        Assert.True(Directory.Exists(Path.Combine(solutionRoot, FileNames.BlobStorage.DirectoryName)));
+        Assert.True(Directory.Exists(Path.Combine(solutionRoot, "BlobStorageSimulation")));
     }
 
     private static string? FindSolutionRoot()
