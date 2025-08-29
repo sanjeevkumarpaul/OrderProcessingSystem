@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrderProcessingSystem.Contracts\OrderProcessingSystem.Contracts.csproj" />
+    <ProjectReference Include="..\OrderProcessingSystem.Utilities\OrderProcessingSystem.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

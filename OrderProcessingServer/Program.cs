@@ -5,12 +5,19 @@ using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingServer.Services;
 using OrderProcessingSystem.Events.Configurations;
 using OrderProcessingSystem.Events.FileWatcherTasks;
+using OrderProcessingSystem.Core.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load additional configuration files
+builder.Configuration.AddJsonFile("Configuration/file-naming.json", optional: false, reloadOnChange: true);
 
 // Configure options
 builder.Services.Configure<BlobStorageSimulationOptions>(
     builder.Configuration.GetSection(BlobStorageSimulationOptions.SectionName));
+
+builder.Services.Configure<FileNamingOptions>(
+    builder.Configuration.GetSection(FileNamingOptions.SectionName));
 
 // Add services
 builder.Services.AddRazorPages();

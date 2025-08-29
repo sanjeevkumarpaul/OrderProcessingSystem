@@ -5,7 +5,10 @@ using System.IO;
 using System.Text.Json;
 using Xunit;
 using OrderProcessingSystem.Events.Models;
-using OrderProcessingSystem.Core.Constants;
+using OrderProcessingSystem.Core.Configuration;
+using Microsoft.Extensions.Options;
+using OrderProcessingSystem.Utilities.Helpers;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.Tests.FileCreations;
 
@@ -13,17 +16,40 @@ namespace OrderProcessingSystem.Tests.FileCreations;
 public class OrderFileServiceTests : IDisposable
 {
     private readonly Mock<ILogger<OrderFileService>> _mockLogger;
+    private readonly Mock<IBlobStorageMonitorService> _mockBlobStorageMonitorService;
     private readonly OrderFileService _orderFileService;
     private readonly string _testSolutionDirectory;
+    private readonly FileNamingOptions _fileNamingOptions;
 
     public OrderFileServiceTests()
     {
         _mockLogger = new Mock<ILogger<OrderFileService>>();
-        _orderFileService = new OrderFileService(_mockLogger.Object);
+        _mockBlobStorageMonitorService = new Mock<IBlobStorageMonitorService>();
+        
+        // Create test file naming options
+        _fileNamingOptions = new FileNamingOptions
+        {
+            BlobStorage = new BlobStorageFileNames
+            {
+                OrderTransaction = "OrderTransaction.json",
+                OrderCancellation = "OrderCancellation.json",
+                DirectoryName = "BlobStorageSimulation",
+                SampleDirectory = "_Sample"
+            },
+            Solution = new SolutionFileNames
+            {
+                OrderProcessingSystem = "OrderProcessingSystem.sln"
+            }
+        };
+        
+        var mockOptions = new Mock<IOptions<FileNamingOptions>>();
+        mockOptions.Setup(x => x.Value).Returns(_fileNamingOptions);
+        
+        _orderFileService = new OrderFileService(_mockLogger.Object, mockOptions.Object, _mockBlobStorageMonitorService.Object);
         
         // Create a test solution directory in temp
         _testSolutionDirectory = Path.Combine(Path.GetTempPath(), $"OrderProcessingSystem_Test_{Guid.NewGuid()}");
-        Directory.CreateDirectory(_testSolutionDirectory);
+        FileHelper.EnsureDirectoryExists(_testSolutionDirectory);
         
         // Create a fake solution file 
         var solutionFile = Path.Combine(_testSolutionDirectory, "OrderProcessingSystem.sln");
@@ -39,8 +65,8 @@ public class OrderFileServiceTests : IDisposable
         var quantity = 25;
         
         // Create BlobStorageSimulation directory in our test location
-        var blobStoragePath = Path.Combine(_testSolutionDirectory, FileNames.BlobStorage.DirectoryName);
-        Directory.CreateDirectory(blobStoragePath);
+        var blobStoragePath = Path.Combine(_testSolutionDirectory, _fileNamingOptions.BlobStorage.DirectoryName);
+        FileHelper.EnsureDirectoryExists(blobStoragePath);
 
         // Act
         await _orderFileService.CreateOrderTransactionFileAsync(customerName, supplierName, quantity);
@@ -50,8 +76,8 @@ public class OrderFileServiceTests : IDisposable
         var realSolutionRoot = FindSolutionRoot();
         if (realSolutionRoot != null)
         {
-            var realBlobStoragePath = Path.Combine(realSolutionRoot, FileNames.BlobStorage.DirectoryName);
-            var expectedFilePath = Path.Combine(realBlobStoragePath, FileNames.BlobStorage.OrderTransaction);
+            var realBlobStoragePath = Path.Combine(realSolutionRoot, _fileNamingOptions.BlobStorage.DirectoryName);
+            var expectedFilePath = Path.Combine(realBlobStoragePath, _fileNamingOptions.BlobStorage.OrderTransaction);
             
             if (File.Exists(expectedFilePath))
             {
@@ -85,8 +111,8 @@ public class OrderFileServiceTests : IDisposable
         var realSolutionRoot = FindSolutionRoot();
         if (realSolutionRoot != null)
         {
-            var realBlobStoragePath = Path.Combine(realSolutionRoot, FileNames.BlobStorage.DirectoryName);
-            var expectedFilePath = Path.Combine(realBlobStoragePath, FileNames.BlobStorage.OrderCancellation);
+            var realBlobStoragePath = Path.Combine(realSolutionRoot, _fileNamingOptions.BlobStorage.DirectoryName);
+            var expectedFilePath = Path.Combine(realBlobStoragePath, _fileNamingOptions.BlobStorage.OrderCancellation);
             
             if (File.Exists(expectedFilePath))
             {
@@ -118,7 +144,7 @@ public class OrderFileServiceTests : IDisposable
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Creating {FileNames.BlobStorage.OrderTransaction}")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Creating {_fileNamingOptions.BlobStorage.OrderTransaction}")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

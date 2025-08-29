@@ -3,12 +3,29 @@ using Moq;
 using OrderProcessingServer.Services;
 using System.IO;
 using Xunit;
+using OrderProcessingSystem.Core.Configuration;
+using Microsoft.Extensions.Options;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.Tests.FileCreations;
 
 [Collection("FileCreation Tests")]
 public class BlobStorageSimulationIntegrationTests
 {
+    private static IOptions<FileNamingOptions> GetDefaultFileNamingOptions()
+    {
+        var options = new FileNamingOptions();
+        var mockOptions = new Mock<IOptions<FileNamingOptions>>();
+        mockOptions.Setup(x => x.Value).Returns(options);
+        return mockOptions.Object;
+    }
+
+    private static IBlobStorageMonitorService GetMockBlobStorageMonitorService()
+    {
+        var mockBlobStorageMonitorService = new Mock<IBlobStorageMonitorService>();
+        return mockBlobStorageMonitorService.Object;
+    }
+
     [Fact]
     public void OrderFileService_Should_BeInstantiable_WithLogger()
     {
@@ -16,7 +33,7 @@ public class BlobStorageSimulationIntegrationTests
         var mockLogger = new Mock<ILogger<OrderFileService>>();
 
         // Act & Assert - Should not throw exception
-        var orderFileService = new OrderFileService(mockLogger.Object);
+        var orderFileService = new OrderFileService(mockLogger.Object, GetDefaultFileNamingOptions(), GetMockBlobStorageMonitorService());
         Assert.NotNull(orderFileService);
     }
 
@@ -25,7 +42,7 @@ public class BlobStorageSimulationIntegrationTests
     {
         // Arrange
         var mockLogger = new Mock<ILogger<OrderFileService>>();
-        var orderFileService = new OrderFileService(mockLogger.Object);
+        var orderFileService = new OrderFileService(mockLogger.Object, GetDefaultFileNamingOptions(), GetMockBlobStorageMonitorService());
         
         // Act - Create files
         await orderFileService.CreateOrderTransactionFileAsync("Integration Test Customer", "Integration Test Supplier", 99);
@@ -59,7 +76,7 @@ public class BlobStorageSimulationIntegrationTests
     {
         // Arrange
         var mockLogger = new Mock<ILogger<OrderFileService>>();
-        var orderFileService = new OrderFileService(mockLogger.Object);
+        var orderFileService = new OrderFileService(mockLogger.Object, GetDefaultFileNamingOptions(), GetMockBlobStorageMonitorService());
 
         // Act & Assert - Should not throw exception for valid ranges
         await orderFileService.CreateOrderTransactionFileAsync(customerName, supplierName, quantity);

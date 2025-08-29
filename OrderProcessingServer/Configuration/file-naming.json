@@ -1,0 +1,13 @@
+{
+  "FileNaming": {
+    "BlobStorage": {
+      "OrderTransaction": "OrderTransaction.json",
+      "OrderCancellation": "OrderCancellation.json",
+      "DirectoryName": "BlobStorageSimulation",
+      "SampleDirectory": "_Sample"
+    },
+    "Solution": {
+      "OrderProcessingSystem": "OrderProcessingSystem.sln"
+    }
+  }
+}

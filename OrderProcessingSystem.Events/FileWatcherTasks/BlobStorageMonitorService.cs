@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Events.Configurations;
 using OrderProcessingSystem.Events.Models;
+using OrderProcessingSystem.Utilities.Helpers;
+using System.Collections.Concurrent;
 using System.Text.Json;
 
 namespace OrderProcessingSystem.Events.FileWatcherTasks;
@@ -13,8 +15,9 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
     private readonly ILogger<BlobStorageMonitorService> _logger;
     private readonly BlobStorageSimulationOptions _options;
     private readonly IServiceProvider _serviceProvider;
-    private FileSystemWatcher? _fileWatcher;
     private readonly string _fullFolderPath;
+    private readonly ConcurrentQueue<string> _fileProcessingQueue;
+    private readonly SemaphoreSlim _queueSemaphore;
 
     public BlobStorageMonitorService(
         ILogger<BlobStorageMonitorService> logger,
@@ -24,6 +27,8 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         _logger = logger;
         _options = options.Value;
         _serviceProvider = serviceProvider;
+        _fileProcessingQueue = new ConcurrentQueue<string>();
+        _queueSemaphore = new SemaphoreSlim(0);
         
         // Convert relative path to absolute path
         _fullFolderPath = Path.GetFullPath(_options.FolderPath);
@@ -31,27 +36,45 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         _logger.LogInformation("BlobStorageMonitorService initialized. Monitoring folder: {FolderPath}", _fullFolderPath);
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    /// <summary>
+    /// Queues a task to process a specific file in the monitored folder
+    /// </summary>
+    /// <param name="fileName">Name of the file to process</param>
+    /// <returns>Task representing the queuing operation</returns>
+    public async Task QueueFileProcessingTask(string fileName)
     {
-        _logger.LogInformation("BlobStorageMonitorService started");
-
-        // Ensure the directory exists
-        if (!Directory.Exists(_fullFolderPath))
+        if (string.IsNullOrWhiteSpace(fileName))
         {
-            _logger.LogInformation("Creating directory: {FolderPath}", _fullFolderPath);
-            Directory.CreateDirectory(_fullFolderPath);
+            _logger.LogWarning("Cannot queue file processing task: fileName is null or empty");
+            return;
         }
 
-        // Set up file system watcher
-        SetupFileWatcher();
+        _logger.LogInformation("Queuing file processing task for: {FileName}", fileName);
+        _fileProcessingQueue.Enqueue(fileName);
+        _queueSemaphore.Release(); // Signal that a new item is available
+        
+        await Task.CompletedTask;
+    }
 
-        // Also do periodic polling as backup
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("BlobStorageMonitorService started - Task-based processing mode");
+
+        // Ensure the directory exists
+        FileHelper.EnsureDirectoryExists(_fullFolderPath, _logger);
+
+        // Process queued files
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                await CheckForJsonFiles();
-                await Task.Delay(TimeSpan.FromSeconds(_options.PollingIntervalSeconds), stoppingToken);
+                // Wait for a file to be queued or cancellation
+                await _queueSemaphore.WaitAsync(stoppingToken);
+                
+                if (_fileProcessingQueue.TryDequeue(out string? fileName))
+                {
+                    await ProcessQueuedFile(fileName);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -60,65 +83,33 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during periodic file check");
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // Wait before retrying
+                _logger.LogError(ex, "Error during queued file processing");
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken); // Brief delay before continuing
             }
         }
 
         _logger.LogInformation("BlobStorageMonitorService stopped");
     }
 
-    private void SetupFileWatcher()
+    private async Task ProcessQueuedFile(string fileName)
     {
         try
         {
-            _fileWatcher = new FileSystemWatcher(_fullFolderPath)
-            {
-                Filter = "*.json", // Monitor all JSON files
-                NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.Size,
-                EnableRaisingEvents = true
-            };
-
-            _fileWatcher.Created += OnFileCreated;
-            _fileWatcher.Changed += OnFileChanged;
+            var filePath = Path.Combine(_fullFolderPath, fileName);
             
-            _logger.LogInformation("File system watcher setup complete for JSON files in {FolderPath}", _fullFolderPath);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to setup file system watcher");
-        }
-    }
-
-    private async void OnFileCreated(object sender, FileSystemEventArgs e)
-    {
-        _logger.LogInformation("File created: {FilePath}", e.FullPath);
-        await ProcessJsonFile(e.FullPath);
-    }
-
-    private async void OnFileChanged(object sender, FileSystemEventArgs e)
-    {
-        _logger.LogInformation("File changed: {FilePath}", e.FullPath);
-        await ProcessJsonFile(e.FullPath);
-    }
-
-    private async Task CheckForJsonFiles()
-    {
-        try
-        {
-            var jsonFiles = Directory.GetFiles(_fullFolderPath, "*.json");
-            
-            foreach (var filePath in jsonFiles)
+            // Check if file exists
+            if (!File.Exists(filePath))
             {
-                var fileName = Path.GetFileName(filePath);
-                _logger.LogDebug("Found JSON file: {FileName}", fileName);
-                
-                await ProcessJsonFile(filePath);
+                _logger.LogWarning("Queued file not found: {FilePath}", filePath);
+                return;
             }
+
+            _logger.LogInformation("Processing queued file: {FilePath}", filePath);
+            await ProcessJsonFile(filePath);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error checking for JSON files");
+            _logger.LogError(ex, "Error processing queued file: {FileName}", fileName);
         }
     }
 
@@ -454,7 +445,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         try
         {
             var archiveFolder = Path.Combine(_fullFolderPath, "processed");
-            Directory.CreateDirectory(archiveFolder);
+            FileHelper.EnsureDirectoryExists(archiveFolder, _logger);
             
             var fileName = Path.GetFileName(filePath);
             var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -475,7 +466,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
 
     public override void Dispose()
     {
-        _fileWatcher?.Dispose();
+        _queueSemaphore?.Dispose();
         base.Dispose();
     }
 }

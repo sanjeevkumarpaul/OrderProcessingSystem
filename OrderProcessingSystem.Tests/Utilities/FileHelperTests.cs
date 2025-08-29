@@ -12,7 +12,7 @@ public class FileHelperTests : IDisposable
     public FileHelperTests()
     {
         _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        Directory.CreateDirectory(_tempDirectory);
+        FileHelper.EnsureDirectoryExists(_tempDirectory);
     }
 
     [Fact]
@@ -123,12 +123,12 @@ public class FileHelperTests : IDisposable
     {
         // Arrange
         var solutionDir = Path.Combine(_tempDirectory, "solution");
-        Directory.CreateDirectory(solutionDir);
+        FileHelper.EnsureDirectoryExists(solutionDir);
         var solutionFile = Path.Combine(solutionDir, "TestSolution.sln");
         File.WriteAllText(solutionFile, "solution content");
 
         var projectDir = Path.Combine(solutionDir, "Project");
-        Directory.CreateDirectory(projectDir);
+        FileHelper.EnsureDirectoryExists(projectDir);
 
         // Act
         var result = FileHelper.FindSolutionRoot(projectDir, "TestSolution.sln");
@@ -142,7 +142,7 @@ public class FileHelperTests : IDisposable
     {
         // Arrange
         var projectDir = Path.Combine(_tempDirectory, "no-solution");
-        Directory.CreateDirectory(projectDir);
+        FileHelper.EnsureDirectoryExists(projectDir);
 
         // Act & Assert
         Assert.Throws<DirectoryNotFoundException>(() => FileHelper.FindSolutionRoot(projectDir, "NonExistent.sln"));

@@ -20,10 +20,9 @@ public static class FileHelper
         var directory = Path.GetDirectoryName(filePath);
         
         // Create directory if it doesn't exist
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        if (!string.IsNullOrEmpty(directory))
         {
-            Directory.CreateDirectory(directory);
-            logger?.LogInformation($"Created directory: {directory}");
+            EnsureDirectoryExists(directory, logger);
         }
         
         logger?.LogInformation($"Creating {fileName} at: {filePath}");
@@ -68,6 +67,24 @@ public static class FileHelper
     public static bool FileExists(string filePath)
     {
         return File.Exists(filePath);
+    }
+
+    /// <summary>
+    /// Ensures a directory exists by creating it if it doesn't exist
+    /// </summary>
+    /// <param name="directoryPath">Path to the directory to ensure exists</param>
+    /// <param name="logger">Logger instance for logging operations</param>
+    /// <returns>True if directory was created, false if it already existed</returns>
+    public static bool EnsureDirectoryExists(string directoryPath, ILogger? logger = null)
+    {
+        if (Directory.Exists(directoryPath))
+        {
+            return false;
+        }
+        
+        Directory.CreateDirectory(directoryPath);
+        logger?.LogInformation($"Created directory: {directoryPath}");
+        return true;
     }
 
     /// <summary>

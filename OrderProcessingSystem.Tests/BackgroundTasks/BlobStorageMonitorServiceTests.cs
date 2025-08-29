@@ -7,7 +7,6 @@ using OrderProcessingSystem.Events.Configurations;
 using System.Reflection;
 using System.Text.Json;
 using Xunit;
-using OrderProcessingSystem.Core.Constants;
 
 namespace OrderProcessingSystem.Tests.BackgroundTasks;
 
@@ -29,7 +28,7 @@ public class BlobStorageMonitorServiceTests
         {
             FolderPath = "./TestData",
             PollingIntervalSeconds = 5,
-            MonitoredFileName = FileNames.BlobStorage.OrderTransaction
+            MonitoredFileName = "OrderTransaction.json"
         };
         
         _mockOptions.Setup(x => x.Value).Returns(_options);
