@@ -129,7 +129,7 @@
                                     Initialize Order
                                 </button>
                                 <span class="flow-text">or</span>
-                                <button class="flow-btn secondary-flow-btn" @onclick="CancelOrder" disabled="@(!CanProcessOrder)">
+                                <button class="flow-btn" @onclick="CancelOrder" disabled="@(!CanProcessOrder)">
                                     Cancel Order
                                 </button>
                             </div>
@@ -142,8 +142,8 @@
 
 @code {
     // Data properties
-    private List<CustomerWithOrdersVM>? customers;
-    private List<SupplierWithOrdersVM>? suppliers;
+    private List<CustomerVM>? customers;
+    private List<SupplierVM>? suppliers;
     private bool isLoading = true;
   
     // Form properties
@@ -181,9 +181,9 @@
                 
         try
         {
-            // Use optimized methods without calculations for dropdown population
-            var customersTask = DataService.LoadCustomersWithOrdersAsync();
-            var suppliersTask = DataService.LoadSuppliersWithOrdersAsync();
+            // Use basic methods for dropdown population - no need for complex calculations
+            var customersTask = DataService.LoadCustomersAsync();
+            var suppliersTask = DataService.LoadSuppliersAsync();
             
             await Task.WhenAll(customersTask, suppliersTask);
             

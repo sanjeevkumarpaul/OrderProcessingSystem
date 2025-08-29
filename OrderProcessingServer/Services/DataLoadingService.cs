@@ -64,6 +64,16 @@ public class DataLoadingService
         return await LoadDataAsync<SupplierWithOrdersVM>("api/data/suppliers-with-orders", "suppliers with orders");
     }
 
+    public async Task<List<CustomerVM>> LoadCustomersAsync()
+    {
+        return await LoadDataAsync<CustomerVM>("api/data/customers", "customers");
+    }
+
+    public async Task<List<SupplierVM>> LoadSuppliersAsync()
+    {
+        return await LoadDataAsync<SupplierVM>("api/data/suppliers", "suppliers");
+    }
+
     public async Task<List<OrderVM>> LoadOrdersAsync()
     {
         return await LoadDataAsync<OrderVM>("api/data/orders", "orders");
