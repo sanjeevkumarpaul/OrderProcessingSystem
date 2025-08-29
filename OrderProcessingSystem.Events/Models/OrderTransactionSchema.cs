@@ -2,16 +2,16 @@ using System.Text.Json.Serialization;
 
 namespace OrderProcessingSystem.Events.Models;
 
-public class OrderTransactionModel
+public class OrderTransactionSchema
 {
     [JsonPropertyName("Supplier")]
-    public SupplierInfo Supplier { get; set; } = new();
+    public SupplierInfoSchema Supplier { get; set; } = new();
 
     [JsonPropertyName("Customer")]
-    public CustomerInfo Customer { get; set; } = new();
+    public CustomerInfoSchema Customer { get; set; } = new();
 }
 
-public class SupplierInfo
+public class SupplierInfoSchema
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ public class SupplierInfo
     public decimal Price { get; set; }
 }
 
-public class CustomerInfo
+public class CustomerInfoSchema
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; } = string.Empty;

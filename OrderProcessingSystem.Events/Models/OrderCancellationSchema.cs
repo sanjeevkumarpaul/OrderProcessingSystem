@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace OrderProcessingSystem.Events.Models;
 
-public class OrderCancellationModel
+public class OrderCancellationSchema
 {
     [JsonPropertyName("Customer")]
     public string Customer { get; set; } = string.Empty;

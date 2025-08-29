@@ -190,7 +190,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             // Try to parse JSON and validate schema
             try
             {
-                var orderTransaction = JsonSerializer.Deserialize<OrderTransactionModel>(fileContent);
+                var orderTransaction = JsonSerializer.Deserialize<OrderTransactionSchema>(fileContent);
                 
                 if (orderTransaction == null)
                 {
@@ -256,7 +256,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             // Try to parse JSON and validate schema
             try
             {
-                var orderCancellation = JsonSerializer.Deserialize<OrderCancellationModel>(fileContent);
+                var orderCancellation = JsonSerializer.Deserialize<OrderCancellationSchema>(fileContent);
                 
                 if (orderCancellation == null)
                 {
@@ -288,7 +288,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
-    private bool ValidateOrderTransaction(OrderTransactionModel orderTransaction)
+    private bool ValidateOrderTransaction(OrderTransactionSchema orderTransaction)
     {
         try
         {
@@ -344,7 +344,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
-    private bool ValidateOrderCancellation(OrderCancellationModel orderCancellation)
+    private bool ValidateOrderCancellation(OrderCancellationSchema orderCancellation)
     {
         try
         {
@@ -377,7 +377,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
-    private Task ProcessOrderTransaction(OrderTransactionModel orderTransaction, string filePath)
+    private Task ProcessOrderTransaction(OrderTransactionSchema orderTransaction, string filePath)
     {
         try
         {
@@ -407,7 +407,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
-    private Task ProcessOrderCancellation(OrderCancellationModel orderCancellation, string filePath)
+    private Task ProcessOrderCancellation(OrderCancellationSchema orderCancellation, string filePath)
     {
         try
         {

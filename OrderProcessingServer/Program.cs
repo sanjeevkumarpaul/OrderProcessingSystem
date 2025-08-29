@@ -27,7 +27,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 // Register services
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
-builder.Services.AddScoped<DataLoadingService>(provider =>
+builder.Services.AddScoped(provider =>
 {
     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
     var logger = provider.GetRequiredService<ILogger<DataLoadingService>>();
@@ -36,7 +36,7 @@ builder.Services.AddScoped<DataLoadingService>(provider =>
 
 // Register background services
 builder.Services.AddSingleton<IBlobStorageMonitorService, BlobStorageMonitorService>();
-builder.Services.AddHostedService(provider => provider.GetRequiredService<IBlobStorageMonitorService>());
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<IBlobStorageMonitorService>());
 
 var app = builder.Build();
 
