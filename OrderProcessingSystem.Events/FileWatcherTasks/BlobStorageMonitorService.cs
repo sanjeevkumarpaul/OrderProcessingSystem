@@ -396,9 +396,9 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             }
 
             // Validate price is within expected range (200-1000)
-            if (orderTransaction.Supplier.Price < 200 || orderTransaction.Supplier.Price > 1000)
+            if (orderTransaction.Supplier.Price < 200 || orderTransaction.Supplier.Price > 10000)
             {
-                _logger.LogError("Price must be between 200 and 1000. Current: {Price}", orderTransaction.Supplier.Price);
+                _logger.LogError("Price must be between 200 and 10000. Current: {Price}", orderTransaction.Supplier.Price);
                 return false;
             }
 
