@@ -2,7 +2,8 @@ using System.Text.Json;
 using OrderProcessingSystem.Contracts.Dto;
 using OrderProcessingSystem.Core.Metadata;
 using OrderProcessingSystem.Cache;
-using OrderProcessingSystem.API.Interfaces;
+using OrderProcessingSystem.Cache.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.API.Services;
 

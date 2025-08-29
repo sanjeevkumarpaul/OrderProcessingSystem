@@ -3,7 +3,7 @@ using Microsoft.Extensions.FileProviders;
 using OrderProcessingSystem.Data;
 using OrderProcessingSystem.Infrastructure;
 using OrderProcessingSystem.Cache;
-using OrderProcessingSystem.API.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,7 +1,7 @@
 using OrderProcessingSystem.Contracts.Dto;
 
+namespace OrderProcessingSystem.Contracts.Interfaces;
 
-namespace OrderProcessingSystem.API.Interfaces;
 public interface IGridColumnMappingService
 {
     List<UIGridColumnDto> MapToUIColumns(List<GridColumnDto> contractDtos);

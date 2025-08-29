@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderProcessingSystem.API.Services;
 using OrderProcessingSystem.Contracts.Dto;
-using OrderProcessingSystem.API.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.API.Controllers
 {
