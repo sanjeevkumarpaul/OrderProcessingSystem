@@ -26,6 +26,19 @@ public class OrderFileService
         return blobPath;
     }
 
+    /// <summary>
+    /// Creates a JSON file in the BlobStorageSimulation folder
+    /// </summary>
+    /// <typeparam name="T">Type of object to serialize</typeparam>
+    /// <param name="data">Data to serialize and write</param>
+    /// <param name="fileName">Name of the JSON file to create</param>
+    private async Task CreateJsonFileAsync<T>(T data, string fileName)
+    {
+        var jsonContent = JsonHelper.SerializeToJson(data);
+        var blobStoragePath = GetBlobStorageSimulationPath();
+        await FileHelper.WriteJsonFileAsync(blobStoragePath, fileName, jsonContent, _logger);
+    }
+
     public async Task CreateOrderTransactionFileAsync(string customerName, string supplierName, int quantity)
     {
         var price = RandomHelper.GenerateRandomPrice();
@@ -47,9 +60,7 @@ public class OrderFileService
             }
         };
         
-        var jsonContent = JsonHelper.SerializeToJson(orderTransaction);
-        var blobStoragePath = GetBlobStorageSimulationPath();
-        await FileHelper.WriteJsonFileAsync(blobStoragePath, "OrderTransaction.json", jsonContent, _logger);
+        await CreateJsonFileAsync(orderTransaction, "OrderTransaction.json");
     }
     
     public async Task CreateOrderCancellationFileAsync(string customerName, string supplierName, int quantity)
@@ -62,8 +73,6 @@ public class OrderFileService
             Quantity = quantity
         };
         
-        var jsonContent = JsonHelper.SerializeToJson(orderCancellation);
-        var blobStoragePath = GetBlobStorageSimulationPath();
-        await FileHelper.WriteJsonFileAsync(blobStoragePath, "OrderCancellation.json", jsonContent, _logger);
+        await CreateJsonFileAsync(orderCancellation, "OrderCancellation.json");
     }
 }
