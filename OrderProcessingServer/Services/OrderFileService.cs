@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using OrderProcessingSystem.Events.Models;
 using OrderProcessingSystem.Utilities.Helpers;
 using OrderProcessingSystem.Core.Configuration;
+using OrderProcessingSystem.Core.Enums;
 using Microsoft.Extensions.Options;
 using OrderProcessingSystem.Contracts.Interfaces;
 
@@ -46,8 +47,9 @@ public class OrderFileService
     /// <typeparam name="T">Type of object to serialize</typeparam>
     /// <param name="data">Data to serialize to JSON</param>
     /// <param name="fileName">Name of the file to create</param>
+    /// <param name="queue">Which queue to use for processing</param>
     /// <returns>Task representing the asynchronous operation</returns>
-    private async Task CreateJsonFileAsync<T>(T data, string fileName)
+    private async Task CreateJsonFileAsync<T>(T data, string fileName, FileProcessingQueue queue)
     {
         var blobStoragePath = GetBlobStoragePath();
         var jsonContent = JsonHelper.SerializeToJson(data);
@@ -55,7 +57,7 @@ public class OrderFileService
         await FileHelper.WriteJsonFileAsync(blobStoragePath, fileName, jsonContent, _logger);
         
         // Queue the file for processing by the background service
-        await _blobStorageMonitorService.QueueFileProcessingTask(fileName);
+        await _blobStorageMonitorService.QueueFileProcessingTask(fileName, queue);
     }
 
     /// <summary>
@@ -85,7 +87,7 @@ public class OrderFileService
             }
         };
 
-        await CreateJsonFileAsync(orderTransaction, _fileNamingOptions.BlobStorage.OrderTransaction);
+        await CreateJsonFileAsync(orderTransaction, _fileNamingOptions.BlobStorage.OrderTransaction, FileProcessingQueue.OrderTransaction);
     }
 
     /// <summary>
@@ -104,6 +106,6 @@ public class OrderFileService
             Quantity = quantity
         };
 
-        await CreateJsonFileAsync(orderCancellation, _fileNamingOptions.BlobStorage.OrderCancellation);
+        await CreateJsonFileAsync(orderCancellation, _fileNamingOptions.BlobStorage.OrderCancellation, FileProcessingQueue.OrderCancellation);
     }
 }

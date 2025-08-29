@@ -5,6 +5,7 @@ using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Events.Configurations;
 using OrderProcessingSystem.Events.Models;
 using OrderProcessingSystem.Utilities.Helpers;
+using OrderProcessingSystem.Core.Enums;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -16,8 +17,10 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
     private readonly BlobStorageSimulationOptions _options;
     private readonly IServiceProvider _serviceProvider;
     private readonly string _fullFolderPath;
-    private readonly ConcurrentQueue<string> _fileProcessingQueue;
-    private readonly SemaphoreSlim _queueSemaphore;
+    private readonly ConcurrentQueue<string> _orderTransactionQueue;
+    private readonly ConcurrentQueue<string> _orderCancellationQueue;
+    private readonly SemaphoreSlim _transactionQueueSemaphore;
+    private readonly SemaphoreSlim _cancellationQueueSemaphore;
 
     public BlobStorageMonitorService(
         ILogger<BlobStorageMonitorService> logger,
@@ -27,21 +30,24 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         _logger = logger;
         _options = options.Value;
         _serviceProvider = serviceProvider;
-        _fileProcessingQueue = new ConcurrentQueue<string>();
-        _queueSemaphore = new SemaphoreSlim(0);
+        _orderTransactionQueue = new ConcurrentQueue<string>();
+        _orderCancellationQueue = new ConcurrentQueue<string>();
+        _transactionQueueSemaphore = new SemaphoreSlim(0);
+        _cancellationQueueSemaphore = new SemaphoreSlim(0);
         
         // Convert relative path to absolute path
         _fullFolderPath = Path.GetFullPath(_options.FolderPath);
         
-        _logger.LogInformation("BlobStorageMonitorService initialized. Monitoring folder: {FolderPath}", _fullFolderPath);
+        _logger.LogInformation("BlobStorageMonitorService initialized with separate queues. Monitoring folder: {FolderPath}", _fullFolderPath);
     }
 
     /// <summary>
     /// Queues a task to process a specific file in the monitored folder
     /// </summary>
     /// <param name="fileName">Name of the file to process</param>
+    /// <param name="queue">Which queue to use for processing</param>
     /// <returns>Task representing the queuing operation</returns>
-    public async Task QueueFileProcessingTask(string fileName)
+    public async Task QueueFileProcessingTask(string fileName, FileProcessingQueue queue)
     {
         if (string.IsNullOrWhiteSpace(fileName))
         {
@@ -49,31 +55,57 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             return;
         }
 
-        _logger.LogInformation("Queuing file processing task for: {FileName}", fileName);
-        _fileProcessingQueue.Enqueue(fileName);
-        _queueSemaphore.Release(); // Signal that a new item is available
+        switch (queue)
+        {
+            case FileProcessingQueue.OrderTransaction:
+                _logger.LogInformation("Queuing ORDER TRANSACTION processing task for: {FileName}", fileName);
+                _orderTransactionQueue.Enqueue(fileName);
+                _transactionQueueSemaphore.Release();
+                break;
+            case FileProcessingQueue.OrderCancellation:
+                _logger.LogInformation("Queuing ORDER CANCELLATION processing task for: {FileName}", fileName);
+                _orderCancellationQueue.Enqueue(fileName);
+                _cancellationQueueSemaphore.Release();
+                break;
+            default:
+                _logger.LogWarning("Unknown queue type: {Queue}", queue);
+                break;
+        }
         
         await Task.CompletedTask;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("BlobStorageMonitorService started - Task-based processing mode");
+        _logger.LogInformation("BlobStorageMonitorService started - Separate queue processing mode");
 
         // Ensure the directory exists
         FileHelper.EnsureDirectoryExists(_fullFolderPath, _logger);
 
-        // Process queued files
+        // Create tasks for processing both queues concurrently
+        var transactionTask = ProcessTransactionQueue(stoppingToken);
+        var cancellationTask = ProcessCancellationQueue(stoppingToken);
+
+        // Wait for both tasks to complete
+        await Task.WhenAll(transactionTask, cancellationTask);
+
+        _logger.LogInformation("BlobStorageMonitorService stopped");
+    }
+
+    private async Task ProcessTransactionQueue(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("Transaction queue processor started");
+        
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                // Wait for a file to be queued or cancellation
-                await _queueSemaphore.WaitAsync(stoppingToken);
+                // Wait for a transaction file to be queued or cancellation
+                await _transactionQueueSemaphore.WaitAsync(stoppingToken);
                 
-                if (_fileProcessingQueue.TryDequeue(out string? fileName))
+                if (_orderTransactionQueue.TryDequeue(out string? fileName))
                 {
-                    await ProcessQueuedFile(fileName);
+                    await ProcessQueuedFile(fileName, FileProcessingQueue.OrderTransaction);
                 }
             }
             catch (OperationCanceledException)
@@ -83,15 +115,46 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during queued file processing");
+                _logger.LogError(ex, "Error during transaction queue processing");
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken); // Brief delay before continuing
             }
         }
-
-        _logger.LogInformation("BlobStorageMonitorService stopped");
+        
+        _logger.LogInformation("Transaction queue processor stopped");
     }
 
-    private async Task ProcessQueuedFile(string fileName)
+    private async Task ProcessCancellationQueue(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("Cancellation queue processor started");
+        
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                // Wait for a cancellation file to be queued or cancellation
+                await _cancellationQueueSemaphore.WaitAsync(stoppingToken);
+                
+                if (_orderCancellationQueue.TryDequeue(out string? fileName))
+                {
+                    await ProcessQueuedFile(fileName, FileProcessingQueue.OrderCancellation);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when cancellation is requested
+                break;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during cancellation queue processing");
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken); // Brief delay before continuing
+            }
+        }
+        
+        _logger.LogInformation("Cancellation queue processor stopped");
+    }
+
+    private async Task ProcessQueuedFile(string fileName, FileProcessingQueue queue)
     {
         try
         {
@@ -104,12 +167,25 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
                 return;
             }
 
-            _logger.LogInformation("Processing queued file: {FilePath}", filePath);
-            await ProcessJsonFile(filePath);
+            _logger.LogInformation("Processing queued file from {Queue} queue: {FilePath}", queue, filePath);
+            
+            // Process file based on queue type
+            switch (queue)
+            {
+                case FileProcessingQueue.OrderTransaction:
+                    await ProcessOrderTransactionFile(filePath);
+                    break;
+                case FileProcessingQueue.OrderCancellation:
+                    await ProcessOrderCancellationFile(filePath);
+                    break;
+                default:
+                    _logger.LogWarning("Unknown queue type for file: {FileName}", fileName);
+                    break;
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing queued file: {FileName}", fileName);
+            _logger.LogError(ex, "Error processing queued file from {Queue} queue: {FileName}", queue, fileName);
         }
     }
 
@@ -466,7 +542,8 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
 
     public override void Dispose()
     {
-        _queueSemaphore?.Dispose();
+        _transactionQueueSemaphore?.Dispose();
+        _cancellationQueueSemaphore?.Dispose();
         base.Dispose();
     }
 }
