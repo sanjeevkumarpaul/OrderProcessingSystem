@@ -499,3 +499,8 @@ temp/
 # Local configuration files
 appsettings.Development.json
 appsettings.Local.json
+
+# BlobStorageSimulation - Ignore all files except the _Sample folder
+BlobStorageSimulation/*
+!BlobStorageSimulation/_Sample/
+!BlobStorageSimulation/_Sample/**
