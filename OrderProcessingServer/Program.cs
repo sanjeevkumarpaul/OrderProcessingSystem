@@ -44,7 +44,7 @@ builder.Services.AddScoped(provider =>
 
 // Register background services
 builder.Services.AddSingleton<IBlobStorageMonitorService, BlobStorageMonitorService>();
-//builder.Services.AddHostedService(provider => provider.GetRequiredService<IBlobStorageMonitorService>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<IBlobStorageMonitorService>());
 
 var app = builder.Build();
 

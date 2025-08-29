@@ -42,22 +42,37 @@ public class OrderFileService
     }
 
     /// <summary>
+    /// Generates a unique filename with timestamp postfix
+    /// </summary>
+    /// <param name="baseFileName">Base filename (e.g., "OrderTransaction.json")</param>
+    /// <returns>Unique filename with timestamp postfix</returns>
+    private string GenerateUniqueFileName(string baseFileName)
+    {
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
+        var extension = Path.GetExtension(baseFileName);
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff"); // Include milliseconds for uniqueness
+        
+        return $"{fileNameWithoutExtension}_{timestamp}{extension}";
+    }
+
+    /// <summary>
     /// Creates a JSON file in the BlobStorageSimulation folder
     /// </summary>
     /// <typeparam name="T">Type of object to serialize</typeparam>
     /// <param name="data">Data to serialize to JSON</param>
-    /// <param name="fileName">Name of the file to create</param>
+    /// <param name="baseFileName">Base name of the file to create</param>
     /// <param name="queue">Which queue to use for processing</param>
     /// <returns>Task representing the asynchronous operation</returns>
-    private async Task CreateJsonFileAsync<T>(T data, string fileName, FileProcessingQueue queue)
+    private async Task CreateJsonFileAsync<T>(T data, string baseFileName, FileProcessingQueue queue)
     {
         var blobStoragePath = GetBlobStoragePath();
+        var uniqueFileName = GenerateUniqueFileName(baseFileName);
         var jsonContent = JsonHelper.SerializeToJson(data);
         
-        await FileHelper.WriteJsonFileAsync(blobStoragePath, fileName, jsonContent, _logger);
+        await FileHelper.WriteJsonFileAsync(blobStoragePath, uniqueFileName, jsonContent, _logger);
         
-        // Queue the file for processing by the background service
-        await _blobStorageMonitorService.QueueFileProcessingTask(fileName, queue);
+        // Queue the file for processing by the background service (use unique filename)
+        await _blobStorageMonitorService.QueueFileProcessingTask(uniqueFileName, queue);
     }
 
     /// <summary>

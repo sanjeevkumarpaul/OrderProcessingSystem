@@ -396,9 +396,9 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             }
 
             // Validate price is within expected range (200-1000)
-            if (orderTransaction.Supplier.Price < 200 || orderTransaction.Supplier.Price > 10000)
+            if (orderTransaction.Supplier.Price < 200 || orderTransaction.Supplier.Price > 1000)
             {
-                _logger.LogError("Price must be between 200 and 10000. Current: {Price}", orderTransaction.Supplier.Price);
+                _logger.LogError("Price must be between 200 and 1000. Current: {Price}", orderTransaction.Supplier.Price);
                 return false;
             }
 
@@ -444,7 +444,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
-    private Task ProcessOrderTransaction(OrderTransactionSchema orderTransaction, string filePath)
+    private async Task ProcessOrderTransaction(OrderTransactionSchema orderTransaction, string filePath)
     {
         try
         {
@@ -462,19 +462,19 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             
             _logger.LogInformation("Order transaction processed successfully from file: {FilePath}", filePath);
 
-            // Optionally, archive or delete the processed file
-            // await ArchiveProcessedFile(filePath);
+            // Archive the processed file
+            await ArchiveProcessedFile(filePath, FileProcessingQueue.OrderTransaction);
             
-            return Task.CompletedTask;
+            return;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing order transaction from {FilePath}", filePath);
-            return Task.CompletedTask;
+            return;
         }
     }
 
-    private Task ProcessOrderCancellation(OrderCancellationSchema orderCancellation, string filePath)
+    private async Task ProcessOrderCancellation(OrderCancellationSchema orderCancellation, string filePath)
     {
         try
         {
@@ -491,15 +491,15 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             
             _logger.LogInformation("Order cancellation processed successfully from file: {FilePath}", filePath);
 
-            // Optionally, archive or delete the processed file
-            // await ArchiveProcessedFile(filePath);
+            // Archive the processed file
+            await ArchiveProcessedFile(filePath, FileProcessingQueue.OrderCancellation);
             
-            return Task.CompletedTask;
+            return;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing order cancellation from {FilePath}", filePath);
-            return Task.CompletedTask;
+            return;
         }
     }
 
@@ -516,17 +516,36 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
-    private Task ArchiveProcessedFile(string filePath)
+    private Task ArchiveProcessedFile(string filePath, FileProcessingQueue queueType)
     {
         try
         {
-            var archiveFolder = Path.Combine(_fullFolderPath, "processed");
+            // Create main archive folder
+            var archiveFolder = Path.Combine(_fullFolderPath, "_Archive");
             FileHelper.EnsureDirectoryExists(archiveFolder, _logger);
             
+            // Create specific subfolder based on queue type
+            string subFolder = queueType switch
+            {
+                FileProcessingQueue.OrderTransaction => "_NewOrders",
+                FileProcessingQueue.OrderCancellation => "_CancelOrder",
+                _ => "Other"
+            };
+            
+            var targetFolder = Path.Combine(archiveFolder, subFolder);
+            FileHelper.EnsureDirectoryExists(targetFolder, _logger);
+            
             var fileName = Path.GetFileName(filePath);
-            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            var archivedFileName = $"{timestamp}_{fileName}";
-            var archivedFilePath = Path.Combine(archiveFolder, archivedFileName);
+            var archivedFilePath = Path.Combine(targetFolder, fileName);
+            
+            // If file already exists in archive, add timestamp
+            if (File.Exists(archivedFilePath))
+            {
+                var nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+                var extension = Path.GetExtension(fileName);
+                var timestamp = DateTime.Now.ToString("_yyyyMMdd_HHmmss_fff");
+                archivedFilePath = Path.Combine(targetFolder, $"{nameWithoutExt}{timestamp}{extension}");
+            }
             
             File.Move(filePath, archivedFilePath);
             _logger.LogInformation("File archived: {OriginalPath} -> {ArchivedPath}", filePath, archivedFilePath);

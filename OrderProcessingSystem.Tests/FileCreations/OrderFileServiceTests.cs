@@ -144,7 +144,7 @@ public class OrderFileServiceTests : IDisposable
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Creating {_fileNamingOptions.BlobStorage.OrderTransaction}")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderTransaction_")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

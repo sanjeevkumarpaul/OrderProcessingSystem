@@ -53,7 +53,7 @@ public class BlobStorageSimulationIntegrationTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderTransaction.json")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderTransaction_")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.AtLeastOnce);
@@ -62,7 +62,7 @@ public class BlobStorageSimulationIntegrationTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderCancellation.json")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderCancellation_")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.AtLeastOnce);
@@ -86,7 +86,7 @@ public class BlobStorageSimulationIntegrationTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("OrderTransaction.json created successfully")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("created successfully")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
