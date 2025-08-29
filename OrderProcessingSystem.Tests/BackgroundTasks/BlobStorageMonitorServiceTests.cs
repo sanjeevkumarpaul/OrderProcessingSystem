@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using OrderProcessingServer.BackgroundTasks;
-using OrderProcessingServer.BackgroundTasks.Models;
+using OrderProcessingSystem.Events.FileWatcherTasks;
+using OrderProcessingSystem.Events.Models;
+using OrderProcessingSystem.Events.Configurations;
 using System.Reflection;
 using System.Text.Json;
 using Xunit;

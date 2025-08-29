@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace OrderProcessingServer.BackgroundTasks.Models;
+namespace OrderProcessingSystem.Events.Models;
 
 public class OrderTransactionModel
 {

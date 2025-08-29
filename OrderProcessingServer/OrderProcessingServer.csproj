@@ -5,6 +5,7 @@
   <ProjectReference Include="..\OrderProcessingSystem.Utilities\OrderProcessingSystem.Utilities.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Infrastructure\OrderProcessingSystem.Infrastructure.csproj" />
+  <ProjectReference Include="..\OrderProcessingSystem.Events\OrderProcessingSystem.Events.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

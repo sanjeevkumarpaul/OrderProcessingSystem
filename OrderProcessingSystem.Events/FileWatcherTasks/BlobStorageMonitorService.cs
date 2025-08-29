@@ -1,10 +1,14 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OrderProcessingSystem.Contracts.Interfaces;
+using OrderProcessingSystem.Events.Configurations;
+using OrderProcessingSystem.Events.Models;
 using System.Text.Json;
-using OrderProcessingServer.BackgroundTasks.Models;
 
-namespace OrderProcessingServer.BackgroundTasks;
+namespace OrderProcessingSystem.Events.FileWatcherTasks;
 
-public class BlobStorageMonitorService : BackgroundService
+public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorService
 {
     private readonly ILogger<BlobStorageMonitorService> _logger;
     private readonly BlobStorageSimulationOptions _options;

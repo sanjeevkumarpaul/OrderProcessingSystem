@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 using OrderProcessingSystem.Infrastructure.Services;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingServer.Services;
-using OrderProcessingServer.BackgroundTasks;
+using OrderProcessingSystem.Events.Configurations;
+using OrderProcessingSystem.Events.FileWatcherTasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,8 @@ builder.Services.AddScoped<DataLoadingService>(provider =>
 });
 
 // Register background services
-builder.Services.AddHostedService<BlobStorageMonitorService>();
+builder.Services.AddSingleton<IBlobStorageMonitorService, BlobStorageMonitorService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<IBlobStorageMonitorService>());
 
 var app = builder.Build();
 

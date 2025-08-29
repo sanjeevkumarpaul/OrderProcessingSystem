@@ -1,4 +1,4 @@
-namespace OrderProcessingServer.BackgroundTasks;
+namespace OrderProcessingSystem.Events.Configurations;
 
 public class BlobStorageSimulationOptions
 {
