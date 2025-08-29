@@ -16,6 +16,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
     private readonly ILogger<BlobStorageMonitorService> _logger;
     private readonly BlobStorageSimulationOptions _options;
     private readonly IServiceProvider _serviceProvider;
+    private readonly HttpClient _httpClient;
     private readonly string _fullFolderPath;
     private readonly ConcurrentQueue<string> _orderTransactionQueue;
     private readonly ConcurrentQueue<string> _orderCancellationQueue;
@@ -25,11 +26,13 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
     public BlobStorageMonitorService(
         ILogger<BlobStorageMonitorService> logger,
         IOptions<BlobStorageSimulationOptions> options,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        HttpClient httpClient)
     {
         _logger = logger;
         _options = options.Value;
         _serviceProvider = serviceProvider;
+        _httpClient = httpClient;
         _orderTransactionQueue = new ConcurrentQueue<string>();
         _orderCancellationQueue = new ConcurrentQueue<string>();
         _transactionQueueSemaphore = new SemaphoreSlim(0);
@@ -39,6 +42,12 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         _fullFolderPath = Path.GetFullPath(_options.FolderPath);
         
         _logger.LogInformation("BlobStorageMonitorService initialized with separate queues. Monitoring folder: {FolderPath}", _fullFolderPath);
+    }
+
+    // Constructor for backward compatibility (tests, etc.)
+    public BlobStorageMonitorService(ILogger<BlobStorageMonitorService> logger, string folderPath)
+        : this(logger, Microsoft.Extensions.Options.Options.Create(new BlobStorageSimulationOptions { FolderPath = folderPath }), null!, new HttpClient())
+    {
     }
 
     /// <summary>
@@ -454,11 +463,8 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             _logger.LogInformation("  Customer: {CustomerName} - Quantity: {Quantity}, Price: {Price}", 
                 orderTransaction.Customer.Name, orderTransaction.Customer.Quantity, orderTransaction.Customer.Price);
 
-            // Here you can add specific business logic such as:
-            // 1. Create order in database
-            // 2. Update inventory
-            // 3. Send notifications
-            // 4. Generate invoices
+            // Call API to process the order transaction
+            await CallOrderProcessingAPI(orderTransaction);
             
             _logger.LogInformation("Order transaction processed successfully from file: {FilePath}", filePath);
 
@@ -474,6 +480,45 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         }
     }
 
+    private async Task CallOrderProcessingAPI(OrderTransactionSchema orderTransaction)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(orderTransaction);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            
+            // TODO: Make this configurable
+            var apiUrl = "http://localhost:5269/api/orderprocessing/process-order-transaction";
+            
+            _logger.LogInformation("Calling Order Processing API at {ApiUrl}", apiUrl);
+            
+            var response = await _httpClient.PostAsync(apiUrl, content);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation("API call successful: {Response}", responseContent);
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("API call failed with status {StatusCode}: {ErrorContent}", 
+                    response.StatusCode, errorContent);
+                throw new HttpRequestException($"API call failed: {response.StatusCode}");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP error calling Order Processing API");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error calling Order Processing API");
+            throw;
+        }
+    }
+
     private async Task ProcessOrderCancellation(OrderCancellationSchema orderCancellation, string filePath)
     {
         try
@@ -483,11 +528,8 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             _logger.LogInformation("  Supplier: {Supplier}", orderCancellation.Supplier);
             _logger.LogInformation("  Quantity: {Quantity}", orderCancellation.Quantity);
 
-            // Here you can add specific business logic such as:
-            // 1. Find and cancel existing orders
-            // 2. Update inventory
-            // 3. Process refunds
-            // 4. Send cancellation notifications
+            // Call the API to process the order cancellation
+            await CallOrderCancellationAPI(orderCancellation);
             
             _logger.LogInformation("Order cancellation processed successfully from file: {FilePath}", filePath);
 
@@ -500,6 +542,45 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         {
             _logger.LogError(ex, "Error processing order cancellation from {FilePath}", filePath);
             return;
+        }
+    }
+
+    private async Task CallOrderCancellationAPI(OrderCancellationSchema orderCancellation)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(orderCancellation);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            
+            // TODO: Make this configurable
+            var apiUrl = "http://localhost:5269/api/orderprocessing/process-order-cancellation";
+            
+            _logger.LogInformation("Calling Order Cancellation API at {ApiUrl}", apiUrl);
+            
+            var response = await _httpClient.PostAsync(apiUrl, content);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation("Order cancellation API call successful: {Response}", responseContent);
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Order cancellation API call failed with status {StatusCode}: {ErrorContent}", 
+                    response.StatusCode, errorContent);
+                throw new HttpRequestException($"Order cancellation API call failed: {response.StatusCode}");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP error calling Order Cancellation API");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error calling Order Cancellation API");
+            throw;
         }
     }
 

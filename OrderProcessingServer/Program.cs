@@ -43,7 +43,14 @@ builder.Services.AddScoped(provider =>
 });
 
 // Register background services
-builder.Services.AddSingleton<IBlobStorageMonitorService, BlobStorageMonitorService>();
+builder.Services.AddSingleton<IBlobStorageMonitorService>(provider =>
+{
+    var logger = provider.GetRequiredService<ILogger<BlobStorageMonitorService>>();
+    var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<BlobStorageSimulationOptions>>();
+    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient();
+    return new BlobStorageMonitorService(logger, options, provider, httpClient);
+});
 builder.Services.AddHostedService(provider => provider.GetRequiredService<IBlobStorageMonitorService>());
 
 var app = builder.Build();

@@ -9,4 +9,5 @@ public interface IOrderRepository
     Task AddAsync(Order order, CancellationToken ct = default);
     Task UpdateAsync(Order order, CancellationToken ct = default);
     Task DeleteAsync(int id, CancellationToken ct = default);
+    Task<List<Order>> GetOrdersByCustomerAndSupplierAsync(int customerId, int supplierId, CancellationToken ct = default);
 }

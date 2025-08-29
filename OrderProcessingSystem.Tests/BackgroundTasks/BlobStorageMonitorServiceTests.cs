@@ -36,7 +36,8 @@ public class BlobStorageMonitorServiceTests
         _service = new BlobStorageMonitorService(
             _mockLogger.Object,
             _mockOptions.Object,
-            _mockServiceProvider.Object);
+            _mockServiceProvider.Object,
+            new HttpClient());
     }
 
     #region OrderTransaction Validation Tests

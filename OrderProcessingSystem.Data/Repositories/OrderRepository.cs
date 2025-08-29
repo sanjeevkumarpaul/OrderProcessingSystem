@@ -87,4 +87,29 @@ public class OrderRepository : IOrderRepository
         var sql = "DELETE FROM Orders WHERE OrderId = @Id";
     await OrderProcessingSystem.Data.Common.DapperExecutor.ExecuteAsync(_db, sql, new { Id = id }, ct);
     }
+
+    public async Task<List<Order>> GetOrdersByCustomerAndSupplierAsync(int customerId, int supplierId, CancellationToken ct = default)
+    {
+        var sql = @"SELECT o.OrderId, o.CustomerId, o.SupplierId, o.Total, o.Status,
+                   s.SupplierId, s.Name, s.Country,
+                   c.CustomerId, c.Name
+                FROM Orders o
+                LEFT JOIN Suppliers s ON s.SupplierId = o.SupplierId
+                LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
+                WHERE o.CustomerId = @CustomerId AND o.SupplierId = @SupplierId";
+
+        using var conn = _db.Database.GetDbConnection();
+        if (conn.State == ConnectionState.Closed)
+            await conn.OpenAsync(ct);
+
+        var result = await conn.QueryAsync<Order, Supplier, Customer, Order>(sql,
+            (order, supplier, customer) =>
+            {
+                order.Supplier = supplier;
+                order.Customer = customer;
+                return order;
+            }, new { CustomerId = customerId, SupplierId = supplierId }, splitOn: "SupplierId,CustomerId");
+
+        return result.ToList();
+    }
 }

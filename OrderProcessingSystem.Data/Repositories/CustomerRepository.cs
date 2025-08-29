@@ -23,6 +23,12 @@ public class CustomerRepository : ICustomerRepository
         return await OrderProcessingSystem.Data.Common.DapperExecutor.QueryAsync<Customer>(_db, sql, null, ct);
     }
 
+    public async Task<Customer?> GetByNameAsync(string name, CancellationToken ct = default)
+    {
+        var sql = "SELECT CustomerId, Name FROM Customers WHERE Name = @Name";
+        return await OrderProcessingSystem.Data.Common.DapperExecutor.QuerySingleOrDefaultAsync<Customer>(_db, sql, new { Name = name }, ct);
+    }
+
     public async Task AddAsync(Customer customer, CancellationToken ct = default)
     {
         var sql = _sqlProvider.GetSql("Customers.Insert");

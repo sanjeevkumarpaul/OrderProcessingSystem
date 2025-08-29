@@ -18,6 +18,7 @@
     <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
     <ProjectReference Include="..\OrderProcessingSystem.Contracts\OrderProcessingSystem.Contracts.csproj" />
     <ProjectReference Include="..\OrderProcessingSystem.Cache\OrderProcessingSystem.Cache.csproj" />
+    <ProjectReference Include="..\OrderProcessingSystem.Events\OrderProcessingSystem.Events.csproj" />
   </ItemGroup>
 
 </Project>

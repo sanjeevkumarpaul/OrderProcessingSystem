@@ -27,6 +27,12 @@ public class SupplierRepository : ISupplierRepository
     return await OrderProcessingSystem.Data.Common.DapperExecutor.QuerySingleOrDefaultAsync<Supplier>(_db, sql, new { Id = id }, ct);
     }
 
+    public async Task<Supplier?> GetByNameAsync(string name, CancellationToken ct = default)
+    {
+    var sql = "SELECT SupplierId, Name, Country FROM Suppliers WHERE Name = @Name";
+    return await OrderProcessingSystem.Data.Common.DapperExecutor.QuerySingleOrDefaultAsync<Supplier>(_db, sql, new { Name = name }, ct);
+    }
+
     public async Task AddAsync(Supplier supplier, CancellationToken ct = default)
     {
     var sql = "INSERT INTO Suppliers (Name, Country) VALUES (@Name, @Country); SELECT last_insert_rowid();";
