@@ -1,5 +1,6 @@
 using OrderProcessingSystem.Events.Models;
 using OrderProcessingSystem.Utilities.Helpers;
+using OrderProcessingSystem.Core.Constants;
 
 namespace OrderProcessingServer.Services;
 
@@ -14,13 +15,13 @@ public class OrderFileService
 
     private string GetBlobStorageSimulationPath()
     {
-        var solutionRoot = FileHelper.FindSolutionRoot(solutionFileName: "OrderProcessingSystem.sln");
-        var blobPath = Path.Combine(solutionRoot, "BlobStorageSimulation");
+        var solutionRoot = FileHelper.FindSolutionRoot(solutionFileName: FileNames.Solution.OrderProcessingSystem);
+        var blobPath = Path.Combine(solutionRoot, FileNames.BlobStorage.DirectoryName);
         
         if (!Directory.Exists(blobPath))
         {
             Directory.CreateDirectory(blobPath);
-            _logger.LogInformation($"Created BlobStorageSimulation directory at: {blobPath}");
+            _logger.LogInformation($"Created {FileNames.BlobStorage.DirectoryName} directory at: {blobPath}");
         }
         
         return blobPath;
@@ -60,7 +61,7 @@ public class OrderFileService
             }
         };
         
-        await CreateJsonFileAsync(orderTransaction, "OrderTransaction.json");
+        await CreateJsonFileAsync(orderTransaction, FileNames.BlobStorage.OrderTransaction);
     }
     
     public async Task CreateOrderCancellationFileAsync(string customerName, string supplierName, int quantity)
@@ -73,6 +74,6 @@ public class OrderFileService
             Quantity = quantity
         };
         
-        await CreateJsonFileAsync(orderCancellation, "OrderCancellation.json");
+        await CreateJsonFileAsync(orderCancellation, FileNames.BlobStorage.OrderCancellation);
     }
 }

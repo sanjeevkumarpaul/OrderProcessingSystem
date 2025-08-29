@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json;
 using Xunit;
 using OrderProcessingSystem.Events.Models;
+using OrderProcessingSystem.Core.Constants;
 
 namespace OrderProcessingSystem.Tests.FileCreations;
 
@@ -38,7 +39,7 @@ public class OrderFileServiceTests : IDisposable
         var quantity = 25;
         
         // Create BlobStorageSimulation directory in our test location
-        var blobStoragePath = Path.Combine(_testSolutionDirectory, "BlobStorageSimulation");
+        var blobStoragePath = Path.Combine(_testSolutionDirectory, FileNames.BlobStorage.DirectoryName);
         Directory.CreateDirectory(blobStoragePath);
 
         // Act
@@ -49,8 +50,8 @@ public class OrderFileServiceTests : IDisposable
         var realSolutionRoot = FindSolutionRoot();
         if (realSolutionRoot != null)
         {
-            var realBlobStoragePath = Path.Combine(realSolutionRoot, "BlobStorageSimulation");
-            var expectedFilePath = Path.Combine(realBlobStoragePath, "OrderTransaction.json");
+            var realBlobStoragePath = Path.Combine(realSolutionRoot, FileNames.BlobStorage.DirectoryName);
+            var expectedFilePath = Path.Combine(realBlobStoragePath, FileNames.BlobStorage.OrderTransaction);
             
             if (File.Exists(expectedFilePath))
             {
@@ -84,8 +85,8 @@ public class OrderFileServiceTests : IDisposable
         var realSolutionRoot = FindSolutionRoot();
         if (realSolutionRoot != null)
         {
-            var realBlobStoragePath = Path.Combine(realSolutionRoot, "BlobStorageSimulation");
-            var expectedFilePath = Path.Combine(realBlobStoragePath, "OrderCancellation.json");
+            var realBlobStoragePath = Path.Combine(realSolutionRoot, FileNames.BlobStorage.DirectoryName);
+            var expectedFilePath = Path.Combine(realBlobStoragePath, FileNames.BlobStorage.OrderCancellation);
             
             if (File.Exists(expectedFilePath))
             {
@@ -117,7 +118,7 @@ public class OrderFileServiceTests : IDisposable
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Creating OrderTransaction.json")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Creating {FileNames.BlobStorage.OrderTransaction}")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
