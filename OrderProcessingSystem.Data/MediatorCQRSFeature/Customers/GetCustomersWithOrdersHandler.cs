@@ -21,7 +21,7 @@ public class GetCustomersWithOrdersHandler : IRequestHandler<GetCustomersWithOrd
                 '' as Email,
                 '' as Phone,
                 COALESCE(COUNT(o.OrderId), 0) as OrdersCount,
-                COALESCE(SUM(o.Total), 0) as TotalSales
+                COALESCE(SUM(CAST(o.Total AS DECIMAL)), 0.0) as TotalSales
             FROM Customers c
             LEFT JOIN Orders o ON c.CustomerId = o.CustomerId
             GROUP BY c.CustomerId, c.Name
