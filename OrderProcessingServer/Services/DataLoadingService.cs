@@ -83,4 +83,14 @@ public class DataLoadingService
     {
         return await LoadDataAsync<SalesByCustomerVM>("api/data/sales-by-customer", "sales by customer");
     }
+
+    public async Task<List<TransExceptionVM>> LoadTransExceptionsAsync()
+    {
+        return await LoadDataAsync<TransExceptionVM>("api/TransExceptions", "transaction exceptions");
+    }
+
+    public async Task<List<TransExceptionVM>> LoadTransExceptionsByTypeAsync(string transactionType)
+    {
+        return await LoadDataAsync<TransExceptionVM>($"api/TransExceptions/by-type/{transactionType}", $"transaction exceptions for {transactionType}");
+    }
 }

@@ -4,8 +4,10 @@
 @inject DataLoadingService DataService
 @inject OrderFileService OrderFileService
 @inject IJSRuntime JSRuntime
+@inject IGridColumnService GridColumnService
 @using OrderProcessingServer.Services
 @using OrderProcessingServer.Shared.UIViewModels
+@using OrderProcessingSystem.Contracts.Dto
 
 <PageTitle>Process Order - OrderProcessingServer</PageTitle>
 
@@ -138,6 +140,59 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- TransExceptions Grid Section -->
+    <div class="trans-exceptions-section">
+        <div class="capture-card">
+            <div class="card-header">
+                <h3 class="section-title">Unprocessed Transaction Exceptions</h3>
+                <small class="text-muted">Transactions that failed processing and need attention</small>
+            </div>
+            <div class="card-body">
+                @if (transExceptionsLoading)
+                {
+                    <div class="loading-state">
+                        <div class="spinner-border spinner-border-sm text-secondary" role="status">
+                            <span class="visually-hidden">Loading exceptions...</span>
+                        </div>
+                        <span class="ms-2">Loading transaction exceptions...</span>
+                    </div>
+                }
+                else if (transExceptions != null)
+                {
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>@transExceptions.Count</strong> exception records found
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" @onclick="RefreshTransExceptions">
+                                    🔄 Refresh
+                                </button>
+                                <select class="form-select form-select-sm" style="width: auto;" @bind="SelectedTransactionTypeFilter">
+                                    <option value="">All Types</option>
+                                    <option value="Order Creation">Order Creation</option>
+                                    <option value="Order Cancellation">Order Cancellation</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <GenericGrid TItem="TransExceptionVM" 
+                                 Items="filteredTransExceptions" 
+                                 Columns="transExceptionColumns" 
+                                 PageSize="8" />
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        No transaction exceptions found. System is running smoothly!
+                    </div>
+                }
+            </div>
+        </div>
 </div>
 
 @code {
@@ -146,6 +201,25 @@
     private List<SupplierVM>? suppliers;
     private bool isLoading = true;
   
+    // TransExceptions data properties
+    private List<TransExceptionVM>? transExceptions;
+    private List<TransExceptionVM>? filteredTransExceptions;
+    private bool transExceptionsLoading = false;
+    private List<GridColumnVM> transExceptionColumns = new();
+    private string selectedTransactionTypeFilter = "";
+    
+    // Property to handle filter changes
+    private string SelectedTransactionTypeFilter
+    {
+        get => selectedTransactionTypeFilter;
+        set
+        {
+            selectedTransactionTypeFilter = value;
+            ApplyTransactionTypeFilter();
+            InvokeAsync(StateHasChanged);
+        }
+    }
+    
     // Form properties
     private int selectedCustomerId = 0;
     private int selectedSupplierId = 0;
@@ -165,6 +239,7 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadFormData();
+        await LoadTransExceptionsData();
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -199,6 +274,102 @@
         {
             isLoading = false;
         }
+    }
+
+    private async Task LoadTransExceptionsData()
+    {
+        transExceptionsLoading = true;
+        try
+        {
+            // Load TransExceptions data
+            var transExceptionsTask = DataService.LoadTransExceptionsAsync();
+            
+            // Load grid column metadata
+            var enumMappings = new Dictionary<string, List<string>>
+            {
+                { "TransactionTypeDisplay", new List<string> { "Order Creation", "Order Cancellation" } }
+            };
+            
+            var columnsTask = LoadTransExceptionColumnsAsync(enumMappings);
+            
+            await Task.WhenAll(transExceptionsTask, columnsTask);
+            
+            transExceptions = await transExceptionsTask;
+            transExceptionColumns = await columnsTask;
+            
+            // Apply initial filter
+            ApplyTransactionTypeFilter();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Error loading TransExceptions data:", ex.Message);
+            transExceptions = new List<TransExceptionVM>();
+            filteredTransExceptions = new List<TransExceptionVM>();
+        }
+        finally
+        {
+            transExceptionsLoading = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    
+    private async Task<List<GridColumnVM>> LoadTransExceptionColumnsAsync(Dictionary<string, List<string>>? enumMappings = null)
+    {
+        try
+        {
+            var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("transexceptions", enumMappings);
+            
+            var uiColumns = serviceColumns.Select(col => new GridColumnVM
+            {
+                Header = col.Header,
+                Field = col.Field,
+                Sortable = col.Sortable,
+                Filterable = col.Filterable,
+                IsNumeric = col.IsNumeric,
+                IsEnum = col.IsEnum,
+                EnumValues = col.EnumValues
+            }).ToList();
+            
+            return uiColumns;
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Failed to load TransException column metadata:", ex.Message);
+            return new List<GridColumnVM>();
+        }
+    }
+    
+    private void ApplyTransactionTypeFilter()
+    {
+        if (transExceptions == null)
+        {
+            filteredTransExceptions = new List<TransExceptionVM>();
+            return;
+        }
+        
+        if (string.IsNullOrEmpty(selectedTransactionTypeFilter))
+        {
+            filteredTransExceptions = transExceptions.ToList();
+        }
+        else
+        {
+            // Map display names back to actual types for filtering
+            var actualType = selectedTransactionTypeFilter switch
+            {
+                "Order Creation" => "ORDERCREATION",
+                "Order Cancellation" => "ORDERCANCELLATION",
+                _ => selectedTransactionTypeFilter
+            };
+            
+            filteredTransExceptions = transExceptions
+                .Where(te => te.TransactionType.Equals(actualType, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+    
+    private async Task RefreshTransExceptions()
+    {
+        await LoadTransExceptionsData();
     }
     
     private void IncrementQuantity()

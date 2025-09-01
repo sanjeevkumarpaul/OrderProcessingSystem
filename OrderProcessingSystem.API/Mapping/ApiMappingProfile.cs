@@ -14,6 +14,7 @@ public class ApiMappingProfile : Profile
         CreateMap<OrderProcessingSystem.Data.Entities.Supplier, SupplierDto>();
         CreateMap<OrderProcessingSystem.Data.Entities.Customer, CustomerDto>();
         CreateMap<OrderProcessingSystem.Data.Entities.Order, OrderDto>();        
+        CreateMap<OrderProcessingSystem.Data.Entities.TransException, TransExceptionDto>();        
         CreateMap<OrderProcessingSystem.Data.MediatorCQRS.Reports.SalesByCustomerDto, SalesByCustomerDto>();
         
         // Add mappings between Data layer DTOs and Contract layer DTOs

@@ -555,3 +555,62 @@
 .dropdown-options::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.5);
 }
+
+/* TransExceptions Section Styling */
+.trans-exceptions-section {
+    max-width: 1000px;
+    margin: 2rem auto 0 auto;
+    position: relative;
+}
+
+.trans-exceptions-section .capture-card {
+    border-top: 2px solid #17a2b8; /* Info color for exceptions */
+}
+
+.trans-exceptions-section .capture-card::before {
+    background: linear-gradient(90deg, #17a2b8 0%, #138496 100%);
+}
+
+.trans-exceptions-section .section-title {
+    color: #17a2b8;
+}
+
+/* Loading state for exceptions */
+.trans-exceptions-section .loading-state .spinner-border-sm {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+/* Filters toolbar styling */
+.trans-exceptions-section .d-flex.justify-content-between {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.trans-exceptions-section .form-select-sm {
+    max-width: 200px;
+}
+
+/* Grid container styling */
+.trans-exceptions-section .card {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+}
+
+.trans-exceptions-section .table {
+    margin-bottom: 0;
+}
+
+/* Exception type badges */
+.badge-ordercreation {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-ordercancellation {
+    background-color: #dc3545;
+    color: white;
+}
