@@ -3,8 +3,7 @@
 
 /* Page Setup - Light Theme with Minimal Aesthetic */
 .order-process-page {
-    background: transparent;
-    min-height: 100vh;
+    background: transparent;    
     /* margin: -20px -15px -20px -15px;
     padding: 40px 15px 40px 30px; */
     position: relative;
@@ -81,7 +80,7 @@
 }
 
 .card-body {
-    padding: 0 1.5rem 1.5rem;
+    padding: 0 1.5rem 0.75rem;
     background: #ffffff;
 }
 
@@ -559,7 +558,7 @@
 /* TransExceptions Section Styling */
 .trans-exceptions-section {
     max-width: 1000px;
-    margin: 2rem auto 0 auto;
+    margin: 0.25rem auto 0 auto;
     position: relative;
 }
 
