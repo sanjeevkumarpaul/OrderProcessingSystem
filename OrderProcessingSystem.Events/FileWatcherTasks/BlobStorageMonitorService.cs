@@ -2,7 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OrderProcessingSystem.Contracts.Interfaces;
-using OrderProcessingSystem.Events.Configurations;
+using OrderProcessingSystem.Core.Configuration;
 using OrderProcessingSystem.Events.Models;
 using OrderProcessingSystem.Utilities.Helpers;
 using OrderProcessingSystem.Core.Enums;
@@ -33,6 +33,16 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         _options = options.Value;
         _serviceProvider = serviceProvider;
         _httpClient = httpClient;
+        
+        // Validate API endpoints configuration
+        if (!_options.ApiEndpoints.IsValid())
+        {
+            var errors = _options.ApiEndpoints.GetValidationErrors();
+            var errorMessage = $"Invalid API endpoints configuration: {string.Join(", ", errors)}";
+            _logger.LogError(errorMessage);
+            throw new InvalidOperationException(errorMessage);
+        }
+        
         _orderTransactionQueue = new ConcurrentQueue<string>();
         _orderCancellationQueue = new ConcurrentQueue<string>();
         _transactionQueueSemaphore = new SemaphoreSlim(0);
@@ -487,8 +497,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             var json = JsonSerializer.Serialize(orderTransaction);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             
-            // TODO: Make this configurable
-            var apiUrl = "http://localhost:5269/api/orderprocessing/process-order-transaction";
+            var apiUrl = _options.ApiEndpoints.OrderTransactionUrl;
             
             _logger.LogInformation("Calling Order Processing API at {ApiUrl}", apiUrl);
             
@@ -552,8 +561,7 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             var json = JsonSerializer.Serialize(orderCancellation);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             
-            // TODO: Make this configurable
-            var apiUrl = "http://localhost:5269/api/orderprocessing/process-order-cancellation";
+            var apiUrl = _options.ApiEndpoints.OrderCancellationUrl;
             
             _logger.LogInformation("Calling Order Cancellation API at {ApiUrl}", apiUrl);
             
@@ -563,6 +571,14 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation("Order cancellation API call successful: {Response}", responseContent);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // Handle the case where no orders were found to cancel - create TransException
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogWarning("No orders found to cancel - creating audit exception: {ErrorContent}", errorContent);
+                
+                await CreateAuditException(orderCancellation, "No orders found to cancel for the specified Customer and Supplier");
             }
             else
             {
@@ -637,6 +653,49 @@ public class BlobStorageMonitorService : BackgroundService, IBlobStorageMonitorS
         {
             _logger.LogError(ex, "Error archiving file {FilePath}", filePath);
             return Task.CompletedTask;
+        }
+    }
+
+    /// <summary>
+    /// Creates a manual audit exception when order cancellation fails due to no matching records
+    /// </summary>
+    /// <param name="orderCancellation">The order cancellation that failed</param>
+    /// <param name="reason">The reason for the exception</param>
+    private async Task CreateAuditException(OrderCancellationSchema orderCancellation, string reason)
+    {
+        try
+        {
+            var exceptionData = new
+            {
+                TransactionType = "ORDERCANCELLATION",
+                InputMessage = JsonSerializer.Serialize(orderCancellation),
+                Reason = reason
+            };
+
+            var json = JsonSerializer.Serialize(exceptionData);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var apiUrl = _options.ApiEndpoints.TransExceptionsUrl;
+            
+            _logger.LogInformation("Creating audit exception for failed order cancellation at {ApiUrl}", apiUrl);
+            
+            var response = await _httpClient.PostAsync(apiUrl, content);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation("Audit exception created successfully: {Response}", responseContent);
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Failed to create audit exception with status {StatusCode}: {ErrorContent}", 
+                    response.StatusCode, errorContent);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating audit exception for order cancellation");
         }
     }
 

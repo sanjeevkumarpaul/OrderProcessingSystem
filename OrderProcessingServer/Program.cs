@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Web;
 using OrderProcessingSystem.Infrastructure.Services;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingServer.Services;
-using OrderProcessingSystem.Events.Configurations;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Core.Configuration;
 

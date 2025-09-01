@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Events.Models;
-using OrderProcessingSystem.Events.Configurations;
+using OrderProcessingSystem.Core.Configuration;
 using System.Reflection;
 using System.Text.Json;
 using Xunit;
@@ -28,7 +28,14 @@ public class BlobStorageMonitorServiceTests
         {
             FolderPath = "./TestData",
             PollingIntervalSeconds = 5,
-            MonitoredFileName = "OrderTransaction.json"
+            MonitoredFileName = "OrderTransaction.json",
+            ApiEndpoints = new ApiEndpoints
+            {
+                BaseUrl = "http://localhost:5269/api",
+                OrderTransactionEndpoint = "/OrderTransaction",
+                OrderCancellationEndpoint = "/OrderCancellation",
+                TransExceptionsEndpoint = "/TransExceptions"
+            }
         };
         
         _mockOptions.Setup(x => x.Value).Returns(_options);
