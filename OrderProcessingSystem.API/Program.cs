@@ -6,8 +6,17 @@ using OrderProcessingSystem.Cache;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.API.Services;
 using Microsoft.Extensions.DependencyInjection;
+using OrderProcessingSystem.Core.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure ApplicationSettings
+builder.Services.Configure<ApplicationSettings>(
+    builder.Configuration.GetSection(ApplicationSettings.SectionName));
+
+// Get application settings
+var appSettings = new ApplicationSettings();
+builder.Configuration.GetSection(ApplicationSettings.SectionName).Bind(appSettings);
 
 // Register controllers
 builder.Services.AddControllers();
@@ -26,8 +35,8 @@ builder.Services.AddScoped<IGridColumnMappingService, GridColumnMappingService>(
 // Register metadata services
 builder.Services.AddScoped<IGridMetadataService,GridMetadataService>();
 
-// Register Data services with SQLite file in OrderDatabase/OPSDB.db
-var dbPath = Path.Combine(builder.Environment.ContentRootPath, "..", "OrderDatabase", "OPSDB.db");
+// Register Data services with SQLite file from configuration
+var dbPath = Path.Combine(builder.Environment.ContentRootPath, appSettings.DatabasePath);
 var conn = $"Data Source={dbPath}";
 builder.Services.AddOrderProcessingData(conn);
 // Register infrastructure services (OrderService, repositories)

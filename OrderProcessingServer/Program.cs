@@ -8,8 +8,23 @@ using OrderProcessingSystem.Core.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load additional configuration files
-builder.Configuration.AddJsonFile("Configuration/file-naming.json", optional: false, reloadOnChange: true);
+// Configure ApplicationSettings first to get configuration paths
+builder.Services.Configure<ApplicationSettings>(
+    builder.Configuration.GetSection(ApplicationSettings.SectionName));
+
+// Get configuration paths from settings
+var appSettings = new ApplicationSettings();
+builder.Configuration.GetSection(ApplicationSettings.SectionName).Bind(appSettings);
+
+// Load additional configuration files - file is linked and copied to output directory
+string configPath = appSettings.JsonConfigurationPath;
+if (!File.Exists(configPath))
+{
+    // Fallback to the bin directory path when running from project directory
+    configPath = appSettings.JsonConfigurationFallbackPath;
+}
+
+builder.Configuration.AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
 // Configure options
 builder.Services.Configure<BlobStorageSimulationOptions>(
@@ -26,7 +41,7 @@ builder.Services.AddHttpClient();
 // Named client for API
 builder.Services.AddHttpClient("ApiClient", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5269/");
+    client.BaseAddress = new Uri(appSettings.ApiClient.BaseAddress);
 });
 // Default scoped client still available
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());

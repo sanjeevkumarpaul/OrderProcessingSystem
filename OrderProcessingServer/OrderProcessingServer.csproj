@@ -14,4 +14,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="..\OrderProcessingSystem.Core\JsonConfigurations\file-naming.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>JsonConfigurations\file-naming.json</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>
