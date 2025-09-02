@@ -7,6 +7,8 @@ using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 using OrderProcessingSystem.Core.Configuration;
+using System.Reflection;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,9 @@ var conn = $"Data Source={dbPath}";
 builder.Services.AddOrderProcessingData(conn);
 // Register infrastructure services (OrderService, repositories)
 builder.Services.AddInfrastructureServices();
+
+// Register MediatR for API handlers
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 // Add caching services
 builder.Services.AddOrderProcessingCache(builder.Configuration);

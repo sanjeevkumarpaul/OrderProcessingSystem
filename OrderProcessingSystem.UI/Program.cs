@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OrderProcessingSystem.Infrastructure.Services;
+using OrderProcessingSystem.Infrastructure;
+using OrderProcessingSystem.Data;
 using OrderProcessingSystem.Contracts.Interfaces;
-using OrderProcessingSystem.UI.Services;
+using Microsoft.AspNetCore.ResponseCompression;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Core.Configuration;
 
@@ -36,7 +37,7 @@ builder.Services.Configure<FileNamingOptions>(
 // Add services
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-// Register HttpClient so components can @inject HttpClient
+// HttpClient configuration
 builder.Services.AddHttpClient();
 // Named client for API
 builder.Services.AddHttpClient("ApiClient", client =>
@@ -46,15 +47,10 @@ builder.Services.AddHttpClient("ApiClient", client =>
 // Default scoped client still available
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());
 
-// Register services
-builder.Services.AddScoped<IGridColumnService, GridColumnService>();
-builder.Services.AddScoped<OrderFileService>();
-builder.Services.AddScoped(provider =>
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var logger = provider.GetRequiredService<ILogger<DataLoadingService>>();
-    return new DataLoadingService(httpClientFactory, logger);
-});
+// Register services - UI should use HTTP client instead of direct database access
+// Use HTTP-based Infrastructure services for proper clean architecture
+builder.Services.AddInfrastructureHttpServices();
+builder.Services.AddScoped<IGridColumnService, OrderProcessingSystem.Infrastructure.Services.GridColumnService>();
 
 // Register background services
 builder.Services.AddSingleton<IBlobStorageMonitorService>(provider =>

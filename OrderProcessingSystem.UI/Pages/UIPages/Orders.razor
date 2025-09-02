@@ -1,7 +1,8 @@
 @page "/orders"
-@inherits BaseDataPage<OrderVM>
+@using OrderProcessingSystem.Contracts.Dto
+@inherits BaseDataPage<OrderDto>
 
-<BaseDataPage TItem="OrderVM" 
+<BaseDataPage TItem="OrderDto" 
               PageTitle="Orders"
               EntityName="orders"
               ShowCardsText="Show Cards"
@@ -29,9 +30,9 @@
 
 @code {
     // Data loader function for orders
-    private async Task<List<OrderVM>?> LoadOrdersAsync()
+    private async Task<List<OrderDto>?> LoadOrdersAsync()
     {
-        return await DataLoadingService.LoadOrdersAsync();
+        return await ApiDataService.GetOrdersAsync();
     }
 
     // Provide enum mappings for filtering

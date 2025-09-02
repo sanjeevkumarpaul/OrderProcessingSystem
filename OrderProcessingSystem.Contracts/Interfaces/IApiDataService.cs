@@ -14,4 +14,8 @@ public interface IApiDataService
     // New optimized methods with database-level calculations
     Task<List<CustomerWithOrdersDto>> GetCustomersWithOrdersAsync();
     Task<List<SupplierWithOrdersDto>> GetSuppliersWithOrdersAsync();
+    
+    // Transaction Exception methods
+    Task<List<TransExceptionDto>> GetTransExceptionsAsync();
+    Task<List<TransExceptionDto>> GetTransExceptionsByTypeAsync(string transactionType);
 }

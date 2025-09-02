@@ -1,12 +1,11 @@
 @page "/orderprocess"
 @page "/process-order"
 
-@inject DataLoadingService DataService
-@inject OrderFileService OrderFileService
+@inject IApiDataService DataService
+@inject IOrderFileService OrderFileService
 @inject IJSRuntime JSRuntime
 @inject IGridColumnService GridColumnService
-@using OrderProcessingSystem.UI.Services
-@using OrderProcessingSystem.UI.Shared.UIViewModels
+@using OrderProcessingSystem.Contracts.Interfaces
 @using OrderProcessingSystem.Contracts.Dto
 
 <PageTitle>Process Order - OrderProcessingSystem.UI</PageTitle>
@@ -179,7 +178,7 @@
                         </div>
                     </div>
                     
-                    <GenericGrid TItem="TransExceptionVM" 
+                    <GenericGrid TItem="TransExceptionDto" 
                                  Items="filteredTransExceptions" 
                                  Columns="transExceptionColumns" 
                                  PageSize="8" />
@@ -197,13 +196,13 @@
 
 @code {
     // Data properties
-    private List<CustomerVM>? customers;
-    private List<SupplierVM>? suppliers;
+    private List<CustomerDto>? customers;
+    private List<SupplierDto>? suppliers;
     private bool isLoading = true;
   
     // TransExceptions data properties
-    private List<TransExceptionVM>? transExceptions;
-    private List<TransExceptionVM>? filteredTransExceptions;
+    private List<TransExceptionDto>? transExceptions;
+    private List<TransExceptionDto>? filteredTransExceptions;
     private bool transExceptionsLoading = false;
     private List<GridColumnVM> transExceptionColumns = new();
     private string selectedTransactionTypeFilter = "";
@@ -257,8 +256,8 @@
         try
         {
             // Use basic methods for dropdown population - no need for complex calculations
-            var customersTask = DataService.LoadCustomersAsync();
-            var suppliersTask = DataService.LoadSuppliersAsync();
+            var customersTask = DataService.GetCustomersAsync();
+            var suppliersTask = DataService.GetSuppliersAsync();
             
             await Task.WhenAll(customersTask, suppliersTask);
             
@@ -282,7 +281,7 @@
         try
         {
             // Load TransExceptions data
-            var transExceptionsTask = DataService.LoadTransExceptionsAsync();
+            var transExceptionsTask = DataService.GetTransExceptionsAsync();
             
             // Load grid column metadata
             var enumMappings = new Dictionary<string, List<string>>
@@ -303,8 +302,8 @@
         catch (Exception ex)
         {
             await JSRuntime.InvokeVoidAsync("console.error", "Error loading TransExceptions data:", ex.Message);
-            transExceptions = new List<TransExceptionVM>();
-            filteredTransExceptions = new List<TransExceptionVM>();
+            transExceptions = new List<TransExceptionDto>();
+            filteredTransExceptions = new List<TransExceptionDto>();
         }
         finally
         {
@@ -343,7 +342,7 @@
     {
         if (transExceptions == null)
         {
-            filteredTransExceptions = new List<TransExceptionVM>();
+            filteredTransExceptions = new List<TransExceptionDto>();
             return;
         }
         

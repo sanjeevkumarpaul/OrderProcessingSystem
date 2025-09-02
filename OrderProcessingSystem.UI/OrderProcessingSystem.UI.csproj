@@ -1,11 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
   <ProjectReference Include="..\OrderProcessingSystem.Contracts\OrderProcessingSystem.Contracts.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Utilities\OrderProcessingSystem.Utilities.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Infrastructure\OrderProcessingSystem.Infrastructure.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Events\OrderProcessingSystem.Events.csproj" />
+  <ProjectReference Include="..\OrderProcessingSystem.API\OrderProcessingSystem.API.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

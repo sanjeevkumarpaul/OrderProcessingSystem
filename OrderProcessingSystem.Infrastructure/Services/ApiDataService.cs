@@ -4,6 +4,7 @@ using OrderProcessingSystem.Data.MediatorCQRS.Orders;
 using OrderProcessingSystem.Data.MediatorCQRS.Suppliers;
 using OrderProcessingSystem.Data.MediatorCQRS.Customers;
 using OrderProcessingSystem.Data.MediatorCQRS.Reports;
+using OrderProcessingSystem.Data.MediatorCQRSFeature.TransExceptions;
 using OrderProcessingSystem.Contracts.Interfaces;
 using ContractsDto = OrderProcessingSystem.Contracts.Dto;
 
@@ -60,6 +61,18 @@ namespace OrderProcessingSystem.Infrastructure.Services
         {
             var suppliers = await _mediator.Send(new GetSuppliersWithOrdersQuery());
             return _mapper.Map<List<ContractsDto.SupplierWithOrdersDto>>(suppliers);
+        }
+
+        public async Task<List<ContractsDto.TransExceptionDto>> GetTransExceptionsAsync()
+        {
+            var transExceptions = await _mediator.Send(new GetAllTransExceptionsQuery());
+            return _mapper.Map<List<ContractsDto.TransExceptionDto>>(transExceptions);
+        }
+
+        public async Task<List<ContractsDto.TransExceptionDto>> GetTransExceptionsByTypeAsync(string transactionType)
+        {
+            var transExceptions = await _mediator.Send(new GetTransExceptionsByTypeQuery(transactionType));
+            return _mapper.Map<List<ContractsDto.TransExceptionDto>>(transExceptions);
         }
     }
 }

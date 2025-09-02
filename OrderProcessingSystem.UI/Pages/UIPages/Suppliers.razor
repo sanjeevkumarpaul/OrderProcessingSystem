@@ -1,9 +1,9 @@
 @page "/suppliers"
-
-@inherits BaseDataPage<SupplierWithOrdersVM>
+@using OrderProcessingSystem.Contracts.Dto
+@inherits BaseDataPage<SupplierWithOrdersDto>
 <link rel="stylesheet" href="~/css/suppliers.css" />
 
-<BaseDataPage TItem="SupplierWithOrdersVM" 
+<BaseDataPage TItem="SupplierWithOrdersDto" 
               PageTitle="Suppliers"
               EntityName="suppliers"
               ShowCardsText="Show Cards"
@@ -23,8 +23,8 @@
 
 @code {
     // Data loader function for suppliers
-    private async Task<List<SupplierWithOrdersVM>?> LoadSuppliersAsync()
+    private async Task<List<SupplierWithOrdersDto>?> LoadSuppliersAsync()
     {
-        return await DataLoadingService.LoadSuppliersWithOrdersAsync();
+        return await ApiDataService.GetSuppliersWithOrdersAsync();
     }
 }

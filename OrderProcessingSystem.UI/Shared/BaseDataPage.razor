@@ -1,6 +1,6 @@
 
 @inject IGridColumnService GridColumnService
-@inject DataLoadingService DataService
+@inject IApiDataService DataService
 @inject IJSRuntime JS
 @inherits ComponentBase
 
@@ -33,7 +33,7 @@ else
 
 @code {
     // Make DataService accessible to derived classes
-    protected DataLoadingService DataLoadingService => DataService;
+    protected IApiDataService ApiDataService => DataService;
     
     // Data and UI state
     protected List<TItem>? Items { get; set; } = null;

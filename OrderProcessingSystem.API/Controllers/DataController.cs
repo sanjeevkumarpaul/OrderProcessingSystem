@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using OrderProcessingSystem.Contracts.Dto;
-using OrderProcessingSystem.Infrastructure.Services;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.API.Controllers;
 
@@ -9,10 +9,10 @@ namespace OrderProcessingSystem.API.Controllers;
 [Route("api/[controller]")]
 public class DataController : ControllerBase
 {
-    private readonly ApiDataService _apiDataService;
+    private readonly IApiDataService _apiDataService;
     private readonly IMapper _mapper;
 
-    public DataController(ApiDataService apiDataService, IMapper mapper) => (_apiDataService, _mapper) = (apiDataService, mapper);
+    public DataController(IApiDataService apiDataService, IMapper mapper) => (_apiDataService, _mapper) = (apiDataService, mapper);
 
     [HttpGet("orders")]
     public async Task<IActionResult> Orders()

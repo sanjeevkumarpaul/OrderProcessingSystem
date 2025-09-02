@@ -1,1 +1,1089 @@
-zsh: command not found: timeout
+Using launch settings from /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.API/Properties/launchSettings.json...
+Building...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Suppliers" AS "s"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "s"."SupplierId", "s"."Country", "s"."Name"
+      FROM "Suppliers" AS "s"
+      ORDER BY "s"."SupplierId"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Customers" AS "c"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "c"."CustomerId", "c"."Name"
+      FROM "Customers" AS "c"
+      ORDER BY "c"."CustomerId"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM "Orders" AS "o"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT MAX("o"."OrderId")
+      FROM "Orders" AS "o"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "o"."OrderId", "o"."CustomerId", "o"."Status", "o"."SupplierId", "o"."Total"
+      FROM "Orders" AS "o"
+      ORDER BY "o"."OrderId"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
+      WHERE "OrderId" = @p2
+      RETURNING 1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
+      UPDATE "Orders" SET "Total" = @p0
+      WHERE "OrderId" = @p1
+      RETURNING 1;
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5269
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.API
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+Executing SQL: SELECT
+    o.CustomerId as CustomerId,
+    COALESCE(c.Name, '') as CustomerName,
+    SUM(o.Total) as TotalSales,
+    COUNT(1) as OrderCount
+FROM Orders o
+LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
+WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
+GROUP BY o.CustomerId, c.Name
+ORDER BY TotalSales DESC
+, with CustomerID as 
+Executing SQL: SELECT
+    o.CustomerId as CustomerId,
+    COALESCE(c.Name, '') as CustomerName,
+    SUM(o.Total) as TotalSales,
+    COUNT(1) as OrderCount
+FROM Orders o
+LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
+WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
+GROUP BY o.CustomerId, c.Name
+ORDER BY TotalSales DESC
+, with CustomerID as 8
+Executing SQL: SELECT
+    o.CustomerId as CustomerId,
+    COALESCE(c.Name, '') as CustomerName,
+    SUM(o.Total) as TotalSales,
+    COUNT(1) as OrderCount
+FROM Orders o
+LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
+WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
+GROUP BY o.CustomerId, c.Name
+ORDER BY TotalSales DESC
+, with CustomerID as 

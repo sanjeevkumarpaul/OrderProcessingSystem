@@ -6,25 +6,25 @@ using OrderProcessingSystem.Core.Enums;
 using Microsoft.Extensions.Options;
 using OrderProcessingSystem.Contracts.Interfaces;
 
-namespace OrderProcessingSystem.UI.Services;
+namespace OrderProcessingSystem.Infrastructure.Services;
 
 /// <summary>
 /// Service for creating order-related JSON files in the BlobStorageSimulation folder
 /// </summary>
-public class OrderFileService
+public class OrderFileService : IOrderFileService
 {
     private readonly ILogger<OrderFileService> _logger;
     private readonly FileNamingOptions _fileNamingOptions;
-    private readonly IBlobStorageMonitorService _blobStorageMonitorService;
+    private readonly IBlobStorageMonitorService? _blobStorageMonitorService;
 
     public OrderFileService(
         ILogger<OrderFileService> logger, 
         IOptions<FileNamingOptions> fileNamingOptions,
-        IBlobStorageMonitorService blobStorageMonitorService)
+        IBlobStorageMonitorService? blobStorageMonitorService = null)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fileNamingOptions = fileNamingOptions?.Value ?? throw new ArgumentNullException(nameof(fileNamingOptions));
-        _blobStorageMonitorService = blobStorageMonitorService ?? throw new ArgumentNullException(nameof(blobStorageMonitorService));
+        _blobStorageMonitorService = blobStorageMonitorService; // Optional - can be null
     }
 
     /// <summary>
@@ -71,8 +71,11 @@ public class OrderFileService
         
         await FileHelper.WriteJsonFileAsync(blobStoragePath, uniqueFileName, jsonContent, _logger);
         
-        // Queue the file for processing by the background service (use unique filename)
-        await _blobStorageMonitorService.QueueFileProcessingTask(uniqueFileName, queue);
+        // Queue the file for processing by the background service (use unique filename) - only if service is available
+        if (_blobStorageMonitorService != null)
+        {
+            await _blobStorageMonitorService.QueueFileProcessingTask(uniqueFileName, queue);
+        }
     }
 
     /// <summary>
