@@ -2,7 +2,7 @@ using OrderProcessingSystem.Infrastructure;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Core.Configuration;
-using OrderProcessingSystem.UI.Services;
+using OrderProcessingSystem.Infrastructure.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 
