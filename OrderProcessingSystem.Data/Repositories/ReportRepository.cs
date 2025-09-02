@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderProcessingSystem.Data.MediatorCQRS.Reports;
 using OrderProcessingSystem.Data.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 using Dapper;
 
 namespace OrderProcessingSystem.Data.Repositories;
@@ -8,21 +9,12 @@ namespace OrderProcessingSystem.Data.Repositories;
 public class ReportRepository : IReportRepository
 {
     private readonly AppDbContext _db;
-    public ReportRepository(AppDbContext db) => _db = db;
+    private readonly ISqlProvider _sqlProvider;
+    public ReportRepository(AppDbContext db, ISqlProvider sqlProvider) => (_db, _sqlProvider) = (db, sqlProvider);
 
     public async Task<List<SalesByCustomerDto>> GetSalesByCustomerAsync(int? customerId = null, int? top = null, CancellationToken ct = default)
     {
-        var sql = @"
-                    SELECT
-                        o.CustomerId as CustomerId,
-                        COALESCE(c.Name, '') as CustomerName,
-                        SUM(o.Total) as TotalSales,
-                        COUNT(1) as OrderCount
-                    FROM Orders o
-                    LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-                    WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-                    GROUP BY o.CustomerId, c.Name
-                    ORDER BY TotalSales DESC;";
+        var sql = _sqlProvider.GetSql("Reports.SalesByCustomer");
         Console.WriteLine($"Executing SQL: {sql}, with CustomerID as {customerId}");
         var param = new { CustomerId = customerId };
         var rows = await OrderProcessingSystem.Data.Common.DapperExecutor.QueryAsync<SalesByCustomerDto>(_db, sql, param, ct);

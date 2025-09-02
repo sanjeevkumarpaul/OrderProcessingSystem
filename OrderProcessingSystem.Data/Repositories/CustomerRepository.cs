@@ -25,7 +25,7 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<Customer?> GetByNameAsync(string name, CancellationToken ct = default)
     {
-        var sql = "SELECT CustomerId, Name FROM Customers WHERE Name = @Name";
+        var sql = _sqlProvider.GetSql("Customers.SelectByName");
         return await OrderProcessingSystem.Data.Common.DapperExecutor.QuerySingleOrDefaultAsync<Customer>(_db, sql, new { Name = name }, ct);
     }
 
