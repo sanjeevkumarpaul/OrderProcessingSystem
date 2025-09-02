@@ -246,6 +246,21 @@
         if (firstRender)
         {
             await JSRuntime.InvokeVoidAsync("setupDropdownHandlers", DotNetObjectReference.Create(this));
+            
+            // Debug logging after first render
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("console.log", "TransExceptions loaded:", transExceptions?.Count ?? 0);
+                if (transExceptions?.Count > 0)
+                {
+                    await JSRuntime.InvokeVoidAsync("console.log", "First record:", transExceptions[0]);
+                }
+                await JSRuntime.InvokeVoidAsync("console.log", "Filtered TransExceptions:", filteredTransExceptions?.Count ?? 0);
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("console.error", "Debug logging error:", ex.Message);
+            }
         }
     }
     
@@ -301,7 +316,7 @@
         }
         catch (Exception ex)
         {
-            await JSRuntime.InvokeVoidAsync("console.error", "Error loading TransExceptions data:", ex.Message);
+            // Console logging will be done in OnAfterRenderAsync
             transExceptions = new List<TransExceptionDto>();
             filteredTransExceptions = new List<TransExceptionDto>();
         }

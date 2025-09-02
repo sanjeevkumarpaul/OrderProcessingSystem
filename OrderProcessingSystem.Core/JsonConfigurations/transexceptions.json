@@ -1,0 +1,47 @@
+[
+  {
+    "Header": "ID",
+    "Field": "transExceptionId",
+    "Sortable": true,
+    "Filterable": true,
+    "IsNumeric": true,
+    "IsEnum": false,
+    "EnumValues": []
+  },
+  {
+    "Header": "Transaction Type",
+    "Field": "transactionType", 
+    "Sortable": true,
+    "Filterable": true,
+    "IsNumeric": false,
+    "IsEnum": false,
+    "EnumValues": []
+  },
+  {
+    "Header": "Input Message",
+    "Field": "inputMessage",
+    "Sortable": false,
+    "Filterable": true,
+    "IsNumeric": false,
+    "IsEnum": false,
+    "EnumValues": []
+  },
+  {
+    "Header": "Reason",
+    "Field": "reason",
+    "Sortable": false,
+    "Filterable": true,
+    "IsNumeric": false,
+    "IsEnum": false,
+    "EnumValues": []
+  },
+  {
+    "Header": "Run Time",
+    "Field": "runTime",
+    "Sortable": true,
+    "Filterable": true,
+    "IsNumeric": false,
+    "IsEnum": false,
+    "EnumValues": []
+  }
+]
