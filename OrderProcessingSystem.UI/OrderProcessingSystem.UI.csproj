@@ -11,6 +11,7 @@
   <ProjectReference Include="..\OrderProcessingSystem.Infrastructure\OrderProcessingSystem.Infrastructure.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.Events\OrderProcessingSystem.Events.csproj" />
   <ProjectReference Include="..\OrderProcessingSystem.API\OrderProcessingSystem.API.csproj" />
+  <ProjectReference Include="..\OrderProcessingSystem.Authentication\OrderProcessingSystem.Authentication.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
