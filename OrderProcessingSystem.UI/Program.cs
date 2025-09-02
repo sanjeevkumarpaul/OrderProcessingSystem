@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using OrderProcessingSystem.Infrastructure;
-using OrderProcessingSystem.Data;
 using OrderProcessingSystem.Contracts.Interfaces;
-using Microsoft.AspNetCore.ResponseCompression;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Core.Configuration;
+using OrderProcessingSystem.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +57,7 @@ builder.Services.AddInfrastructureHttpServices();
 builder.Services.AddScoped<IGridColumnService, OrderProcessingSystem.Infrastructure.Services.GridColumnService>();
 
 // Register ViewModel Data Provider for centralized DTO-to-ViewModel mapping
-builder.Services.AddScoped<OrderProcessingSystem.UI.Services.IViewModelDataProvider, OrderProcessingSystem.UI.Services.ViewModelDataProvider>();
+builder.Services.AddScoped<IViewModelDataProvider, ViewModelDataProvider>();
 
 // Register background services
 builder.Services.AddSingleton<IBlobStorageMonitorService>(provider =>
