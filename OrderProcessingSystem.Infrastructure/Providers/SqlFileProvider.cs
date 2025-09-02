@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using OrderProcessingSystem.Contracts.Interfaces;
+using OrderProcessingSystem.Core.Metadata;
 
 namespace OrderProcessingSystem.Infrastructure.Providers;
 
@@ -16,9 +17,10 @@ public class SqlFileProvider : ISqlProvider
 
     public SqlFileProvider()
     {
-        _assembly = Assembly.GetExecutingAssembly();
-        // resources are embedded with the path: {DefaultNamespace}.Providers.<path>.sql
-        _resourceRoot = _assembly.GetName().Name + ".Providers.";
+        // Get the Core assembly where SQL files are embedded
+        _assembly = typeof(GridMetadataProvider).Assembly;
+        // resources are embedded with the path: {DefaultNamespace}.Sql.<path>.sql
+        _resourceRoot = _assembly.GetName().Name + ".Sql.";
     }
 
     public string GetSql(string name)
