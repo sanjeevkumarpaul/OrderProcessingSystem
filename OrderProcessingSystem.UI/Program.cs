@@ -13,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<ApplicationSettings>(
     builder.Configuration.GetSection(ApplicationSettings.SectionName));
 
+// Configure API Endpoints
+builder.Services.Configure<ApiEndpointsConfiguration>(
+    builder.Configuration.GetSection(ApiEndpointsConfiguration.SectionName));
+
 // Get configuration paths from settings
 var appSettings = new ApplicationSettings();
 builder.Configuration.GetSection(ApplicationSettings.SectionName).Bind(appSettings);
