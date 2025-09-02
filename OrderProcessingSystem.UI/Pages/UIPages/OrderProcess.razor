@@ -311,12 +311,21 @@
             transExceptions = await transExceptionsTask;
             transExceptionColumns = await columnsTask;
             
+            // Debug: Log the data we received
+            Console.WriteLine($"LoadTransExceptionsData: Received {transExceptions?.Count ?? 0} records");
+            if (transExceptions != null && transExceptions.Any())
+            {
+                Console.WriteLine($"First record: ID={transExceptions[0].TransExceptionId}, Type={transExceptions[0].TransactionType}");
+            }
+            
             // Apply initial filter
             ApplyTransactionTypeFilter();
+            
+            Console.WriteLine($"After filter: {filteredTransExceptions?.Count ?? 0} filtered records");
         }
         catch (Exception ex)
         {
-            // Console logging will be done in OnAfterRenderAsync
+            Console.WriteLine($"Error in LoadTransExceptionsData: {ex.Message}");
             transExceptions = new List<TransExceptionDto>();
             filteredTransExceptions = new List<TransExceptionDto>();
         }
@@ -357,13 +366,17 @@
     {
         if (transExceptions == null)
         {
+            Console.WriteLine("ApplyTransactionTypeFilter: transExceptions is null");
             filteredTransExceptions = new List<TransExceptionDto>();
             return;
         }
         
+        Console.WriteLine($"ApplyTransactionTypeFilter: Input has {transExceptions.Count} records, filter='{selectedTransactionTypeFilter}'");
+        
         if (string.IsNullOrEmpty(selectedTransactionTypeFilter))
         {
             filteredTransExceptions = transExceptions.ToList();
+            Console.WriteLine($"No filter applied, filtered count: {filteredTransExceptions.Count}");
         }
         else
         {
@@ -375,9 +388,13 @@
                 _ => selectedTransactionTypeFilter
             };
             
+            Console.WriteLine($"Mapping filter '{selectedTransactionTypeFilter}' to '{actualType}'");
+            
             filteredTransExceptions = transExceptions
                 .Where(te => te.TransactionType.Equals(actualType, StringComparison.OrdinalIgnoreCase))
                 .ToList();
+                
+            Console.WriteLine($"After filtering by type '{actualType}': {filteredTransExceptions.Count} records");
         }
     }
     
