@@ -345,7 +345,7 @@
             var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("transexceptions", enumMappings);
             
             // Use centralized ViewModelDataProvider for mapping
-            var uiColumns = ViewModelDataProvider.MapGridColumns(serviceColumns);
+            var uiColumns = ViewModelDataProvider.MapGridColumns<GridColumnVM>(serviceColumns);
             
             return uiColumns;
         }

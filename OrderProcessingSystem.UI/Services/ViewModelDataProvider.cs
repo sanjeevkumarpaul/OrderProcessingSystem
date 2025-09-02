@@ -59,9 +59,10 @@ public class ViewModelDataProvider : IViewModelDataProvider
     /// <summary>
     /// Map GridColumnDto to GridColumnVM (for grid metadata)
     /// </summary>
-    public List<GridColumnVM> MapGridColumns(List<GridColumnDto> gridColumnDtos)
+    //public List<GridColumnVM> MapGridColumns(List<GridColumnDto> gridColumnDtos)
+    public List<TViewModel> MapGridColumns<TViewModel>(List<GridColumnDto> gridColumnDtos)
     {
-        return _mapper.Map<List<GridColumnVM>>(gridColumnDtos);
+        return _mapper.Map<List<TViewModel>>(gridColumnDtos);
     }
 
     /// <summary>

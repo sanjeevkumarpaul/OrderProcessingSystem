@@ -28,11 +28,12 @@ public interface IViewModelDataProvider
     /// Get transaction exceptions data mapped to specified ViewModel type
     /// </summary>
     Task<List<TViewModel>?> GetTransExceptionsAsync<TViewModel>() where TViewModel : class;
-    
+
     /// <summary>
     /// Map GridColumnDto to GridColumnVM (for grid metadata)
     /// </summary>
-    List<GridColumnVM> MapGridColumns(List<GridColumnDto> gridColumnDtos);
+    //List<GridColumnVM> MapGridColumns(List<GridColumnDto> gridColumnDtos);
+    List<TViewModel> MapGridColumns<TViewModel>(List<GridColumnDto> gridColumnDtos);
     
     /// <summary>
     /// Generic method for custom data fetching and mapping

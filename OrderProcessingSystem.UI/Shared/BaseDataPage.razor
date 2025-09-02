@@ -110,7 +110,7 @@ else
             var serviceColumns = await GridColumnService.LoadColumnMetadataAsync(entityName, enumMappings);
             
             // Use centralized ViewModelDataProvider for mapping
-            var uiColumns = ViewModelDataProvider.MapGridColumns(serviceColumns);
+            var uiColumns = ViewModelDataProvider.MapGridColumns<GridColumnVM>(serviceColumns);
             
             Console.WriteLine($"Successfully loaded {uiColumns.Count} columns from service");
             return uiColumns;
