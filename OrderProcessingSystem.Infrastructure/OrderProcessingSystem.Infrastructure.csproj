@@ -5,6 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Sql\**\*.sql" />
+  </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
     </ItemGroup>

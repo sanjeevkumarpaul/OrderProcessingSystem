@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using OrderProcessingSystem.Data.Entities;
-
 using OrderProcessingSystem.Data.Interfaces;
+using OrderProcessingSystem.Contracts.Interfaces;
 
 namespace OrderProcessingSystem.Data.Repositories;
 
 public class CustomerRepository : ICustomerRepository
 {
     private readonly AppDbContext _db;
-    private readonly OrderProcessingSystem.Core.Sql.ISqlProvider _sqlProvider;
-    public CustomerRepository(AppDbContext db, OrderProcessingSystem.Core.Sql.ISqlProvider sqlProvider) => (_db, _sqlProvider) = (db, sqlProvider);
+    private readonly ISqlProvider _sqlProvider;
+    public CustomerRepository(AppDbContext db, ISqlProvider sqlProvider) => (_db, _sqlProvider) = (db, sqlProvider);
 
     public async Task<List<Customer>> GetAllAsync(CancellationToken ct = default)
     {

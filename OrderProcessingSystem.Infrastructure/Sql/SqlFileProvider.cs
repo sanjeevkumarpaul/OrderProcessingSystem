@@ -1,8 +1,13 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+using OrderProcessingSystem.Contracts.Interfaces;
 
-namespace OrderProcessingSystem.Core.Sql;
+namespace OrderProcessingSystem.Infrastructure.Sql;
 
+/// <summary>
+/// Implementation of ISqlProvider that reads SQL content from embedded resources
+/// This belongs in Infrastructure layer as it's an external concern (file system)
+/// </summary>
 public class SqlFileProvider : ISqlProvider
 {
     private readonly ConcurrentDictionary<string, string> _cache = new();
@@ -50,7 +55,7 @@ public class SqlFileProvider : ISqlProvider
                 return r.ReadToEnd();
             }
 
-            throw new System.IO.FileNotFoundException($"Embedded SQL resource for key '{key}' not found. Available: {string.Join(',', all)}");
+            throw new FileNotFoundException($"Could not find embedded resource for SQL key: {key}. Available resources: {string.Join(", ", all)}");
         });
     }
 }
