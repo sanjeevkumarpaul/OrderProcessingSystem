@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessingServer", "OrderProcessingServer\OrderProcessingServer.csproj", "{21E41516-0BB1-4AA7-8BD7-49711D64F94C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessingSystem.UI", "OrderProcessingSystem.UI\OrderProcessingSystem.UI.csproj", "{21E41516-0BB1-4AA7-8BD7-49711D64F94C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessingSystem.Core", "OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj", "{419792C0-EA7C-4FB4-BB56-BAE4D6E97C94}"
 EndProject

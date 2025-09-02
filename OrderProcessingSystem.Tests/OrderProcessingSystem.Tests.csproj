@@ -9,7 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
       <ProjectReference Include="..\OrderProcessingSystem.Infrastructure\OrderProcessingSystem.Infrastructure.csproj" />
-      <ProjectReference Include="..\OrderProcessingServer\OrderProcessingServer.csproj" />
+      <ProjectReference Include="..\OrderProcessingSystem.UI\OrderProcessingSystem.UI.csproj" />
       <ProjectReference Include="..\OrderProcessingSystem.Events\OrderProcessingSystem.Events.csproj" />
     </ItemGroup>
 

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using OrderProcessingServer.Services;
+using OrderProcessingSystem.UI.Services;
 using System.IO;
 using Xunit;
 using OrderProcessingSystem.Core.Configuration;
