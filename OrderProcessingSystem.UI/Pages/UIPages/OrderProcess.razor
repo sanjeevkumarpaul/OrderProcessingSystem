@@ -5,7 +5,7 @@
 @inject IOrderFileService OrderFileService
 @inject IJSRuntime JSRuntime
 @inject IGridColumnService GridColumnService
-@inject AutoMapper.IMapper Mapper
+@inject OrderProcessingSystem.UI.Services.IViewModelDataProvider ViewModelDataProvider
 @using OrderProcessingSystem.Contracts.Interfaces
 @using OrderProcessingSystem.Contracts.Dto
 @using OrderProcessingSystem.UI.Shared.UIViewModels
@@ -297,8 +297,8 @@
         transExceptionsLoading = true;
         try
         {
-            // Load TransExceptions data
-            var transExceptionsTask = DataService.GetTransExceptionsAsync();
+            // Load TransExceptions data using centralized ViewModelDataProvider
+            var transExceptionsTask = ViewModelDataProvider.GetTransExceptionsAsync<TransExceptionVM>();
             
             // Load grid column metadata
             var enumMappings = new Dictionary<string, List<string>>
@@ -310,8 +310,7 @@
             
             await Task.WhenAll(transExceptionsTask, columnsTask);
             
-            var transExceptionDtos = await transExceptionsTask;
-            transExceptions = transExceptionDtos != null ? Mapper.Map<List<TransExceptionVM>>(transExceptionDtos) : null;
+            transExceptions = await transExceptionsTask;
             transExceptionColumns = await columnsTask;
             
             // Debug: Log the data we received
@@ -345,8 +344,8 @@
         {
             var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("transexceptions", enumMappings);
             
-            // Use AutoMapper to convert from GridColumnDto to GridColumnVM
-            var uiColumns = Mapper.Map<List<GridColumnVM>>(serviceColumns);
+            // Use centralized ViewModelDataProvider for mapping
+            var uiColumns = ViewModelDataProvider.MapGridColumns(serviceColumns);
             
             return uiColumns;
         }

@@ -1,8 +1,10 @@
 
+@using OrderProcessingSystem.UI.Services
 @inject IGridColumnService GridColumnService
 @inject IApiDataService DataService
 @inject IJSRuntime JS
 @inject AutoMapper.IMapper Mapper
+@inject IViewModelDataProvider ViewModelDataProvider
 @inherits ComponentBase
 
 @typeparam TItem
@@ -107,8 +109,8 @@ else
             // Use the centralized service
             var serviceColumns = await GridColumnService.LoadColumnMetadataAsync(entityName, enumMappings);
             
-            // Use AutoMapper to convert from GridColumnDto to GridColumnVM
-            var uiColumns = Mapper.Map<List<GridColumnVM>>(serviceColumns);
+            // Use centralized ViewModelDataProvider for mapping
+            var uiColumns = ViewModelDataProvider.MapGridColumns(serviceColumns);
             
             Console.WriteLine($"Successfully loaded {uiColumns.Count} columns from service");
             return uiColumns;

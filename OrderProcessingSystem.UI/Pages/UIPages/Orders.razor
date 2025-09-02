@@ -1,7 +1,6 @@
 @page "/orders"
-@using OrderProcessingSystem.Contracts.Dto
 @using OrderProcessingSystem.UI.Shared.UIViewModels
-@inject AutoMapper.IMapper Mapper
+@inject OrderProcessingSystem.UI.Services.IViewModelDataProvider ViewModelDataProvider
 @inherits BaseDataPage<OrderVM>
 
 <BaseDataPage TItem="OrderVM" 
@@ -31,11 +30,10 @@
 </BaseDataPage>
 
 @code {
-    // Data loader function for orders - now maps DTOs to ViewModels
+    // Data loader function for orders - now uses centralized ViewModelDataProvider
     private async Task<List<OrderVM>?> LoadOrdersAsync()
     {
-        var orderDtos = await ApiDataService.GetOrdersAsync();
-        return orderDtos != null ? Mapper.Map<List<OrderVM>>(orderDtos) : null;
+        return await ViewModelDataProvider.GetOrdersAsync<OrderVM>();
     }
 
     // Provide enum mappings for filtering

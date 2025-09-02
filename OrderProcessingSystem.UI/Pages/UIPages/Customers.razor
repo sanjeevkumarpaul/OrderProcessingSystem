@@ -1,7 +1,6 @@
 @page "/customers"
-@using OrderProcessingSystem.Contracts.Dto
 @using OrderProcessingSystem.UI.Shared.UIViewModels
-@inject AutoMapper.IMapper Mapper
+@inject OrderProcessingSystem.UI.Services.IViewModelDataProvider ViewModelDataProvider
 @inherits BaseDataPage<CustomerWithOrdersVM>
 <link rel="stylesheet" href="~/css/customers.css" />
 
@@ -24,10 +23,9 @@
 </BaseDataPage>
 
 @code {
-    // Data loader function for customers - now maps DTOs to ViewModels
+    // Data loader function for customers - now uses centralized ViewModelDataProvider
     private async Task<List<CustomerWithOrdersVM>?> LoadCustomersAsync()
     {
-        var customerDtos = await ApiDataService.GetCustomersWithOrdersAsync();
-        return customerDtos != null ? Mapper.Map<List<CustomerWithOrdersVM>>(customerDtos) : null;
+        return await ViewModelDataProvider.GetCustomersWithOrdersAsync<CustomerWithOrdersVM>();
     }
 }

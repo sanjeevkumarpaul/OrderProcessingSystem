@@ -59,6 +59,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddInfrastructureHttpServices();
 builder.Services.AddScoped<IGridColumnService, OrderProcessingSystem.Infrastructure.Services.GridColumnService>();
 
+// Register ViewModel Data Provider for centralized DTO-to-ViewModel mapping
+builder.Services.AddScoped<OrderProcessingSystem.UI.Services.IViewModelDataProvider, OrderProcessingSystem.UI.Services.ViewModelDataProvider>();
+
 // Register background services
 builder.Services.AddSingleton<IBlobStorageMonitorService>(provider =>
 {
