@@ -5,6 +5,7 @@
 @inject IOrderFileService OrderFileService
 @inject IJSRuntime JSRuntime
 @inject IGridColumnService GridColumnService
+@inject AutoMapper.IMapper Mapper
 @using OrderProcessingSystem.Contracts.Interfaces
 @using OrderProcessingSystem.Contracts.Dto
 
@@ -342,16 +343,8 @@
         {
             var serviceColumns = await GridColumnService.LoadColumnMetadataAsync("transexceptions", enumMappings);
             
-            var uiColumns = serviceColumns.Select(col => new GridColumnVM
-            {
-                Header = col.Header,
-                Field = col.Field,
-                Sortable = col.Sortable,
-                Filterable = col.Filterable,
-                IsNumeric = col.IsNumeric,
-                IsEnum = col.IsEnum,
-                EnumValues = col.EnumValues
-            }).ToList();
+            // Use AutoMapper to convert from GridColumnDto to GridColumnVM
+            var uiColumns = Mapper.Map<List<GridColumnVM>>(serviceColumns);
             
             return uiColumns;
         }

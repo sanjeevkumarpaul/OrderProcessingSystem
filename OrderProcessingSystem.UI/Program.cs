@@ -51,6 +51,9 @@ builder.Services.AddHttpClient("ApiClient", client =>
 // Default scoped client still available
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());
 
+// AutoMapper - Add AutoMapper for DTO to ViewModel mappings
+builder.Services.AddAutoMapper(typeof(Program));
+
 // Register services - UI should use HTTP client instead of direct database access
 // Use HTTP-based Infrastructure services for proper clean architecture
 builder.Services.AddInfrastructureHttpServices();
