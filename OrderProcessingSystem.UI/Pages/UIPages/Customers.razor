@@ -1,9 +1,11 @@
 @page "/customers"
 @using OrderProcessingSystem.Contracts.Dto
-@inherits BaseDataPage<CustomerWithOrdersDto>
+@using OrderProcessingSystem.UI.Shared.UIViewModels
+@inject AutoMapper.IMapper Mapper
+@inherits BaseDataPage<CustomerWithOrdersVM>
 <link rel="stylesheet" href="~/css/customers.css" />
 
-<BaseDataPage TItem="CustomerWithOrdersDto" 
+<BaseDataPage TItem="CustomerWithOrdersVM" 
               PageTitle="Customers"
               EntityName="customers"
               ShowCardsText="Show Cards"
@@ -22,9 +24,10 @@
 </BaseDataPage>
 
 @code {
-    // Data loader function for customers
-    private async Task<List<CustomerWithOrdersDto>?> LoadCustomersAsync()
+    // Data loader function for customers - now maps DTOs to ViewModels
+    private async Task<List<CustomerWithOrdersVM>?> LoadCustomersAsync()
     {
-        return await ApiDataService.GetCustomersWithOrdersAsync();
+        var customerDtos = await ApiDataService.GetCustomersWithOrdersAsync();
+        return customerDtos != null ? Mapper.Map<List<CustomerWithOrdersVM>>(customerDtos) : null;
     }
 }

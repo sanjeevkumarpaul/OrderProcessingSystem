@@ -1,8 +1,10 @@
 @page "/orders"
 @using OrderProcessingSystem.Contracts.Dto
-@inherits BaseDataPage<OrderDto>
+@using OrderProcessingSystem.UI.Shared.UIViewModels
+@inject AutoMapper.IMapper Mapper
+@inherits BaseDataPage<OrderVM>
 
-<BaseDataPage TItem="OrderDto" 
+<BaseDataPage TItem="OrderVM" 
               PageTitle="Orders"
               EntityName="orders"
               ShowCardsText="Show Cards"
@@ -29,10 +31,11 @@
 </BaseDataPage>
 
 @code {
-    // Data loader function for orders
-    private async Task<List<OrderDto>?> LoadOrdersAsync()
+    // Data loader function for orders - now maps DTOs to ViewModels
+    private async Task<List<OrderVM>?> LoadOrdersAsync()
     {
-        return await ApiDataService.GetOrdersAsync();
+        var orderDtos = await ApiDataService.GetOrdersAsync();
+        return orderDtos != null ? Mapper.Map<List<OrderVM>>(orderDtos) : null;
     }
 
     // Provide enum mappings for filtering

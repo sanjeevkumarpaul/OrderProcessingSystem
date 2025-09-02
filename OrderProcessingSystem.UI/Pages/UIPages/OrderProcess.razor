@@ -8,6 +8,7 @@
 @inject AutoMapper.IMapper Mapper
 @using OrderProcessingSystem.Contracts.Interfaces
 @using OrderProcessingSystem.Contracts.Dto
+@using OrderProcessingSystem.UI.Shared.UIViewModels
 
 <PageTitle>Process Order - OrderProcessingSystem.UI</PageTitle>
 
@@ -179,7 +180,7 @@
                         </div>
                     </div>
                     
-                    <GenericGrid TItem="TransExceptionDto" 
+                    <GenericGrid TItem="TransExceptionVM" 
                                  Items="filteredTransExceptions" 
                                  Columns="transExceptionColumns" 
                                  PageSize="8" />
@@ -201,9 +202,9 @@
     private List<SupplierDto>? suppliers;
     private bool isLoading = true;
   
-    // TransExceptions data properties
-    private List<TransExceptionDto>? transExceptions;
-    private List<TransExceptionDto>? filteredTransExceptions;
+    // TransExceptions data properties - now using ViewModels
+    private List<TransExceptionVM>? transExceptions;
+    private List<TransExceptionVM>? filteredTransExceptions;
     private bool transExceptionsLoading = false;
     private List<GridColumnVM> transExceptionColumns = new();
     private string selectedTransactionTypeFilter = "";
@@ -309,7 +310,8 @@
             
             await Task.WhenAll(transExceptionsTask, columnsTask);
             
-            transExceptions = await transExceptionsTask;
+            var transExceptionDtos = await transExceptionsTask;
+            transExceptions = transExceptionDtos != null ? Mapper.Map<List<TransExceptionVM>>(transExceptionDtos) : null;
             transExceptionColumns = await columnsTask;
             
             // Debug: Log the data we received
@@ -327,8 +329,8 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error in LoadTransExceptionsData: {ex.Message}");
-            transExceptions = new List<TransExceptionDto>();
-            filteredTransExceptions = new List<TransExceptionDto>();
+            transExceptions = new List<TransExceptionVM>();
+            filteredTransExceptions = new List<TransExceptionVM>();
         }
         finally
         {
@@ -360,7 +362,7 @@
         if (transExceptions == null)
         {
             Console.WriteLine("ApplyTransactionTypeFilter: transExceptions is null");
-            filteredTransExceptions = new List<TransExceptionDto>();
+            filteredTransExceptions = new List<TransExceptionVM>();
             return;
         }
         

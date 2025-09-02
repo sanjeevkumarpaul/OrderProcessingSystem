@@ -21,7 +21,30 @@ public class UIMappingProfile : Profile
             .ForMember(dest => dest.IsEnum, opt => opt.MapFrom(src => src.IsEnum))
             .ForMember(dest => dest.EnumValues, opt => opt.MapFrom(src => src.EnumValues));
 
-        // Reverse mapping if needed
+        // Map DTOs to ViewModels - Main entity mappings
+        CreateMap<CustomerWithOrdersDto, CustomerWithOrdersVM>();
+        CreateMap<SupplierWithOrdersDto, SupplierWithOrdersVM>();
+        CreateMap<OrderDto, OrderVM>();
+        CreateMap<TransExceptionDto, TransExceptionVM>();
+        
+        // Map DTOs to ViewModels - Supporting entity mappings
+        CreateMap<CustomerDto, CustomerVM>()
+            .ForMember(dest => dest.OrdersCount, opt => opt.Ignore()) // UI computed field
+            .ForMember(dest => dest.TotalSales, opt => opt.Ignore()); // UI computed field
+            
+        CreateMap<SupplierDto, SupplierVM>()
+            .ForMember(dest => dest.OrdersSupplied, opt => opt.Ignore()); // UI computed field
+            
+        CreateMap<SalesByCustomerDto, SalesByCustomerVM>();
+
+        // Reverse mappings if needed
         CreateMap<GridColumnVM, GridColumnDto>();
+        CreateMap<CustomerWithOrdersVM, CustomerWithOrdersDto>();
+        CreateMap<SupplierWithOrdersVM, SupplierWithOrdersDto>();
+        CreateMap<OrderVM, OrderDto>();
+        CreateMap<TransExceptionVM, TransExceptionDto>();
+        CreateMap<CustomerVM, CustomerDto>();
+        CreateMap<SupplierVM, SupplierDto>();
+        CreateMap<SalesByCustomerVM, SalesByCustomerDto>();
     }
 }
