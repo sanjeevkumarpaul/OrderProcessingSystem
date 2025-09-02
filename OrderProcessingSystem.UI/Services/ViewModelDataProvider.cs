@@ -1,7 +1,7 @@
 using AutoMapper;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Contracts.Dto;
-using OrderProcessingSystem.UI.Shared.UIViewModels;
+//using OrderProcessingSystem.UI.Shared.UIViewModels;
 
 namespace OrderProcessingSystem.UI.Services;
 
