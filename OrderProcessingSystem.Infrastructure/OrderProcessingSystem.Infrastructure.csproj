@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Sql\**\*.sql" />
+    <EmbeddedResource Include="Providers\**\*.sql" />
   </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />

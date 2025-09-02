@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using OrderProcessingSystem.Contracts.Interfaces;
 
-namespace OrderProcessingSystem.Infrastructure.Sql;
+namespace OrderProcessingSystem.Infrastructure.Providers;
 
 /// <summary>
 /// Implementation of ISqlProvider that reads SQL content from embedded resources
@@ -17,8 +17,8 @@ public class SqlFileProvider : ISqlProvider
     public SqlFileProvider()
     {
         _assembly = Assembly.GetExecutingAssembly();
-        // resources are embedded with the path: {DefaultNamespace}.Sql.<path>.sql
-        _resourceRoot = _assembly.GetName().Name + ".Sql.";
+        // resources are embedded with the path: {DefaultNamespace}.Providers.<path>.sql
+        _resourceRoot = _assembly.GetName().Name + ".Providers.";
     }
 
     public string GetSql(string name)

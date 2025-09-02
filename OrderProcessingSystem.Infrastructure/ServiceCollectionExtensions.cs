@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using OrderProcessingSystem.Infrastructure.Services;
-using OrderProcessingSystem.Infrastructure.Sql;
+using OrderProcessingSystem.Infrastructure.Providers;
 using OrderProcessingSystem.Contracts.Interfaces;
 using MediatR;
 using System.Reflection;
