@@ -4,6 +4,7 @@
 /* Page Setup - Light Theme with Minimal Aesthetic */
 .order-process-page {
     background: transparent;    
+    min-height: 30vh;
     /* margin: -20px -15px -20px -15px;
     padding: 40px 15px 40px 30px; */
     position: relative;
