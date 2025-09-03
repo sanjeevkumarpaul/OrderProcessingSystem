@@ -1,4 +1,5 @@
-using OrderProcessingSystem.API.Services;
+using OrderProcessingSystem.Authentication.Interfaces;
+using OrderProcessingSystem.Authentication.Models;  
 
 namespace OrderProcessingSystem.API.Middleware;
 

@@ -17,8 +17,9 @@
     <ProjectReference Include="..\OrderProcessingSystem.Data\OrderProcessingSystem.Data.csproj" />
     <ProjectReference Include="..\OrderProcessingSystem.Contracts\OrderProcessingSystem.Contracts.csproj" />
     <ProjectReference Include="..\OrderProcessingSystem.Infrastructure\OrderProcessingSystem.Infrastructure.csproj" />
-  <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
-  <ProjectReference Include="..\OrderProcessingSystem.Cache\OrderProcessingSystem.Cache.csproj" />
+    <ProjectReference Include="..\OrderProcessingSystem.Core\OrderProcessingSystem.Core.csproj" />
+    <ProjectReference Include="..\OrderProcessingSystem.Cache\OrderProcessingSystem.Cache.csproj" />
+    <ProjectReference Include="..\OrderProcessingSystem.Authentication\OrderProcessingSystem.Authentication.csproj" />
   </ItemGroup>
 
   <ItemGroup>

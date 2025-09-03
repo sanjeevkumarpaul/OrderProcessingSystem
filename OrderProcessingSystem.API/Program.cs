@@ -8,6 +8,8 @@ using OrderProcessingSystem.API.Services;
 using OrderProcessingSystem.API.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OrderProcessingSystem.Core.Configuration;
+using OrderProcessingSystem.Authentication.Interfaces;
+using OrderProcessingSystem.Authentication.Models;  
 using System.Reflection;
 using MediatR;
 

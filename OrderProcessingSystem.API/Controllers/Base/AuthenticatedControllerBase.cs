@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderProcessingSystem.API.Services;
+using OrderProcessingSystem.Authentication.Models;
 
 namespace OrderProcessingSystem.API.Controllers.Base;
 
