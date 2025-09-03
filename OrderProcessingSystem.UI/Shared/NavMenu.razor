@@ -28,6 +28,12 @@
         {
           <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
         }
+
+        <!-- User Activity - Visible only to ADMIN -->
+        @if (ShouldShowMenuItem("UserActivity"))
+        {
+          <li class="nav-item"><a class="nav-link" href="/user-activity">User Activity</a></li>
+        }
        
         <!-- Processing - Hidden for ADMIN role -->
         @if (ShouldShowMenuItem("Processing"))
@@ -155,6 +161,7 @@
             "orders" => true, // Visible to all roles
             "suppliers" => true, // Visible to all roles  
             "customers" => true, // Visible to all roles
+            "useractivity" => role == "admin", // Visible only to ADMIN role
             "reports" => role != "user" && role !=  "admin", // Hidden for USER role
             "processing" => role != "admin" && role != "manager", // Hidden for ADMIN role
             _ => false
