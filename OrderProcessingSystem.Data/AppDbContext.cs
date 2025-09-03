@@ -53,10 +53,6 @@ public class AppDbContext : DbContext
                   .IsRequired()
                   .HasMaxLength(200);
             
-            entity.Property(e => e.EventFlag)
-                  .IsRequired()
-                  .HasMaxLength(50);
-            
             entity.Property(e => e.UserId)
                   .IsRequired()
                   .HasMaxLength(255); // Changed to accommodate email addresses

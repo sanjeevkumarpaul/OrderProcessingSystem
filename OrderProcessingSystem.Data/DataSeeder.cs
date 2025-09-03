@@ -168,10 +168,6 @@ public static class DataSeeder
                 "MANAGER", "ADMIN", "USER", "FAILED"
             };
             
-            var eventFlags = new[] {
-                "AUTH", "ORDER", "PRODUCT", "PAYMENT", "ACCOUNT", "FILE", "REPORT", "SYSTEM", "API", "SECURITY"
-            };
-            
             var companyDomains = new[] {
                 "acmecorp.com", "globexltd.com", "stellartech.com", "pinnaclegroup.com", "nexusinnovations.com",
                 "vanguardenterprises.com", "meridiantech.com", "apexsolutions.com", "titanindustries.com", "omegacorp.com",
@@ -218,7 +214,6 @@ public static class DataSeeder
                 {
                     EventDate = eventDate,
                     Event = events[rnd.Next(events.Length)],
-                    EventFlag = eventFlags[rnd.Next(eventFlags.Length)],
                     UserId = userEmail,
                     UserName = userName
                 });
