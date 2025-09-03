@@ -44,9 +44,6 @@ builder.Services.AddScoped<IGridMetadataService,GridMetadataService>();
 // Register token validation services for API authentication
 builder.Services.AddScoped<ITokenValidationService, TokenValidationService>();
 
-// Register UserLog services
-builder.Services.AddScoped<UserLogService>();
-
 // Register Data services with SQLite file from configuration
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, appSettings.DatabasePath);
 var conn = $"Data Source={dbPath}";

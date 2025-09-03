@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderProcessingSystem.Infrastructure.Services;
+using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Contracts.Dto;
 
 namespace OrderProcessingSystem.API.Controllers;
@@ -8,10 +8,10 @@ namespace OrderProcessingSystem.API.Controllers;
 [Route("api/[controller]")]
 public class UserLogController : ControllerBase
 {
-    private readonly UserLogService _userLogService;
+    private readonly IUserLogService _userLogService;
     private readonly ILogger<UserLogController> _logger;
 
-    public UserLogController(UserLogService userLogService, ILogger<UserLogController> logger)
+    public UserLogController(IUserLogService userLogService, ILogger<UserLogController> logger)
     {
         _userLogService = userLogService;
         _logger = logger;

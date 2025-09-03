@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IApiDataService, HttpApiDataService>();
         services.AddScoped<IOrderFileService, OrderFileService>();
-        services.AddScoped<IUserLogService, UserLogService>();
+        services.AddScoped<IUserLogService, HttpUserLogService>();
         
         // Register SQL Provider implementation (may be needed for some services)
         services.AddSingleton<ISqlProvider, SqlFileProvider>();

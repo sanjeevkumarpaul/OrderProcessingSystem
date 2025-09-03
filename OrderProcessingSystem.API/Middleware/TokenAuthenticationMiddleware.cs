@@ -71,7 +71,8 @@ public class TokenAuthenticationMiddleware
             "/swagger",
             "/health",
             "/error",
-            "/api/metadata/ui-grid-columns"
+            "/api/metadata/ui-grid-columns",
+            "/api/userlog"  // Skip authentication for UserLog endpoints for now
         };
 
         return skipPaths.Any(skipPath => path.StartsWith(skipPath, StringComparison.OrdinalIgnoreCase));
