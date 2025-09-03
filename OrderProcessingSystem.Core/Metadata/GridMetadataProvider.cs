@@ -1,6 +1,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+
 namespace OrderProcessingSystem.Core.Metadata;
 
 public static class GridMetadataProvider
@@ -10,46 +11,61 @@ public static class GridMetadataProvider
         // Use the assembly that contains this provider to reliably find embedded resources
         var asm = typeof(GridMetadataProvider).Assembly;
         var names = asm.GetManifestResourceNames();
-        // Prefer an exact match if present, otherwise fallback to any resource ending with grid-columns.json
-        // var candidate = names.FirstOrDefault(n => n.EndsWith("Metadata.grid-columns.json", StringComparison.OrdinalIgnoreCase))
-        //                 ?? names.FirstOrDefault(n => n.EndsWith("grid-columns.json", StringComparison.OrdinalIgnoreCase));
-        var candidate = names.FirstOrDefault(n => n.EndsWith("grid-columns.json", StringComparison.OrdinalIgnoreCase));
+        
+        // Look for grid-columns.json in JsonConfigurations folder first
+        var candidate = names.FirstOrDefault(n => n.Contains("JsonConfigurations") && n.EndsWith("grid-columns.json", StringComparison.OrdinalIgnoreCase));
+                        
+        Console.WriteLine($"Available embedded resources: {string.Join(", ", names)}");
+        Console.WriteLine($"Selected candidate: {candidate}");
+        Console.WriteLine($"Looking for resource containing 'JsonConfigurations' and ending with 'grid-columns.json'");
+        
         if (candidate == null)
         {
             // no embedded resource found - attempt filesystem fallbacks (helps in dev when resource isn't embedded)
             var asmDir = Path.GetDirectoryName(asm.Location) ?? AppContext.BaseDirectory;
             var candidates = new[] {
-                Path.Combine(asmDir, "Metadata", "grid-columns.json"),
-                Path.Combine(AppContext.BaseDirectory, "Metadata", "grid-columns.json"),
-                Path.Combine(Directory.GetCurrentDirectory(), "OrderProcessingSystem.Core", "Metadata", "grid-columns.json"),
-                Path.Combine(Directory.GetCurrentDirectory(), "Metadata", "grid-columns.json")
+                Path.Combine(asmDir, "JsonConfigurations", "grid-columns.json"),
+                Path.Combine(AppContext.BaseDirectory, "JsonConfigurations", "grid-columns.json"),
+                Path.Combine(Directory.GetCurrentDirectory(), "OrderProcessingSystem.Core", "JsonConfigurations", "grid-columns.json"),
+                Path.Combine(Directory.GetCurrentDirectory(), "JsonConfigurations", "grid-columns.json")
             };
+            
+            Console.WriteLine($"Trying filesystem fallbacks...");
             foreach (var p in candidates)
             {
+                Console.WriteLine($"Checking path: {p} - Exists: {File.Exists(p)}");
                 if (File.Exists(p))
                 {
                     try
                     {
+                        Console.WriteLine($"Successfully reading from filesystem: {p}");
                         using var fs = File.OpenRead(p);
                         return System.Text.Json.JsonDocument.Parse(fs);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine(p);
+                        Console.WriteLine($"Error reading from {p}: {ex.Message}");
                     }
                 }
             }
             return null;
         }
+        
         using var s = asm.GetManifestResourceStream(candidate);
-        Console.WriteLine($"Candidate resource: {candidate}");
-        if (s == null) return null;
+        Console.WriteLine($"Reading from embedded resource: {candidate}");
+        if (s == null) 
+        {
+            Console.WriteLine("Embedded resource stream is null");
+            return null;
+        }
+        
         try
         {
             return System.Text.Json.JsonDocument.Parse(s);
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error parsing embedded resource: {ex.Message}");
             return null;
         }
     }

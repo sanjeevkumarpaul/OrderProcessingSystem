@@ -21,4 +21,10 @@
   <ProjectReference Include="..\OrderProcessingSystem.Cache\OrderProcessingSystem.Cache.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\OrderProcessingSystem.Core\JsonConfigurations\grid-columns.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>JsonConfigurations\grid-columns.json</Link>
+    </Content>
+  </ItemGroup>
 </Project>
