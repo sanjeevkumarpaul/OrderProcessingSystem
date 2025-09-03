@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<ITransExceptionRepository, TransExceptionRepository>();
+        services.AddScoped<IUserLogRepository, UserLogRepository>();
         services.AddMediatR(typeof(ServiceCollectionExtensions).Assembly);
         return services;
     }

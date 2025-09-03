@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IApiDataService, ApiDataService>();
         services.AddScoped<IOrderFileService, OrderFileService>();
+        services.AddScoped<IUserLogService, UserLogService>();
         
         // Register SQL Provider implementation in Infrastructure layer (Clean Architecture)
         services.AddSingleton<ISqlProvider, SqlFileProvider>();
@@ -34,6 +35,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IApiDataService, HttpApiDataService>();
         services.AddScoped<IOrderFileService, OrderFileService>();
+        services.AddScoped<IUserLogService, UserLogService>();
         
         // Register SQL Provider implementation (may be needed for some services)
         services.AddSingleton<ISqlProvider, SqlFileProvider>();

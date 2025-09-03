@@ -5,6 +5,7 @@ using OrderProcessingSystem.Infrastructure;
 using OrderProcessingSystem.Cache;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.API.Services;
+using OrderProcessingSystem.Infrastructure.Services;
 using OrderProcessingSystem.API.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OrderProcessingSystem.Core.Configuration;
@@ -42,6 +43,9 @@ builder.Services.AddScoped<IGridMetadataService,GridMetadataService>();
 
 // Register token validation services for API authentication
 builder.Services.AddScoped<ITokenValidationService, TokenValidationService>();
+
+// Register UserLog services
+builder.Services.AddScoped<UserLogService>();
 
 // Register Data services with SQLite file from configuration
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, appSettings.DatabasePath);
