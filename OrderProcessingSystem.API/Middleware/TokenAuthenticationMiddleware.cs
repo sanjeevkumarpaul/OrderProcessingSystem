@@ -69,7 +69,8 @@ public class TokenAuthenticationMiddleware
         {
             "/swagger",
             "/health",
-            "/error"
+            "/error",
+            "/api/metadata/ui-grid-columns"
         };
 
         return skipPaths.Any(skipPath => path.StartsWith(skipPath, StringComparison.OrdinalIgnoreCase));
