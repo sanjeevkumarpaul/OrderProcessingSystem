@@ -3,6 +3,8 @@ using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Core.Configuration;
 using OrderProcessingSystem.Infrastructure.Providers;
+using OrderProcessingSystem.UI.Services;
+using OrderProcessingSystem.Authentication.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +60,13 @@ builder.Services.AddScoped<IGridColumnService, OrderProcessingSystem.Infrastruct
 
 // Register ViewModel Data Provider for centralized DTO-to-ViewModel mapping
 builder.Services.AddScoped<IViewModelDataProvider, ViewModelDataProvider>();
+
+// Register Authentication State Service
+builder.Services.AddScoped<IAuthStateService, AuthStateService>();
+
+// Add OAuth Authentication from Authentication project
+builder.Services.AddOAuthAuthentication(builder.Configuration);
+builder.Services.AddAuthenticationServices();
 
 // Register background services
 builder.Services.AddSingleton<IBlobStorageMonitorService>(provider =>

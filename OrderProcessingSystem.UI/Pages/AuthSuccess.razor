@@ -1,0 +1,178 @@
+@page "/auth-success"
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject HttpClient HttpClient
+
+<div class="auth-success-container">
+    <div class="auth-success-card">
+        @if (isLoading)
+        {
+            <div class="loading-section">
+                <div class="spinner-border text-success" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h3 class="mt-3">Completing authentication...</h3>
+                <p>Please wait while we finish setting up your session.</p>
+            </div>
+        }
+        else if (hasError)
+        {
+            <div class="error-section">
+                <i class="fas fa-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+                <h3 class="mt-3 text-danger">Authentication Failed</h3>
+                <p>@errorMessage</p>
+                <button class="btn btn-primary mt-3" @onclick="RetryLogin">Try Again</button>
+            </div>
+        }
+        else
+        {
+            <div class="success-section">
+                <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                <h3 class="mt-3 text-success">Authentication Successful!</h3>
+                <p>Welcome, <strong>@userName</strong></p>
+                <p>Redirecting to dashboard...</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] [SupplyParameterFromQuery] public string? Provider { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public bool Demo { get; set; }
+    [Parameter] [SupplyParameterFromQuery] public string? Role { get; set; }
+    
+    private bool isLoading = true;
+    private bool hasError = false;
+    private string errorMessage = string.Empty;
+    private string userName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CompleteAuthentication();
+    }
+
+    private async Task CompleteAuthentication()
+    {
+        try
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            if (Demo)
+            {
+                // Demo mode - use role-based values
+                var rolePrefix = !string.IsNullOrEmpty(Role) ? $" ({Role})" : "";
+                var demoUserName = $"Sanjeev P{rolePrefix}";
+                var roleBasedEmail = GetRoleBasedEmail(Role, Provider);
+                
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authProvider", Provider ?? "Unknown");
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "accessToken", $"demo_token_{Guid.NewGuid():N}");
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userName", demoUserName);
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userEmail", roleBasedEmail);
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userRole", Role ?? "User");
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "loginTime", DateTime.UtcNow.ToString("O"));
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "isAuthenticated", "true");
+
+                userName = demoUserName;
+                isLoading = false;
+                StateHasChanged();
+
+                // Redirect to main application after 2 seconds
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/", true);
+            }
+            else
+            {
+                // Real OAuth mode - get user info from the auth API
+                var response = await HttpClient.GetAsync("http://localhost:5270/auth/user");
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var userJson = await response.Content.ReadAsStringAsync();
+                    // Parse user info and store in localStorage
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authProvider", Provider ?? "Unknown");
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "accessToken", $"oauth_token_{Guid.NewGuid():N}");
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userName", "Authenticated User"); // You'd parse this from userJson
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userEmail", "user@example.com"); // You'd parse this from userJson
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userRole", "User");
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "loginTime", DateTime.UtcNow.ToString("O"));
+                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "isAuthenticated", "true");
+
+                    userName = "Authenticated User"; // You'd parse this from userJson
+                    isLoading = false;
+                    StateHasChanged();
+
+                    // Redirect to main application after 2 seconds
+                    await Task.Delay(2000);
+                    Navigation.NavigateTo("/", true);
+                }
+                else
+                {
+                    throw new Exception("Failed to retrieve user information");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            hasError = true;
+            errorMessage = ex.Message;
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void RetryLogin()
+    {
+        Navigation.NavigateTo("/login", true);
+    }
+
+    private string GetRoleBasedEmail(string? role, string? provider)
+    {
+        var providerDomain = provider?.ToLower() == "microsoft" ? "microsoft.com" : "gmail.com";
+        
+        return role?.ToLower() switch
+        {
+            "admin" => $"sanjeev.admin@{providerDomain}",
+            "manager" => $"sanjeev.manager@{providerDomain}",
+            "user" => $"sanjeev.user@{providerDomain}",
+            _ => $"sanjeev.p@{providerDomain}"
+        };
+    }
+}
+
+<style>
+    .auth-success-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+    }
+
+    .auth-success-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .loading-section, .error-section, .success-section {
+        text-align: center;
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+</style>

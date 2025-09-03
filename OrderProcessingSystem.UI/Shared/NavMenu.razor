@@ -1,3 +1,6 @@
+@using OrderProcessingSystem.UI.Services
+@using Microsoft.JSInterop
+
 <nav class="navbar navbar-expand-lg topnav fixed-top" role="navigation">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">SANJ ORDERING SYSTEMS</a>
@@ -13,7 +16,117 @@
         <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
         <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
         <li class="nav-item"><a class="nav-link" href="/process-order">Processing...</a></li>
+        
+        @if (isAuthenticated)
+        {
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-success fw-bold" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="@GetRoleIcon()"></i> @GetRoleDisplayText()
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="authDropdown">
+              @if (userRole.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+              {
+                <li><a class="dropdown-item" href="/admin-panel">
+                  <i class="fas fa-crown text-danger"></i> Admin Panel
+                </a></li>
+                <li><a class="dropdown-item" href="/system-settings">
+                  <i class="fas fa-cogs"></i> System Settings
+                </a></li>
+                <li><a class="dropdown-item" href="/user-management">
+                  <i class="fas fa-users"></i> User Management
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+              }
+              @if (userRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) || userRole.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+              {
+                <li><a class="dropdown-item" href="/advanced-analytics">
+                  <i class="fas fa-chart-line text-primary"></i> Advanced Analytics
+                </a></li>
+                <li><a class="dropdown-item" href="/premium-reports">
+                  <i class="fas fa-file-chart text-info"></i> Premium Reports
+                </a></li>
+                <li><a class="dropdown-item" href="/team-management">
+                  <i class="fas fa-user-tie"></i> Team Management
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+              }
+              <li><a class="dropdown-item" href="/my-profile">
+                <i class="fas fa-user-circle"></i> My Profile
+              </a></li>
+              <li><a class="dropdown-item" href="/notifications">
+                <i class="fas fa-bell"></i> Notifications
+              </a></li>
+            </ul>
+          </li>
+        }
+      </ul>
+      
+      <!-- User Info and Logout -->
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user"></i> @userName
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><span class="dropdown-item-text">Role: @userRole</span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item" @onclick="Logout">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
+
+@code {
+    [Inject] private IAuthStateService? AuthState { get; set; }
+    [Inject] private NavigationManager? Navigation { get; set; }
+    [Inject] private IJSRuntime? JSRuntime { get; set; }
+
+    private string userName = "User";
+    private string userRole = "Guest";
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState != null)
+        {
+            userName = await AuthState.GetUserNameAsync() ?? "User";
+            userRole = await AuthState.GetUserRoleAsync() ?? "Guest";
+            isAuthenticated = await AuthState.IsAuthenticatedAsync();
+        }
+    }
+
+    private async Task Logout()
+    {
+        if (AuthState != null && Navigation != null)
+        {
+            await AuthState.LogoutAsync();
+            Navigation.NavigateTo("/", true);
+        }
+    }
+
+    private string GetRoleIcon()
+    {
+        return userRole.ToLower() switch
+        {
+            "admin" => "fas fa-crown",
+            "manager" => "fas fa-user-tie",
+            "user" => "fas fa-user",
+            _ => "fas fa-star"
+        };
+    }
+
+    private string GetRoleDisplayText()
+    {
+        return userRole.ToLower() switch
+        {
+            "admin" => "Admin Features",
+            "manager" => "Manager Features", 
+            "user" => "User Features",
+            _ => "Features"
+        };
+    }
+}

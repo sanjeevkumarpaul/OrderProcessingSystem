@@ -1,0 +1,119 @@
+@using OrderProcessingSystem.UI.Services
+@using OrderProcessingSystem.UI.Shared
+@using Microsoft.JSInterop
+@inherits LayoutComponentBase
+@inject IAuthStateService AuthState
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@implements IDisposable
+
+@if (isLoading)
+{
+    <div class="loading-container">
+        <div class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Checking authentication...</p>
+        </div>
+    </div>
+}
+else if (!isAuthenticated && !IsRoleSelectionPage() && !IsAuthSuccessPage())
+{
+    <!-- Show Login Page -->
+    <LoginComponent />
+}
+else
+{
+    <!-- Show Main Application Layout or Allow Role Selection -->
+    <div class="bg-app">
+        <div class="vertical-bar" aria-hidden="true"></div>
+        @if (isAuthenticated)
+        {
+            <NavMenu />
+        }
+
+        <div class="container mt-4 app-content">
+            @Body
+        </div>
+    </div>
+}
+
+@code {
+    private bool isAuthenticated = false;
+    private bool isLoading = true;
+
+    private bool IsRoleSelectionPage()
+    {
+        return Navigation.Uri.Contains("/role-selection");
+    }
+
+    private bool IsAuthSuccessPage()
+    {
+        return Navigation.Uri.Contains("/auth-success");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to auth state changes
+        AuthState.AuthStateChanged += OnAuthStateChanged;
+        
+        // Check initial authentication status
+        await CheckAuthStatus();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CheckAuthStatus();
+        }
+    }
+
+    private async Task CheckAuthStatus()
+    {
+        try
+        {
+            isLoading = true;
+            StateHasChanged();
+            
+            isAuthenticated = await AuthState.IsAuthenticatedAsync();
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async void OnAuthStateChanged(bool authChanged)
+    {
+        await CheckAuthStatus();
+    }
+
+    public void Dispose()
+    {
+        AuthState.AuthStateChanged -= OnAuthStateChanged;
+    }
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        flex-direction: column;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .loading-spinner {
+        text-align: center;
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+</style>

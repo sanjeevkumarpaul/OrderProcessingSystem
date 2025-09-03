@@ -22,3 +22,24 @@ public class LoginResponse
     public string Message { get; set; } = string.Empty;
     public AuthUser? User { get; set; }
 }
+
+/// <summary>
+/// Demo token request model
+/// </summary>
+public class DemoTokenRequest
+{
+    public string Provider { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Demo token response model
+/// </summary>
+public class DemoTokenResponse
+{
+    public string AccessToken { get; set; } = string.Empty;
+    public string TokenType { get; set; } = "Bearer";
+    public int ExpiresIn { get; set; }
+    public AuthUser User { get; set; } = new();
+    public DateTime IssuedAt { get; set; }
+}
