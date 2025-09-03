@@ -11,8 +11,9 @@ public static class GridMetadataProvider
         var asm = typeof(GridMetadataProvider).Assembly;
         var names = asm.GetManifestResourceNames();
         // Prefer an exact match if present, otherwise fallback to any resource ending with grid-columns.json
-        var candidate = names.FirstOrDefault(n => n.EndsWith("Metadata.grid-columns.json", StringComparison.OrdinalIgnoreCase))
-                        ?? names.FirstOrDefault(n => n.EndsWith("grid-columns.json", StringComparison.OrdinalIgnoreCase));
+        // var candidate = names.FirstOrDefault(n => n.EndsWith("Metadata.grid-columns.json", StringComparison.OrdinalIgnoreCase))
+        //                 ?? names.FirstOrDefault(n => n.EndsWith("grid-columns.json", StringComparison.OrdinalIgnoreCase));
+        var candidate = names.FirstOrDefault(n => n.EndsWith("grid-columns.json", StringComparison.OrdinalIgnoreCase));
         if (candidate == null)
         {
             // no embedded resource found - attempt filesystem fallbacks (helps in dev when resource isn't embedded)
@@ -34,13 +35,14 @@ public static class GridMetadataProvider
                     }
                     catch
                     {
-                        // ignore and try next
+                        Console.WriteLine(p);
                     }
                 }
             }
             return null;
         }
         using var s = asm.GetManifestResourceStream(candidate);
+        Console.WriteLine($"Candidate resource: {candidate}");
         if (s == null) return null;
         try
         {

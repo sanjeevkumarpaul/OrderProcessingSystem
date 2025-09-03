@@ -1,14 +1,5 @@
 [
   {
-    "Header": "ID",
-    "Field": "transExceptionId",
-    "Sortable": true,
-    "Filterable": true,
-    "IsNumeric": true,
-    "IsEnum": false,
-    "EnumValues": []
-  },
-  {
     "Header": "Transaction Type",
     "Field": "transactionType", 
     "Sortable": true,

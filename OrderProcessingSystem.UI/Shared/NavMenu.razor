@@ -52,18 +52,15 @@
                 </a></li>
                 <li><a class="dropdown-item" href="/coming-soon">
                   <i class="fas fa-users"></i> User Management
-                </a></li>
-                <li><hr class="dropdown-divider"></li>
-              }
-              @if (userRole.Equals("Manager", StringComparison.OrdinalIgnoreCase))
-              {
-                <li><a class="dropdown-item" href="/reports">
-                  <i class="fas fa-chart-line text-primary"></i> Advanced Analytics
-                </a></li>
-                <li><a class="dropdown-item" href="/reports">
-                  <i class="fas fa-file-chart text-info"></i> Premium Reports
                 </a></li>                
               }
+              @if (userRole.Equals("Manager", StringComparison.OrdinalIgnoreCase))
+              {                
+                <li><a class="dropdown-item" href="/reports">
+                  <i class="fas fa-file-chart text-info"></i> Premium Reports
+                </a></li>                                
+              }
+              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/coming-soon">
                 <i class="fas fa-user-circle"></i> My Profile
               </a></li>

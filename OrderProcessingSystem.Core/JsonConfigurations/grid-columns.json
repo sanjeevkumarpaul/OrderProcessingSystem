@@ -16,8 +16,7 @@
     { "Header": "Country", "Field": "Country", "Filterable": true, "Sortable": true },
     { "Header": "Orders Supplied", "Field": "OrdersSupplied", "Sortable": true, "IsNumeric": true }
   ],
-  "transexceptions": [
-    { "Header": "ID", "Field": "TransExceptionId", "Sortable": true, "IsNumeric": true },
+  "transexceptions": [   
     { "Header": "Transaction Type", "Field": "TransactionType", "Filterable": true, "Sortable": true },
     { "Header": "Exception Reason", "Field": "Reason", "Filterable": true, "Sortable": true },
     { "Header": "Input Message", "Field": "InputMessage", "Filterable": true },
