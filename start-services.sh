@@ -44,86 +44,8 @@ if [ "$AUTH_EXISTS" = "false" ] || [ "$API_EXISTS" = "false" ] || [ "$UI_EXISTS"
 fi
 
 echo ""
-echo "🔨 Building all projects..."
-BUILD_SUCCESS=true
-BUILD_ERRORS=()
-
-# Function to build project with detailed error reporting
-build_project() {
-    local project_path=$1
-    local project_name=$2
-    local project_icon=$3
-    
-    echo "${project_icon} Building ${project_name}..."
-    cd "$project_path"
-    
-    # Capture both stdout and stderr
-    BUILD_OUTPUT=$(dotnet build --verbosity quiet 2>&1)
-    BUILD_EXIT_CODE=$?
-    
-    if [ $BUILD_EXIT_CODE -eq 0 ]; then
-        echo "✅ ${project_name} build successful"
-        # Check for warnings
-        WARNING_COUNT=$(echo "$BUILD_OUTPUT" | grep -c "warning" || true)
-        if [ $WARNING_COUNT -gt 0 ]; then
-            echo "⚠️  ${project_name} has ${WARNING_COUNT} warning(s)"
-        fi
-    else
-        echo "❌ ${project_name} build failed!"
-        echo "📋 Error details:"
-        
-        # Show compilation errors
-        echo "$BUILD_OUTPUT" | grep -E "(error|Error|fail|fail)" | head -10 | sed 's/^/   /'
-        
-        # Store error for summary
-        BUILD_ERRORS+=("${project_name}: Build failed")
-        BUILD_SUCCESS=false
-        
-        echo ""
-    fi
-    
-    return $BUILD_EXIT_CODE
-}
-
-# Build each project
-build_project "$AUTH_PATH" "Authentication Service" "🔐"
-build_project "$API_PATH" "API Service" "🌐" 
-build_project "$UI_PATH" "UI Service" "🎨"
-
-# Return to root directory
-cd "$ROOT_PATH"
-
-# Check if all builds were successful
-if [ "$BUILD_SUCCESS" = "false" ]; then
-    echo ""
-    echo "❌ BUILD FAILED! Summary of errors:"
-    for error in "${BUILD_ERRORS[@]}"; do
-        echo "   • $error"
-    done
-    echo ""
-    echo "🔧 Troubleshooting steps:"
-    echo "   1. Run 'dotnet restore' in each project directory"
-    echo "   2. Check for missing NuGet packages"
-    echo "   3. Verify .NET SDK version compatibility"
-    echo "   4. Run individual builds for detailed error messages:"
-    echo "      • cd $AUTH_PATH && dotnet build"
-    echo "      • cd $API_PATH && dotnet build"
-    echo "      • cd $UI_PATH && dotnet build"
-    echo ""
-    read -p "❓ Press Enter to exit (or Ctrl+C to terminate)"
-    exit 1
-fi
-
-echo ""
-echo "🎉 All builds completed successfully!"
-echo "🔍 Build Summary:"
-echo "   ✅ Authentication Service - Ready"
-echo "   ✅ API Service - Ready"
-echo "   ✅ UI Service - Ready"
-echo ""
-echo "🏁 Auto-starting services in 3 seconds..."
-echo "💡 Press Ctrl+C now to cancel startup"
-sleep 1 && echo "   🕐 2 seconds..." && sleep 1 && echo "   🕑 1 second..." && sleep 1
+echo "🏁 Starting services in 3 seconds..."
+sleep 3
 
 # Start Authentication Service
 echo "🔐 Starting Authentication Service..."
