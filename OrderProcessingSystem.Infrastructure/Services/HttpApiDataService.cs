@@ -17,12 +17,14 @@ public class HttpApiDataService : IApiDataService
     private readonly HttpClient _httpClient;
     private readonly ILogger<HttpApiDataService> _logger;
     private readonly ApiEndpointsConfiguration _endpoints;
+    private readonly IAuthStateService _authStateService;
 
-    public HttpApiDataService(IHttpClientFactory httpClientFactory, ILogger<HttpApiDataService> logger, IOptions<ApiEndpointsConfiguration> endpointsOptions)
+    public HttpApiDataService(IHttpClientFactory httpClientFactory, ILogger<HttpApiDataService> logger, IOptions<ApiEndpointsConfiguration> endpointsOptions, IAuthStateService authStateService)
     {
         _httpClient = httpClientFactory.CreateClient("ApiClient");
         _logger = logger;
         _endpoints = endpointsOptions.Value;
+        _authStateService = authStateService;
     }
 
     /// <summary>
@@ -36,6 +38,9 @@ public class HttpApiDataService : IApiDataService
     {
         try
         {
+            // Add authentication header if user is authenticated
+            await SetAuthenticationHeaderAsync();
+
             _logger.LogInformation("Fetching {Operation} from API: {Endpoint}", operationName, endpoint);
             var response = await _httpClient.GetFromJsonAsync<List<T>>(endpoint);
             _logger.LogDebug("Successfully fetched {Count} {Operation} records", response?.Count ?? 0, operationName);
@@ -56,6 +61,38 @@ public class HttpApiDataService : IApiDataService
         {
             _logger.LogError(ex, "Unexpected error fetching {Operation} from API endpoint {Endpoint}", operationName, endpoint);
             return new List<T>();
+        }
+    }
+
+    /// <summary>
+    /// Sets the authentication header for API requests
+    /// </summary>
+    private async Task SetAuthenticationHeaderAsync()
+    {
+        try
+        {
+            var token = await _authStateService.GetAccessTokenAsync();
+            if (!string.IsNullOrEmpty(token))
+            {
+                // Remove any existing Authorization header
+                _httpClient.DefaultRequestHeaders.Remove("Authorization");
+                
+                // Add the Bearer token
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                
+                _logger.LogDebug("Authentication header set with token: {TokenPrefix}...", token[..Math.Min(10, token.Length)]);
+            }
+            else
+            {
+                // Remove Authorization header if no token
+                _httpClient.DefaultRequestHeaders.Remove("Authorization");
+                _logger.LogWarning("No authentication token available for API request");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error setting authentication header");
+            // Continue without authentication header if there's an error
         }
     }
 

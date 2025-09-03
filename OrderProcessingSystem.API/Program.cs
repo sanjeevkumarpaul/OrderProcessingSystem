@@ -5,6 +5,7 @@ using OrderProcessingSystem.Infrastructure;
 using OrderProcessingSystem.Cache;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.API.Services;
+using OrderProcessingSystem.API.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OrderProcessingSystem.Core.Configuration;
 using System.Reflection;
@@ -36,6 +37,9 @@ builder.Services.AddScoped<IGridColumnMappingService, GridColumnMappingService>(
 
 // Register metadata services
 builder.Services.AddScoped<IGridMetadataService,GridMetadataService>();
+
+// Register token validation services for API authentication
+builder.Services.AddScoped<ITokenValidationService, TokenValidationService>();
 
 // Register Data services with SQLite file from configuration
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, appSettings.DatabasePath);
@@ -86,6 +90,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Add token authentication middleware
+app.UseMiddleware<TokenAuthenticationMiddleware>();
 
 app.MapControllers();
 

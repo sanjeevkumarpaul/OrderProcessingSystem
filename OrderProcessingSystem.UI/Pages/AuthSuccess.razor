@@ -66,8 +66,11 @@
                 var demoUserName = $"Sanjeev P{rolePrefix}";
                 var roleBasedEmail = GetRoleBasedEmail(Role, Provider);
                 
+                // Use a valid demo token that the API middleware recognizes
+                var demoToken = Provider?.ToLower() == "microsoft" ? "demo-token-microsoft-user" : "demo-token-google-user";
+                
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authProvider", Provider ?? "Unknown");
-                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "accessToken", $"demo_token_{Guid.NewGuid():N}");
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "accessToken", demoToken);
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userName", demoUserName);
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userEmail", roleBasedEmail);
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userRole", Role ?? "User");

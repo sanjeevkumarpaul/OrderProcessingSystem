@@ -75,6 +75,18 @@ public class AuthStateService : IAuthStateService
         }
     }
 
+    public async Task<string?> GetAccessTokenAsync()
+    {
+        try
+        {
+            return await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "accessToken");
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public async Task LogoutAsync()
     {
         try

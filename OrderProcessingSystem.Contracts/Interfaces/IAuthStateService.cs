@@ -5,6 +5,7 @@ public interface IAuthStateService
     Task<bool> IsAuthenticatedAsync();
     Task<string?> GetUserNameAsync();
     Task<string?> GetUserRoleAsync();
+    Task<string?> GetAccessTokenAsync();
     Task LogoutAsync();
     void NotifyAuthStateChanged();
 }

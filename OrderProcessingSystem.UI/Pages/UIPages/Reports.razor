@@ -1,5 +1,6 @@
 @page "/reports"
-@inject IHttpClientFactory HttpFactory
+@inject OrderProcessingSystem.Contracts.Interfaces.IApiDataService ApiDataService
+@inject OrderProcessingSystem.Contracts.Interfaces.IViewModelDataProvider ViewModelDataProvider
 
 <style>
   /* SSRS-like page layout */
@@ -138,7 +139,7 @@
       else
       {
         <!-- Single page preview below; additional pages would be looped here -->
-        <PrintExporter @ref="printExporter" Title="Sales Report">
+        <div @ref="reportContainer">
           <div class="report-page">
           <div class="report-header">
             <h4>Sales Report</h4>
@@ -213,7 +214,7 @@
             Generated @DateTime.Now.ToString("yyyy-MM-dd HH:mm")
           </div>
           </div>
-        </PrintExporter>
+        </div>
       }
     </div>
   </section>
@@ -235,8 +236,11 @@
     if (!firstRender) return;
     try
     {
-      var client = HttpFactory.CreateClient("ApiClient");
-      customers = await client.GetFromJsonAsync<List<CustomerVM>>("api/data/customers") ?? new List<CustomerVM>();
+      // Get customers for dropdown using ViewModelDataProvider
+      customers = await ViewModelDataProvider.GetMappedDataAsync<OrderProcessingSystem.Contracts.Dto.CustomerDto, CustomerVM>(
+          async () => await ApiDataService.GetCustomersAsync()
+      ) ?? new List<CustomerVM>();
+      
       await RunReport();
       hasLoaded = true;
       StateHasChanged();
@@ -257,51 +261,28 @@
     lastError = null;
     try
     {
-      var client = HttpFactory.CreateClient("ApiClient");
-
-      // build query parameters for filtering (customer only)
-      var query = new List<string>();
-      // Only include customerId if it's a valid integer to avoid model-binding 400s
+      // Parse customer ID if provided
+      int? customerId = null;
       if (!string.IsNullOrWhiteSpace(selectedCustomerId) && int.TryParse(selectedCustomerId, out var parsedCustomerId))
       {
-        query.Add($"customerId={parsedCustomerId}");
+        customerId = parsedCustomerId;
       }
-      // Always send top=0 to indicate 'no limit' on the server
-      query.Add("top=0");
-      var qs = query.Count > 0 ? "?" + string.Join("&", query) : string.Empty;
 
-  // call sales report endpoint with filters
-  var salesUrl = $"api/data/reports/sales-by-customer" + qs;
-  // ordersUrl already contains a query param (dataset=orders). If qs starts with '?', convert it to '&'
-  var ordersUrl = qs.StartsWith("?") ? $"api/reports?dataset=orders&{qs.Substring(1)}" : $"api/reports?dataset=orders" + qs;
+      // Call the sales report API with proper authentication
+      var salesDtos = await ApiDataService.GetSalesByCustomerAsync(customerId);
+      
+      // Get orders for preview
+      var orderDtos = await ApiDataService.GetOrdersAsync();
 
-      // Use GetAsync so we can inspect non-success responses and surface body text
-      var salesResp = await client.GetAsync(salesUrl);
-      if (!salesResp.IsSuccessStatusCode)
-      {
-        var content = await salesResp.Content.ReadAsStringAsync();
-        lastError = $"Sales report request failed: {(int)salesResp.StatusCode} {salesResp.ReasonPhrase}: {content}";
-        Console.Error.WriteLine(lastError);
-        salesReport = new List<SalesByCustomerVM>();
-        ordersPreview = ordersPreview ?? new List<OrderVM>();
-        return;
-      }
-      var sales = await salesResp.Content.ReadFromJsonAsync<List<SalesByCustomerVM>>();
-
-      var ordersResp = await client.GetAsync(ordersUrl);
-      if (!ordersResp.IsSuccessStatusCode)
-      {
-        var content = await ordersResp.Content.ReadAsStringAsync();
-        lastError = $"Orders request failed: {(int)ordersResp.StatusCode} {ordersResp.ReasonPhrase}: {content}";
-        Console.Error.WriteLine(lastError);
-        ordersPreview = new List<OrderVM>();
-        salesReport = sales ?? new List<SalesByCustomerVM>();
-        return;
-      }
-      var orders = await ordersResp.Content.ReadFromJsonAsync<List<OrderVM>>();
-
-      salesReport = sales ?? new List<SalesByCustomerVM>();
-      ordersPreview = orders ?? new List<OrderVM>();
+      // Map DTOs to ViewModels using AutoMapper through ViewModelDataProvider
+      salesReport = await ViewModelDataProvider.GetMappedDataAsync<OrderProcessingSystem.Contracts.Dto.SalesByCustomerDto, SalesByCustomerVM>(
+          () => Task.FromResult<List<OrderProcessingSystem.Contracts.Dto.SalesByCustomerDto>?>(salesDtos)
+      ) ?? new List<SalesByCustomerVM>();
+      
+      ordersPreview = await ViewModelDataProvider.GetMappedDataAsync<OrderProcessingSystem.Contracts.Dto.OrderDto, OrderVM>(
+          () => Task.FromResult<List<OrderProcessingSystem.Contracts.Dto.OrderDto>?>(orderDtos)
+      ) ?? new List<OrderVM>();
+      
       reportPagesCount = 1; // stub — paging/layout calculation would go here
       lastRunAt = DateTime.Now;
       // ensure UI updates on the UI thread
@@ -330,29 +311,17 @@
     await InvokeAsync(StateHasChanged);
   }
 
-  // Print is handled by the PrintExporter component; keep ExportPdf removed
-
-  // JS runtime is used by ExportPdf to open a printable window
+  // JS runtime for potential future use
   [Inject] IJSRuntime? JS { get; set; }
-  // reference to the reusable print exporter component (now under Shared.UIComponents)
-  private object? printExporter;
+  // reference to the report container element
+  private ElementReference reportContainer;
 
   async Task PrintFromComponent()
   {
-    if (printExporter != null)
+    // Print functionality temporarily disabled - can be re-implemented later
+    if (JS != null)
     {
-      try
-      {
-        await ((dynamic)printExporter).PrintAsync();
-      }
-      catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
-      {
-        // fallback: call JS directly if dynamic invocation fails
-        if (JS != null)
-        {
-          await JS.InvokeVoidAsync("openPrintWindowFromElement", printExporter, true);
-        }
-      }
+      await JS.InvokeVoidAsync("window.print");
     }
   }
 
