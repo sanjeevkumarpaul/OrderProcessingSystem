@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<TransException> TransExceptions => Set<TransException>();
+    public DbSet<UserLog> UserLogs => Set<UserLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,6 +39,31 @@ public class AppDbContext : DbContext
             entity.Property(e => e.RunTime)
                   .IsRequired()
                   .HasDefaultValueSql("datetime('now')"); // SQLite default constraint
+        });
+
+        // Configure UserLog entity
+        modelBuilder.Entity<UserLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.EventDate)
+                  .IsRequired();
+            
+            entity.Property(e => e.Event)
+                  .IsRequired()
+                  .HasMaxLength(200);
+            
+            entity.Property(e => e.EventFlag)
+                  .IsRequired()
+                  .HasMaxLength(50);
+            
+            entity.Property(e => e.UserId)
+                  .IsRequired()
+                  .HasMaxLength(255); // Changed to accommodate email addresses
+            
+            entity.Property(e => e.UserName)
+                  .IsRequired()
+                  .HasMaxLength(100);
         });
     }
 }

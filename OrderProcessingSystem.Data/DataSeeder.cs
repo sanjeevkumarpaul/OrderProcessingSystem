@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OrderProcessingSystem.Data.Entities;
@@ -154,6 +155,89 @@ public static class DataSeeder
                 }
             }
             await db.SaveChangesAsync();
+        }
+
+        // Seed UserLog data with 20,000 records spanning last 2 years
+        const int desiredUserLogs = 20000;
+        var userLogCount = await db.UserLogs.CountAsync();
+        
+        if (userLogCount < desiredUserLogs)
+        {
+            var userLogs = new List<UserLog>();
+            var events = new[] {
+                "MANAGER", "ADMIN", "USER", "FAILED"
+            };
+            
+            var eventFlags = new[] {
+                "AUTH", "ORDER", "PRODUCT", "PAYMENT", "ACCOUNT", "FILE", "REPORT", "SYSTEM", "API", "SECURITY"
+            };
+            
+            var companyDomains = new[] {
+                "acmecorp.com", "globexltd.com", "stellartech.com", "pinnaclegroup.com", "nexusinnovations.com",
+                "vanguardenterprises.com", "meridiantech.com", "apexsolutions.com", "titanindustries.com", "omegacorp.com",
+                "deltatech.com", "infinitelogistics.com", "primeventures.com", "elitemanufacturing.com", "summitconsulting.com",
+                "phoenixtech.com", "quantumcorp.com", "fusionenterprises.com", "catalystgroup.com", "dynamicsolutions.com"
+            };
+            
+            var firstNames = new[] {
+                "James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth",
+                "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Christopher", "Karen",
+                "Charles", "Nancy", "Daniel", "Lisa", "Matthew", "Betty", "Anthony", "Helen", "Mark", "Sandra",
+                "Donald", "Donna", "Steven", "Carol", "Paul", "Ruth", "Andrew", "Sharon", "Joshua", "Michelle",
+                "Kenneth", "Laura", "Kevin", "Sarah", "Brian", "Kimberly", "George", "Deborah", "Edward", "Dorothy"
+            };
+            
+            var lastNames = new[] {
+                "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
+                "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin",
+                "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson",
+                "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores",
+                "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts"
+            };
+            
+            var startDate = DateTime.Now.AddYears(-2); // 2 years ago
+            var endDate = DateTime.Now;
+            var totalDays = (endDate - startDate).TotalDays;
+            
+            int toCreate = desiredUserLogs - userLogCount;
+            
+            for (int i = 0; i < toCreate; i++)
+            {
+                // Generate random date within the last 2 years
+                var randomDays = rnd.NextDouble() * totalDays;
+                var eventDate = startDate.AddDays(randomDays);
+                
+                // Select random first name, last name, and company domain
+                var firstName = firstNames[rnd.Next(firstNames.Length)];
+                var lastName = lastNames[rnd.Next(lastNames.Length)];
+                var domain = companyDomains[rnd.Next(companyDomains.Length)];
+                var userEmail = $"{firstName.ToLower()}.{lastName.ToLower()}@{domain}";
+                var userName = $"{firstName} {lastName}";
+                
+                userLogs.Add(new UserLog
+                {
+                    EventDate = eventDate,
+                    Event = events[rnd.Next(events.Length)],
+                    EventFlag = eventFlags[rnd.Next(eventFlags.Length)],
+                    UserId = userEmail,
+                    UserName = userName
+                });
+                
+                // Add in batches of 1000 to avoid memory issues
+                if (userLogs.Count >= 1000)
+                {
+                    db.UserLogs.AddRange(userLogs);
+                    await db.SaveChangesAsync();
+                    userLogs.Clear();
+                }
+            }
+            
+            // Add any remaining records
+            if (userLogs.Any())
+            {
+                db.UserLogs.AddRange(userLogs);
+                await db.SaveChangesAsync();
+            }
         }
     }
 }
