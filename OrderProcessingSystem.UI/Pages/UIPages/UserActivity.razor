@@ -50,9 +50,9 @@
                             <div class="col-md-4">
                                 <label for="pageSizeFilter" class="form-label">Page Size</label>
                                 <select id="pageSizeFilter" class="form-select" @bind="pageSize" @bind:after="ApplyFilters">
+                                    <option value="05">05</option>
                                     <option value="10">10</option>
-                                    <option value="25">15</option>
-                                    <option value="50">20</option>                                    
+                                    <option value="15">15</option>                                    
                                 </select>
                             </div>
                             <div class="col-md-4 d-flex align-items-end">
@@ -207,7 +207,7 @@
     private async Task ClearFilters()
     {
         selectedEventType = "";
-        pageSize = 25;
+        pageSize = 15;
         currentPage = 1;
         await LoadUserLogsAsync();
     }
