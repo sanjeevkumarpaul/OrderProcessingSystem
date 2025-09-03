@@ -1,19 +1,11 @@
 using Microsoft.JSInterop;
+using OrderProcessingSystem.Contracts.Interfaces;
 
-namespace OrderProcessingSystem.UI.Services;
+namespace OrderProcessingSystem.Infrastructure.Services;
 
 /// <summary>
 /// Service to manage authentication state in the UI
 /// </summary>
-public interface IAuthStateService
-{
-    event Action<bool>? AuthStateChanged;
-    Task<bool> IsAuthenticatedAsync();
-    Task<string?> GetUserNameAsync();
-    Task<string?> GetUserRoleAsync();
-    Task LogoutAsync();
-    void NotifyAuthStateChanged();
-}
 
 public class AuthStateService : IAuthStateService
 {

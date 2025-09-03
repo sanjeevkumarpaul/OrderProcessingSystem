@@ -3,7 +3,7 @@ using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Events.FileWatcherTasks;
 using OrderProcessingSystem.Core.Configuration;
 using OrderProcessingSystem.Infrastructure.Providers;
-using OrderProcessingSystem.UI.Services;
+using OrderProcessingSystem.Infrastructure.Services;
 using OrderProcessingSystem.Authentication.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
