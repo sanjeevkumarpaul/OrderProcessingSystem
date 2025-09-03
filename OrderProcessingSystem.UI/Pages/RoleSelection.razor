@@ -182,49 +182,22 @@
 
             await Task.Delay(1000); // Simulate processing
 
-            // Call Authentication service to get real JWT token
-            var tokenRequest = new 
-            {
-                Provider = Provider ?? "Unknown",
-                Role = role
-            };
-
-            var json = System.Text.Json.JsonSerializer.Serialize(tokenRequest);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            // Create user data based on role and provider (back to demo tokens)
+            var userData = CreateUserData(role, Provider ?? "Unknown");
             
-            var response = await HttpClient.PostAsync("http://localhost:5270/auth/demo/token", content);
+            // Store authentication details in localStorage
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authProvider", Provider ?? "Unknown");
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "accessToken", $"demo_token_{Guid.NewGuid():N}");
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userName", userData.Name);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userEmail", userData.Email);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userRole", role);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "loginTime", DateTime.UtcNow.ToString("O"));
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "isAuthenticated", "true");
+
+            Console.WriteLine($"Demo token generated successfully for {role}");
             
-            if (response.IsSuccessStatusCode)
-            {
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var tokenResponse = System.Text.Json.JsonSerializer.Deserialize<DemoTokenResponse>(responseJson, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                if (tokenResponse != null)
-                {
-                    // Store the real JWT token and user data
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authProvider", tokenResponse.User.Provider ?? "Unknown");
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "accessToken", tokenResponse.AccessToken);
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userName", tokenResponse.User.DisplayName ?? "Unknown User");
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userEmail", tokenResponse.User.Email ?? "unknown@example.com");
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "userRole", role);
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "loginTime", tokenResponse.IssuedAt.ToString("O"));
-                    await JSRuntime.InvokeVoidAsync("localStorage.setItem", "isAuthenticated", "true");
-
-                    Console.WriteLine($"JWT Token generated successfully: {tokenResponse.AccessToken.Substring(0, 50)}...");
-                    
-                    // Redirect to auth success page
-                    Navigation.NavigateTo($"/auth-success?provider={Provider}&demo=true&role={role}&jwt=true", true);
-                }
-                else
-                {
-                    throw new Exception("Invalid token response from server");
-                }
-            }
-            else
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Token generation failed: {response.StatusCode} - {errorContent}");
-            }
+            // Redirect to auth success page
+            Navigation.NavigateTo($"/auth-success?provider={Provider}&demo=true&role={role}", true);
         }
         catch (Exception ex)
         {

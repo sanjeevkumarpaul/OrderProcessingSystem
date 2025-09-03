@@ -11,11 +11,35 @@
 
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="/orders">Orders</a></li>       
-        <li class="nav-item"><a class="nav-link" href="/suppliers">Suppliers</a></li>
-        <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
-        <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
-        <li class="nav-item"><a class="nav-link" href="/process-order">Processing...</a></li>
+        <!-- Orders - Visible to all roles -->
+        @if (ShouldShowMenuItem("Orders"))
+        {
+          <li class="nav-item"><a class="nav-link" href="/orders">Orders</a></li>
+        }
+        
+        <!-- Suppliers - Visible to all roles -->
+        @if (ShouldShowMenuItem("Suppliers"))
+        {
+          <li class="nav-item"><a class="nav-link" href="/suppliers">Suppliers</a></li>
+        }
+        
+        <!-- Customers - Visible to all roles -->
+        @if (ShouldShowMenuItem("Customers"))
+        {
+          <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
+        }
+        
+        <!-- Reports - Hidden for USER role -->
+        @if (ShouldShowMenuItem("Reports"))
+        {
+          <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
+        }
+        
+        <!-- Processing - Hidden for ADMIN role -->
+        @if (ShouldShowMenuItem("Processing"))
+        {
+          <li class="nav-item"><a class="nav-link" href="/process-order">Process Order</a></li>
+        }
         
         @if (isAuthenticated)
         {
@@ -26,34 +50,30 @@
             <ul class="dropdown-menu" aria-labelledby="authDropdown">
               @if (userRole.Equals("Admin", StringComparison.OrdinalIgnoreCase))
               {
-                <li><a class="dropdown-item" href="/admin-panel">
+                <li><a class="dropdown-item" href="/coming-soon">
                   <i class="fas fa-crown text-danger"></i> Admin Panel
                 </a></li>
-                <li><a class="dropdown-item" href="/system-settings">
+                <li><a class="dropdown-item" href="/coming-soon">
                   <i class="fas fa-cogs"></i> System Settings
                 </a></li>
-                <li><a class="dropdown-item" href="/user-management">
+                <li><a class="dropdown-item" href="/coming-soon">
                   <i class="fas fa-users"></i> User Management
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
               }
-              @if (userRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) || userRole.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+              @if (userRole.Equals("Manager", StringComparison.OrdinalIgnoreCase))
               {
-                <li><a class="dropdown-item" href="/advanced-analytics">
+                <li><a class="dropdown-item" href="/reports">
                   <i class="fas fa-chart-line text-primary"></i> Advanced Analytics
                 </a></li>
-                <li><a class="dropdown-item" href="/premium-reports">
+                <li><a class="dropdown-item" href="/reports">
                   <i class="fas fa-file-chart text-info"></i> Premium Reports
-                </a></li>
-                <li><a class="dropdown-item" href="/team-management">
-                  <i class="fas fa-user-tie"></i> Team Management
-                </a></li>
-                <li><hr class="dropdown-divider"></li>
+                </a></li>                
               }
-              <li><a class="dropdown-item" href="/my-profile">
+              <li><a class="dropdown-item" href="/coming-soon">
                 <i class="fas fa-user-circle"></i> My Profile
               </a></li>
-              <li><a class="dropdown-item" href="/notifications">
+              <li><a class="dropdown-item" href="/coming-soon">
                 <i class="fas fa-bell"></i> Notifications
               </a></li>
             </ul>
@@ -127,6 +147,26 @@
             "manager" => "Manager Features", 
             "user" => "User Features",
             _ => "Features"
+        };
+    }
+
+    /// <summary>
+    /// Determines if a menu item should be visible based on user role
+    /// </summary>
+    private bool ShouldShowMenuItem(string menuItem)
+    {
+        var role = userRole.ToLower();
+        
+        if (!isAuthenticated) return false;
+
+        return menuItem.ToLower() switch
+        {
+            "orders" => true, // Visible to all roles
+            "suppliers" => true, // Visible to all roles  
+            "customers" => true, // Visible to all roles
+            "reports" => role != "user" && role !=  "admin", // Hidden for USER role
+            "processing" => role != "admin", // Hidden for ADMIN role
+            _ => false
         };
     }
 }

@@ -78,9 +78,10 @@
                 isLoading = false;
                 StateHasChanged();
 
-                // Redirect to main application after 2 seconds
+                // Redirect to role-specific page after 2 seconds
                 await Task.Delay(2000);
-                Navigation.NavigateTo("/", true);
+                var landingPage = GetRoleBasedLandingPage(Role ?? "User");
+                Navigation.NavigateTo(landingPage, true);
             }
             else
             {
@@ -103,9 +104,10 @@
                     isLoading = false;
                     StateHasChanged();
 
-                    // Redirect to main application after 2 seconds
+                    // Redirect to role-specific page after 2 seconds
                     await Task.Delay(2000);
-                    Navigation.NavigateTo("/", true);
+                    var landingPage = GetRoleBasedLandingPage("User"); // Default to User role for OAuth
+                    Navigation.NavigateTo(landingPage, true);
                 }
                 else
                 {
@@ -137,6 +139,21 @@
             "manager" => $"sanjeev.manager@{providerDomain}",
             "user" => $"sanjeev.user@{providerDomain}",
             _ => $"sanjeev.p@{providerDomain}"
+        };
+    }
+
+    /// <summary>
+    /// Get the landing page based on user role
+    /// MANAGER -> Reports, USER -> Orders, ADMIN -> Customers
+    /// </summary>
+    private string GetRoleBasedLandingPage(string role)
+    {
+        return role.ToLower() switch
+        {
+            "manager" => "/reports",
+            "user" => "/orders",
+            "admin" => "/customers",
+            _ => "/"
         };
     }
 }

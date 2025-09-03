@@ -1,0 +1,216 @@
+@page "/coming-soon"
+@layout AuthLayout
+
+<div class="coming-soon-container">
+    <div class="coming-soon-card">
+        <div class="icon-section">
+            <i class="fas fa-rocket coming-soon-icon"></i>
+        </div>
+        
+        <div class="content-section">
+            <h1 class="coming-soon-title">Coming Soon!</h1>
+            <p class="coming-soon-message">
+                Will roll out on Next Release, Stay Tuned
+            </p>
+            
+            <div class="features-preview">
+                <div class="feature-item">
+                    <i class="fas fa-star text-warning"></i>
+                    <span>New Features</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-cog text-info"></i>
+                    <span>Enhanced Performance</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt text-success"></i>
+                    <span>Better Security</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="history.back()">
+                    <i class="fas fa-arrow-left me-2"></i>Go Back
+                </button>
+                <a href="/" class="btn btn-outline-primary">
+                    <i class="fas fa-home me-2"></i>Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style lang="scss">
+    .coming-soon-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+    }
+
+    .coming-soon-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        padding: 50px;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .coming-soon-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #ff6b6b, #feca57, #48cae4, #f38ba8);
+        background-size: 400% 400%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @@keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .icon-section {
+        margin-bottom: 30px;
+    }
+
+    .coming-soon-icon {
+        font-size: 4rem;
+        color: #667eea;
+        animation: bounce 2s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+
+    .content-section {
+        text-align: center;
+    }
+
+    .coming-soon-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .coming-soon-message {
+        font-size: 1.3rem;
+        color: #7f8c8d;
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .features-preview {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+
+    .feature-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        min-width: 120px;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .feature-item i {
+        font-size: 2rem;
+    }
+
+    .feature-item span {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5a6fd8, #6a4190);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-outline-primary {
+        background: transparent;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .btn-outline-primary:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    @@media (max-width: 768px) {
+        .coming-soon-card {
+            padding: 30px 20px;
+        }
+
+        .coming-soon-title {
+            font-size: 2.5rem;
+        }
+
+        .coming-soon-message {
+            font-size: 1.1rem;
+        }
+
+        .features-preview {
+            gap: 15px;
+        }
+
+        .feature-item {
+            min-width: 100px;
+            padding: 15px;
+        }
+    }
+</style>
