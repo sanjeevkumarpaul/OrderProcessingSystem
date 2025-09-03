@@ -28,13 +28,7 @@
         {
           <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
         }
-        
-        <!-- Reports - Hidden for USER role -->
-        @if (ShouldShowMenuItem("Reports"))
-        {
-          <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
-        }
-        
+       
         <!-- Processing - Hidden for ADMIN role -->
         @if (ShouldShowMenuItem("Processing"))
         {
@@ -165,7 +159,7 @@
             "suppliers" => true, // Visible to all roles  
             "customers" => true, // Visible to all roles
             "reports" => role != "user" && role !=  "admin", // Hidden for USER role
-            "processing" => role != "admin", // Hidden for ADMIN role
+            "processing" => role != "admin" && role != "manager", // Hidden for ADMIN role
             _ => false
         };
     }
