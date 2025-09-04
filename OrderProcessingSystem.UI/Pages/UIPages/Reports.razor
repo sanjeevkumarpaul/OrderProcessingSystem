@@ -98,18 +98,36 @@
             </table>
 
             <h6 class="mt-4">Orders Preview</h6>
+            <div class="small text-muted mb-2">
+              @if (!string.IsNullOrWhiteSpace(selectedCustomerId))
+              {
+                <span class="text-primary">🔍 Filtered for Customer ID: @selectedCustomerId</span>
+                @if (filteredOrdersPreview != null)
+                {
+                  <span> | Showing @filteredOrdersPreview.Count orders</span>
+                  @if (filteredOrdersPreview.Count > 0)
+                  {
+                    <span> | First Order Customer: @filteredOrdersPreview[0].Customer?.Name</span>
+                  }
+                }
+              }
+              else
+              {
+                <span>Showing all customers | Total Orders: @(filteredOrdersPreview?.Count ?? 0)</span>
+              }
+            </div>
             <table class="table table-sm report-table">
               <thead>
                 <tr><th>Order #</th><th>Customer</th><th>Supplier</th><th class="text-end">Total</th></tr>
               </thead>
               <tbody>
-                @if (ordersPreview == null || ordersPreview.Count == 0)
+                @if (filteredOrdersPreview == null || filteredOrdersPreview.Count == 0)
                 {
                   <tr><td colspan="4"><em>No orders</em></td></tr>
                 }
                 else
                 {
-                  foreach(var o in ordersPreview)
+                  foreach(var o in filteredOrdersPreview)
                   {
                     <tr>
                       <td>@o.OrderId</td>
@@ -146,6 +164,7 @@
 
   List<SalesByCustomerVM>? salesReport = null;
   List<OrderVM>? ordersPreview = null;
+  List<OrderVM>? filteredOrdersPreview = null; // Separate filtered list for display
   List<CustomerVM>? customers = null;
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -188,8 +207,27 @@
       // Call the sales report API with proper authentication
       var salesDtos = await ApiDataService.GetSalesByCustomerAsync(customerId);
       
-      // Get orders for preview
+      // Get orders for preview - filter by customer if selected
       var orderDtos = await ApiDataService.GetOrdersAsync();
+      
+      Console.WriteLine($"Retrieved {orderDtos?.Count ?? 0} total orders");
+      Console.WriteLine($"Selected customer ID: {customerId}");
+      
+      if (orderDtos != null && orderDtos.Count > 0)
+      {
+        Console.WriteLine($"Sample order - ID: {orderDtos[0].OrderId}, CustomerID: {orderDtos[0].CustomerId}");
+        var customerIds = orderDtos.Select(o => o.CustomerId).Distinct().ToList();
+        Console.WriteLine($"Available customer IDs in orders: [{string.Join(", ", customerIds)}]");
+      }
+      
+      // Filter orders by selected customer if customerId is provided
+      if (customerId.HasValue && orderDtos != null)
+      {
+        Console.WriteLine($"Filtering orders for customer ID: {customerId.Value}");
+        var originalCount = orderDtos.Count;
+        orderDtos = orderDtos.Where(o => o.CustomerId == customerId.Value).ToList();
+        Console.WriteLine($"After DTO filtering: {originalCount} -> {orderDtos.Count} orders");
+      }
 
       // Map DTOs to ViewModels using AutoMapper through ViewModelDataProvider
       salesReport = await ViewModelDataProvider.GetMappedDataAsync<OrderProcessingSystem.Contracts.Dto.SalesByCustomerDto, SalesByCustomerVM>(
@@ -200,9 +238,41 @@
           () => Task.FromResult<List<OrderProcessingSystem.Contracts.Dto.OrderDto>?>(orderDtos)
       ) ?? new List<OrderVM>();
       
+      Console.WriteLine($"Final ordersPreview count: {ordersPreview.Count}");
+      if (ordersPreview.Count > 0)
+      {
+        Console.WriteLine($"First order customer ID: {ordersPreview[0].CustomerId}");
+      }
+      
+      // Additional filtering at ViewModel level as backup
+      if (customerId.HasValue && ordersPreview != null && ordersPreview.Count > 0)
+      {
+        var beforeCount = ordersPreview.Count;
+        Console.WriteLine($"ViewModel filtering for customer ID: {customerId.Value}");
+        var vmCustomerIds = ordersPreview.Select(o => o.CustomerId).Distinct().ToList();
+        Console.WriteLine($"ViewModel customer IDs: [{string.Join(", ", vmCustomerIds)}]");
+        
+        filteredOrdersPreview = ordersPreview.Where(o => o.CustomerId == customerId.Value).ToList();
+        Console.WriteLine($"ViewModel level filtering: {beforeCount} -> {filteredOrdersPreview.Count} orders");
+        
+        if (filteredOrdersPreview.Count > 0)
+        {
+          Console.WriteLine($"First filtered VM order - ID: {filteredOrdersPreview[0].OrderId}, CustomerID: {filteredOrdersPreview[0].CustomerId}");
+        }
+      }
+      else
+      {
+        // Show all orders when no customer is selected
+        filteredOrdersPreview = ordersPreview;
+      }
+      
       reportPagesCount = 1; // stub — paging/layout calculation would go here
       lastRunAt = DateTime.Now;
       // ensure UI updates on the UI thread
+      await InvokeAsync(StateHasChanged);
+      
+      // Force a second state update to ensure UI refreshes
+      await Task.Delay(100);
       await InvokeAsync(StateHasChanged);
     }
     catch (Exception ex)
@@ -255,7 +325,7 @@
   decimal OrdersTotalAmount {
     get
     {
-      var sum = ordersPreview?.Sum(o => (double?)o.Total) ?? 0.0;
+      var sum = filteredOrdersPreview?.Sum(o => (double?)o.Total) ?? 0.0;
       return Convert.ToDecimal(sum);
     }
   }
