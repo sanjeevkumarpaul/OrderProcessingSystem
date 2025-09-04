@@ -66,8 +66,9 @@
           </div>
 
           <div class="report-body">
-            <h6>Sales by Customer</h6>
-            <table class="table table-sm report-table">
+            <div id="grids-section">
+              <h6>Sales by Customer</h6>
+              <table class="table table-sm report-table">
               <thead>
                 <tr><th>Customer</th><th class="text-end">Orders</th><th class="text-end">Total Sales</th></tr>
               </thead>
@@ -145,6 +146,7 @@
                 </tr>
               </tfoot>
             </table>
+            </div> <!-- End of grids-section -->
           </div>
 
           <div class="report-footer">
@@ -305,10 +307,19 @@
 
   async Task PrintFromComponent()
   {
-    // Print functionality temporarily disabled - can be re-implemented later
     if (JS != null)
     {
-      await JS.InvokeVoidAsync("window.print");
+      try 
+      {
+        // Print only the grids section (tables)
+        await JS.InvokeVoidAsync("printGridsOnly");
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Print error: {ex.Message}");
+        // Fallback to regular print if custom function fails
+        await JS.InvokeVoidAsync("window.print");
+      }
     }
   }
 
@@ -330,3 +341,78 @@
     }
   }
 }
+
+<script>
+  window.printGridsOnly = () => {
+    // Get only the grids section
+    const gridsSection = document.getElementById('grids-section');
+    if (!gridsSection) {
+      console.error('Grids section not found');
+      return;
+    }
+    
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    
+    // Get the grids content
+    const gridsContent = gridsSection.innerHTML;
+    
+    // Create CSS styles for printing grids only
+    const printStyles = `
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 20px;
+        color: #333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 12px 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #495057;
+      }
+      .text-end {
+        text-align: right;
+      }
+      .fw-bold {
+        font-weight: bold;
+      }
+      h6 {
+        color: #333;
+        margin: 20px 0 15px 0;
+        font-size: 1.1em;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+      }
+      .text-muted {
+        display: none;
+      }
+      tfoot tr {
+        background-color: #f8f9fa;
+        font-weight: bold;
+      }
+    `;
+    
+    // Create a complete HTML document for printing
+    const printDocument = '<!DOCTYPE html><html><head><title>Report Tables</title><style>' + printStyles + '</style></head><body>' + gridsContent + '</body></html>';
+    
+    // Write the document and print
+    printWindow.document.write(printDocument);
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Print after a short delay to ensure content is loaded
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+  };
+</script>
