@@ -1,0 +1,34 @@
+/* Specific fix for report page buttons only - preserve original button styling */
+.report-params .btn {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+}
+
+.report-params .d-grid {
+    display: grid !important;
+    visibility: visible !important;
+}
+
+/* Fix for report params container only */
+.report-params {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+}
+
+/* Make sure the report layout doesn't hide content */
+.report-layout {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    min-height: 600px !important;
+}
+
+/* Clean button area styling for reports only */
+.report-params .d-grid {
+    display: block !important;
+    margin: 20px 0 !important;
+    padding: 10px 0 !important;
+}

@@ -1,8 +1,8 @@
 @page "/orders"
 @using OrderProcessingSystem.UI.Shared.UIViewModels
+@using OrderProcessingSystem.UI.Shared
 @inject OrderProcessingSystem.Contracts.Interfaces.IViewModelDataProvider ViewModelDataProvider
 @inject Microsoft.JSInterop.IJSRuntime JSRuntime
-@inherits BaseDataPage<OrderVM>
 
 <BaseDataPage TItem="OrderVM" 
               PageTitle="Orders"
@@ -31,11 +31,6 @@
 </BaseDataPage>
 
 @code {
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
-
     // Data loader function for orders - now uses centralized ViewModelDataProvider
     private async Task<List<OrderVM>?> LoadOrdersAsync()
     {

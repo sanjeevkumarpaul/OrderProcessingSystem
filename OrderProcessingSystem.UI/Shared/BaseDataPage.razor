@@ -13,7 +13,9 @@
 <h1 class="page-title d-flex justify-content-between align-items-center">
   <span class="title-text">@PageTitle</span>
   <div class="header-controls">
-    <button class="btn btn-sm btn-primary" @onclick="ToggleView">@((showGrid) ? ShowCardsText : ShowGridText)</button>
+    <button class="btn btn-sm btn-primary" @onclick="ToggleView">
+      @((showGrid) ? ShowCardsText : ShowGridText)
+    </button>
   </div>
 </h1>
 
