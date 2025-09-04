@@ -1,0 +1,8 @@
+.card-content {
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.form-select-auto-width {
+    width: auto;
+}

@@ -1,0 +1,29 @@
+/* Generic Grid Component Styles */
+.grid-container-scrollable {
+    max-height: var(--grid-max-height, 500px);
+    overflow-y: auto;
+}
+
+.grid-header-cell-relative {
+    position: relative;
+}
+
+.grid-filter-popup-display-block {
+    display: block;
+}
+
+.grid-pagination-select {
+    width: 100px;
+    display: inline-block;
+}
+
+/* Generic Cards Component Styles */
+.filter-select-max-width {
+    max-width: 130px;
+    flex-shrink: 0;
+}
+
+.filter-input-flex {
+    flex: 1;
+    min-width: 120px;
+}

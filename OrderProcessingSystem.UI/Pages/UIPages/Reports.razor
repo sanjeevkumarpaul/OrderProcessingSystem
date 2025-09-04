@@ -1,90 +1,9 @@
 @page "/reports"
 @inject OrderProcessingSystem.Contracts.Interfaces.IApiDataService ApiDataService
 @inject OrderProcessingSystem.Contracts.Interfaces.IViewModelDataProvider ViewModelDataProvider
+@inject Microsoft.JSInterop.IJSRuntime JSRuntime
 
-<style>
-  /* SSRS-like page layout */
-  .report-layout {
-    display: flex;
-    gap: 1rem;
-    /* Limit the layout to the viewport minus header/footer so the document body doesn't grow past the fixed footer.
-       Use max-height (not a forced height) so the layout can shrink if the viewport is smaller. */
-    max-height: calc(100vh - var(--footer-height) - 6rem);
-    overflow: hidden; /* internal panes will scroll */
-  }
-  .report-params {
-  width: 260px;
-  background: #f8f9fa;
-  border: 1px solid #e2e2e2;
-  padding: 1rem;
-  border-radius: 4px;
-  /* Limit height so it doesn't scroll under the fixed footer. Uses layout-level --footer-height from _Layout.cshtml */
-  /* slightly smaller max-height and generous bottom padding so content never scrolls under footer */
-  max-height: calc(100vh - var(--footer-height) - 140px);
-  padding-bottom: calc(var(--footer-height) + 12px);
-  overflow: auto;
-  /* allow flexbox children to shrink so internal scrolling works */
-  min-height: 0;
-  }
-  .report-canvas-wrap {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  height: 100%;
-  /* Allow children to shrink inside the flex column so overflow:auto functions */
-  min-height: 0;
-  }
-  .report-pages {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 4px;
-    /* Fill remaining vertical space inside .report-layout and scroll internally */
-    flex: 1 1 auto;
-  /* Limit the preview pane to the available viewport height so it scrolls when report content is long */
-  max-height: calc(100vh - var(--footer-height) - 10rem);
-    padding-bottom: calc(var(--footer-height) + 12px);
-    box-sizing: border-box;
-    overflow: auto;
-  /* important for flex children to let the element collapse and enable scrolling */
-  min-height: 0;
-  }
-
-  .report-page {
-    margin-bottom: 1.25rem; /* ensure spacing before footer */
-  }
-  .report-page {
-    width: 8.5in; /* approximate letter width for visual fidelity */
-  /* For on-screen preview, allow the page to size naturally and let the preview container handle scrolling. */
-  height: auto;
-  max-height: none;
-  overflow: visible;
-    margin: 0 auto 1rem auto;
-    box-shadow: 0 0 8px rgba(0,0,0,0.08);
-    background: white;
-    padding: 1rem 1.25rem;
-    box-sizing: border-box;
-  }
-
-  /* Print-specific rules: restore printable page dimensions when actually printing */
-  @@media print {
-    .report-layout, .report-canvas-wrap, .report-pages { overflow: visible !important; max-height: none !important; }
-    .report-page { min-height: 11in !important; width: 8.5in !important; box-shadow: none !important; }
-  }
-  .report-header, .report-footer { text-align: center; color: #666; margin-bottom: 0.5rem; }
-  .report-body { margin-top: 0.75rem; }
-  .report-toolbar { display:flex; gap:0.5rem; align-items:center; }
-  /* Keep toolbar visible and ensure right-side controls (Print) are not clipped */
-  .report-toolbar {
-    position: sticky;
-    top: 0.5rem;
-    z-index: 1100; /* above the report pages */
-    background: transparent; /* keep existing visual */
-    padding-right: 1rem; /* ensure button isn't clipped by viewport or scrollbar */
-  }
-  .report-table th, .report-table td { padding: 0.25rem 0.5rem; }
-</style>
+<link rel="stylesheet" href="~/css/reports.css" />
 
 <h1 class="page-title">Reports</h1>
 
@@ -228,8 +147,6 @@
   List<SalesByCustomerVM>? salesReport = null;
   List<OrderVM>? ordersPreview = null;
   List<CustomerVM>? customers = null;
-
-  protected override Task OnInitializedAsync() => Task.CompletedTask;
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {

@@ -5,10 +5,12 @@
 @inject NavigationManager Navigation
 @inject HttpClient HttpClient
 
+<link rel="stylesheet" href="~/css/role-selection.css" />
+
 <div class="role-selection-container">
     <div class="role-selection-card">
         <div class="provider-info">
-            <i class="@GetProviderIcon()" style="font-size: 3rem; color: @GetProviderColor();"></i>
+            <i class="@GetProviderIcon() provider-icon @(Provider?.ToLower())"></i>
             <h2 class="mt-3">@GetProviderDisplayName() Authentication</h2>
             <p class="text-muted">Select your role to continue</p>
         </div>
@@ -61,110 +63,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .role-selection-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-    }
-
-    .role-selection-card {
-        background: white;
-        padding: 3rem;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        text-align: center;
-        max-width: 500px;
-        width: 100%;
-    }
-
-    .provider-info h2 {
-        color: #333;
-        font-weight: 600;
-    }
-
-    .role-buttons {
-        margin: 2rem 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .role-btn {
-        padding: 1rem 1.5rem;
-        border: none;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 1rem;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-        position: relative;
-        color: white;
-        width: 100%;
-    }
-
-    .role-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-
-    .role-btn:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-
-    .admin-btn {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-    }
-
-    .admin-btn:hover:not(:disabled) {
-        background: linear-gradient(135deg, #ee5a24, #ff6b6b);
-    }
-
-    .manager-btn {
-        background: linear-gradient(135deg, #4834d4, #686de0);
-    }
-
-    .manager-btn:hover:not(:disabled) {
-        background: linear-gradient(135deg, #686de0, #4834d4);
-    }
-
-    .user-btn {
-        background: linear-gradient(135deg, #00d2d3, #54a0ff);
-    }
-
-    .user-btn:hover:not(:disabled) {
-        background: linear-gradient(135deg, #54a0ff, #00d2d3);
-    }
-
-    .role-btn small {
-        font-size: 0.75rem;
-        opacity: 0.9;
-        font-weight: normal;
-        text-transform: none;
-    }
-
-    .back-section {
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #eee;
-    }
-
-    @@media (max-width: 576px) {
-        .role-selection-card {
-            padding: 2rem 1.5rem;
-        }
-        
-        .role-btn {
-            padding: 0.8rem 1rem;
-            font-size: 0.9rem;
-        }
-    }
-</style>
 
 @code {
     [Parameter] [SupplyParameterFromQuery] public string? Provider { get; set; }

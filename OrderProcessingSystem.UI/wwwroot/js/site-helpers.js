@@ -1,3 +1,17 @@
+// Dynamic CSS loading function
+window.loadCSS = (href) => {
+    // Check if CSS is already loaded
+    if (document.querySelector(`link[href="${href}"]`)) {
+        return; // Already loaded
+    }
+    
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.type = 'text/css';
+    document.head.appendChild(link);
+};
+
 window.blazorDownload = (fileName, content) => {
     const data = new Blob([content], { type: 'text/csv;charset=utf-8;' });
     if (navigator.msSaveBlob) { // IE 10+

@@ -4,6 +4,8 @@
 @inject NavigationManager Navigation
 @inject HttpClient HttpClient
 
+<link rel="stylesheet" href="~/css/auth-success.css" />
+
 <div class="auth-success-container">
     <div class="auth-success-card">
         @if (isLoading)
@@ -18,20 +20,24 @@
         }
         else if (hasError)
         {
-            <div class="error-section">
-                <i class="fas fa-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
-                <h3 class="mt-3 text-danger">Authentication Failed</h3>
-                <p>@errorMessage</p>
+                        <div class="error-section">
+                <i class="fas fa-exclamation-triangle auth-success-icon error"></i>
+                <h2 class="mt-3 text-danger">Authentication Failed</h2>
+                <p class="mt-3">@errorMessage</p>
                 <button class="btn btn-primary mt-3" @onclick="RetryLogin">Try Again</button>
             </div>
         }
         else
         {
-            <div class="success-section">
-                <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
-                <h3 class="mt-3 text-success">Authentication Successful!</h3>
-                <p>Welcome, <strong>@userName</strong></p>
-                <p>Redirecting to dashboard...</p>
+                        <div class="success-section">
+                <i class="fas fa-check-circle auth-success-icon success"></i>
+                <h2 class="mt-3 text-success">Authentication Successful!</h2>
+                <p class="mt-3">Welcome, @userName</p>
+                <p><strong>Provider:</strong> @Provider</p>
+                <p><strong>Role:</strong> @Role</p>
+                <div class="d-flex justify-content-center gap-2 mt-4">
+                    <button class="btn btn-outline-secondary" @onclick="RetryLogin">Switch Account</button>
+                </div>
             </div>
         }
     </div>
@@ -145,39 +151,3 @@
         };
     }    
 }
-
-<style>
-    .auth-success-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-    }
-
-    .auth-success-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        padding: 40px;
-        max-width: 500px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .loading-section, .error-section, .success-section {
-        text-align: center;
-    }
-
-    .spinner-border {
-        width: 3rem;
-        height: 3rem;
-    }
-
-    .btn {
-        padding: 12px 30px;
-        border-radius: 8px;
-        font-weight: 600;
-    }
-</style>

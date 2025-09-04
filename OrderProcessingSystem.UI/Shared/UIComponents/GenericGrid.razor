@@ -31,14 +31,14 @@
         }
     </div>
 
-    <div class="@(EnableGridScrolling ? "scrollable-grid-container" : "table-responsive")" 
-         style="@(EnableGridScrolling ? $"max-height: {GridMaxHeight}; overflow-y: auto;" : "")">
+    <div class="@(EnableGridScrolling ? "scrollable-grid-container grid-container-scrollable" : "table-responsive")" 
+         style="@(EnableGridScrolling ? $"--grid-max-height: {GridMaxHeight};" : "")">
         <table class="table table-striped table-hover @(EnableGridScrolling && StickyHeader ? "sticky-header-table" : "")">
             <thead class="@(EnableGridScrolling && StickyHeader ? "sticky-top" : "")">
                 <tr>
                     @foreach(var c in Columns)
                     {
-                                <th style="position:relative;" class="@(IsNumericColumn(c) ? "text-end" : string.Empty)">
+                                <th class="grid-header-cell-relative @(IsNumericColumn(c) ? "text-end" : string.Empty)">>
                                     <div class="d-flex align-items-center @(IsNumericColumn(c) ? "justify-content-end" : "")">
                                         <span class="@(IsNumericColumn(c) ? "me-2 text-end" : "")">@c.Header</span>
                                         @if (c.Filterable)
@@ -56,7 +56,7 @@
                                     </div>
                                     @if (ActiveFilterColumn == c)
                                     {
-                                        <div id="@($"{_gridId}-popup-{c.Field}")" class="grid-filter-popup p-2 shadow-sm bg-white border @(ShouldFlipFilterPopup ? "flip-up" : "")" style="display:block;">
+                                        <div id="@($"{_gridId}-popup-{c.Field}")" class="grid-filter-popup p-2 shadow-sm bg-white border grid-filter-popup-display-block @(ShouldFlipFilterPopup ? "flip-up" : "")">
                                             @if (c.IsEnum && c.EnumValues != null)
                                             {
                                                 <select class="form-select form-select-sm" @bind="EnumFilterValue">
@@ -151,7 +151,7 @@
                 <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage-1)">Previous</button></li>
 
                 <li class="page-item px-2">
-                    <select class="form-select form-select-sm" style="width:100px; display:inline-block" @onchange="OnPageSelect" value="@CurrentPage">
+                    <select class="form-select form-select-sm grid-pagination-select" @onchange="OnPageSelect" value="@CurrentPage">
                         @for (int p = 1; p <= TotalPages; p++)
                         {
                             <option value="@p" selected="@(p==CurrentPage)">Page @p</option>
@@ -200,7 +200,6 @@
     [Parameter] public string GridMaxHeight { get; set; } = "400px";
     [Parameter] public bool StickyHeader { get; set; } = true;
 
-    private bool _isFirstRender = true;
     private int _actualPageSize = 5; // Internal working page size
     List<TItem>? PagedItems;
     int CurrentPage = 1;
@@ -578,3 +577,4 @@
 
 <link rel="stylesheet" href="~/css/generic-grid.css" />
 <link rel="stylesheet" href="~/css/scrollable-grid.css" />
+<link rel="stylesheet" href="~/css/generic-components.css" />
