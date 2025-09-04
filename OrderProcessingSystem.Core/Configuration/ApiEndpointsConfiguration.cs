@@ -21,6 +21,11 @@ public class ApiEndpointsConfiguration
     /// Base endpoints for reports
     /// </summary>
     public ReportsEndpoints Reports { get; set; } = new();
+
+    /// <summary>
+    /// Base endpoints for user logging operations
+    /// </summary>
+    public UserLogEndpoints UserLog { get; set; } = new();
 }
 
 public class DataEndpoints
@@ -40,4 +45,13 @@ public class TransExceptionEndpoints
 public class ReportsEndpoints
 {
     public string SalesByCustomer { get; set; } = "api/data/reports/sales-by-customer";
+}
+
+public class UserLogEndpoints
+{
+    public string Base { get; set; } = "api/userlog";
+    public string LoginEvent { get; set; } = "api/userlog/login-event";
+    public string LoginAsAdmin { get; set; } = "api/userlog/login-as-admin";
+    public string LoginAsManager { get; set; } = "api/userlog/login-as-manager";
+    public string LoginAsUser { get; set; } = "api/userlog/login-as-user";
 }

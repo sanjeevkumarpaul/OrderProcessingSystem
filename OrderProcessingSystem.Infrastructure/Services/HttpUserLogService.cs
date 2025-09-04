@@ -33,7 +33,7 @@ public class HttpUserLogService : IUserLogService
         {
             _logger.LogInformation("Sending login event request to API for event type: {EventType}", request.EventType);
 
-            var response = await _httpClient.PostAsJsonAsync("/api/userlog/login-event", request);
+            var response = await _httpClient.PostAsJsonAsync(_endpoints.UserLog.LoginEvent, request);
             
             if (response.IsSuccessStatusCode)
             {
@@ -66,7 +66,7 @@ public class HttpUserLogService : IUserLogService
             _logger.LogInformation("Requesting user logs from API - Page: {PageNumber}, Size: {PageSize}, EventType: {EventType}", 
                 pageNumber, pageSize, eventType ?? "All");
 
-            var url = $"/api/userlog?pageNumber={pageNumber}&pageSize={pageSize}";
+            var url = $"{_endpoints.UserLog.Base}?pageNumber={pageNumber}&pageSize={pageSize}";
             if (!string.IsNullOrEmpty(eventType))
             {
                 url += $"&eventType={Uri.EscapeDataString(eventType)}";

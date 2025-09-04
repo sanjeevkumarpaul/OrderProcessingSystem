@@ -1,9 +1,13 @@
 @page "/role-selection"
 @using Microsoft.JSInterop
 @using OrderProcessingSystem.UI.Models
+@using OrderProcessingSystem.Contracts.Interfaces
+@using OrderProcessingSystem.Contracts.Dto
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @inject HttpClient HttpClient
+@inject IUserLogService UserLogService
+@inject ILogger<RoleSelection> Logger
 
 <div class="role-selection-container">
     <div class="role-selection-card">
@@ -76,6 +80,9 @@
             selectedRole = role;
             StateHasChanged();
 
+            // Log the button click event to UserLogs table
+            await LogUserButtonClick(role);
+
             await Task.Delay(1000); // Simulate processing
 
             // Create user data based on role and provider (back to demo tokens)
@@ -97,6 +104,7 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error during role selection for {Role}", role);
             Console.WriteLine($"Error during role selection: {ex.Message}");
             isLoading = false;
             selectedRole = string.Empty;
@@ -115,6 +123,43 @@
             "User" => ("Sanjeev P (User)", $"sanjeev.user@{providerDomain}"),
             _ => ("Sanjeev P", $"sanjeev.p@{providerDomain}")
         };
+    }
+
+    /// <summary>
+    /// Logs the button click event to UserLogs table with random user data and proper timestamp
+    /// </summary>
+    /// <param name="eventType">The type of login event (Admin, Manager, User)</param>
+    private async Task LogUserButtonClick(string eventType)
+    {
+        try
+        {
+            Logger.LogInformation("Logging user button click for event type: {EventType}", eventType);
+
+            var loginRequest = new LoginEventRequest
+            {
+                EventType = eventType.ToUpper() // API expects uppercase values
+            };
+
+            var response = await UserLogService.LogLoginEventAsync(loginRequest);
+            
+            if (response.Success)
+            {
+                Logger.LogInformation("Successfully logged user event: ID={Id}, User={UserName}, Email={UserId}, Timestamp={EventDate}", 
+                    response.Id, response.UserName, response.UserId, response.EventDate);
+                Console.WriteLine($"UserLog created successfully: {response.UserName} ({response.Event}) at {response.EventDate:yyyy-MM-dd HH:mm:ss}");
+            }
+            else
+            {
+                Logger.LogWarning("Failed to log user event: {Message}", response.Message);
+                Console.WriteLine($"Warning: Failed to log user event - {response.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error logging user button click for event type: {EventType}", eventType);
+            Console.WriteLine($"Error logging user event: {ex.Message}");
+            // Don't throw - allow login process to continue even if logging fails
+        }
     }
 
     private string GetProviderIcon()
