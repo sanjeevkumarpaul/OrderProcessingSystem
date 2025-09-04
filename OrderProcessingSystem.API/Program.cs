@@ -26,6 +26,19 @@ builder.Configuration.GetSection(ApplicationSettings.SectionName).Bind(appSettin
 
 // Register controllers
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+
+// Add CORS support for SignalR cross-origin connections
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowUI", builder =>
+    {
+        builder.WithOrigins("http://localhost:5253", "https://localhost:5253")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
+    });
+});
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -92,11 +105,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Enable CORS
+app.UseCors("AllowUI");
+
 app.UseRouting();
 
 // Add token authentication middleware
 app.UseMiddleware<TokenAuthenticationMiddleware>();
 
 app.MapControllers();
+app.MapHub<OrderProcessingSystem.Infrastructure.Hubs.UserLogHub>("/userLogHub");
 
 app.Run();

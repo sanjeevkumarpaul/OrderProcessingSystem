@@ -1,1049 +1,5 @@
 Using launch settings from /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.API/Properties/launchSettings.json...
 Building...
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT "MigrationId", "ProductVersion"
-      FROM "__EFMigrationsHistory"
-      ORDER BY "MigrationId";
-info: Microsoft.EntityFrameworkCore.Migrations[20405]
-      No migrations were applied. The database is already up to date.
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT COUNT(*)
-      FROM "Suppliers" AS "s"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT "s"."SupplierId", "s"."Country", "s"."Name"
-      FROM "Suppliers" AS "s"
-      ORDER BY "s"."SupplierId"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT COUNT(*)
-      FROM "Customers" AS "c"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT "c"."CustomerId", "c"."Name"
-      FROM "Customers" AS "c"
-      ORDER BY "c"."CustomerId"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT COUNT(*)
-      FROM "Orders" AS "o"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT MAX("o"."OrderId")
-      FROM "Orders" AS "o"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
-      SELECT "o"."OrderId", "o"."CustomerId", "o"."Status", "o"."SupplierId", "o"."Total"
-      FROM "Orders" AS "o"
-      ORDER BY "o"."OrderId"
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (1ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 9), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 7), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 10), @p1='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Status" = @p0, "Total" = @p1
-      WHERE "OrderId" = @p2
-      RETURNING 1;
-info: Microsoft.EntityFrameworkCore.Database.Command[20101]
-      Executed DbCommand (0ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = Double)], CommandType='Text', CommandTimeout='30']
-      UPDATE "Orders" SET "Total" = @p0
-      WHERE "OrderId" = @p1
-      RETURNING 1;
 info: Microsoft.Hosting.Lifetime[14]
       Now listening on: http://localhost:5269
 info: Microsoft.Hosting.Lifetime[0]
@@ -1054,71 +10,357 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /Users/sanjeevkumarpaul/Desktop/Code Practice/OrderProcessingSystem/OrderProcessingSystem.API
 warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
       Failed to determine the https port for redirect.
-Executing SQL: SELECT
-    o.CustomerId as CustomerId,
-    COALESCE(c.Name, '') as CustomerName,
-    SUM(o.Total) as TotalSales,
-    COUNT(1) as OrderCount
-FROM Orders o
-LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-GROUP BY o.CustomerId, c.Name
-ORDER BY TotalSales DESC
-, with CustomerID as 
-Executing SQL: SELECT
-    o.CustomerId as CustomerId,
-    COALESCE(c.Name, '') as CustomerName,
-    SUM(o.Total) as TotalSales,
-    COUNT(1) as OrderCount
-FROM Orders o
-LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-GROUP BY o.CustomerId, c.Name
-ORDER BY TotalSales DESC
-, with CustomerID as 8
-Executing SQL: SELECT
-    o.CustomerId as CustomerId,
-    COALESCE(c.Name, '') as CustomerName,
-    SUM(o.Total) as TotalSales,
-    COUNT(1) as OrderCount
-FROM Orders o
-LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-GROUP BY o.CustomerId, c.Name
-ORDER BY TotalSales DESC
-, with CustomerID as 
-Executing SQL: SELECT
-    o.CustomerId as CustomerId,
-    COALESCE(c.Name, '') as CustomerName,
-    SUM(o.Total) as TotalSales,
-    COUNT(1) as OrderCount
-FROM Orders o
-LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-GROUP BY o.CustomerId, c.Name
-ORDER BY TotalSales DESC
-, with CustomerID as 
-Executing SQL: SELECT
-    o.CustomerId as CustomerId,
-    COALESCE(c.Name, '') as CustomerName,
-    SUM(o.Total) as TotalSales,
-    COUNT(1) as OrderCount
-FROM Orders o
-LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-GROUP BY o.CustomerId, c.Name
-ORDER BY TotalSales DESC
-, with CustomerID as 
-Executing SQL: SELECT
-    o.CustomerId as CustomerId,
-    COALESCE(c.Name, '') as CustomerName,
-    SUM(o.Total) as TotalSales,
-    COUNT(1) as OrderCount
-FROM Orders o
-LEFT JOIN Customers c ON c.CustomerId = o.CustomerId
-WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
-GROUP BY o.CustomerId, c.Name
-ORDER BY TotalSales DESC
-, with CustomerID as 
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: efpH5m1kXwOvR8gDh5UFGw
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: STXmnxaIx-EBm2UYpGkocQ
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: u7AuPBZSCuxS25rBDIOc9A
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: u7AuPBZSCuxS25rBDIOc9A
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: 1CVdNSFY7FWAQHEhx55q2A
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: STXmnxaIx-EBm2UYpGkocQ
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: efpH5m1kXwOvR8gDh5UFGw
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: MANAGER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60028, User: Deborah Hernandez, Email: deborah.hernandez@meridiantech.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Deborah Hernandez as MANAGER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60029, User: Richard Anderson, Email: richard.anderson@infinitelogistics.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Richard Anderson as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60030, User: Jessica Rivera, Email: jessica.rivera@quantumcorp.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Jessica Rivera as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60031, User: Anthony Thompson, Email: anthony.thompson@quantumcorp.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Anthony Thompson as ADMIN
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: 1CVdNSFY7FWAQHEhx55q2A
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: gCpG-RbLYsU7KHsmpOLr1w
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60032, User: William Robinson, Email: william.robinson@infinitelogistics.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: William Robinson as USER
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: gCpG-RbLYsU7KHsmpOLr1w
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: 9QU7IHs7UzW5mZxZpbqrqg
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60033, User: Carol Lopez, Email: carol.lopez@summitconsulting.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Carol Lopez as ADMIN
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: 9QU7IHs7UzW5mZxZpbqrqg
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: tAx8Edz4HrO702afkMuZNA
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: tAx8Edz4HrO702afkMuZNA
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: _VllyK-E2DDmAQ_y6n_SfQ
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: _VllyK-E2DDmAQ_y6n_SfQ
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: O-3ZOV4yDM59fH7LyQWdoQ
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: O-3ZOV4yDM59fH7LyQWdoQ
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: Mc0GCG_IeAtD4bkxkS-LSQ
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: Yo9ceP0DVO8MVn9XP0a8eQ
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: Mc0GCG_IeAtD4bkxkS-LSQ
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60034, User: Matthew Allen, Email: matthew.allen@stellartech.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Matthew Allen as USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60035, User: Amy Adams, Email: amy.adams@globexltd.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Amy Adams as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: YD4v2jYqhfl6oXkXOeI79Q
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: Yo9ceP0DVO8MVn9XP0a8eQ
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60036, User: Richard Perez, Email: richard.perez@vanguardenterprises.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Richard Perez as USER
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: YD4v2jYqhfl6oXkXOeI79Q
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: qKLcQ-WbELCEYAlo7qHxuA
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: qKLcQ-WbELCEYAlo7qHxuA
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: 2-0TqQl6GKHR-fKO4Nl_sQ
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60037, User: Robert Brown, Email: robert.brown@nexusinnovations.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Robert Brown as ADMIN
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: mOOGVkTHkpMryhfISHOZ3Q
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60038, User: Michael Scott, Email: michael.scott@pinnaclegroup.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Michael Scott as ADMIN
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client connected to UserLog Hub: u1fAh-XV4ERPHwKoc_XLMg
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60039, User: Joshua Martinez, Email: joshua.martinez@vanguardenterprises.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Joshua Martinez as ADMIN
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: u1fAh-XV4ERPHwKoc_XLMg
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: 2-0TqQl6GKHR-fKO4Nl_sQ
+info: OrderProcessingSystem.Infrastructure.Hubs.UserLogHub[0]
+      Client disconnected from UserLog Hub: mOOGVkTHkpMryhfISHOZ3Q
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60040, User: Steven Carter, Email: steven.carter@nexusinnovations.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Steven Carter as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60041, User: Joshua Lopez, Email: joshua.lopez@primeventures.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Joshua Lopez as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: TokenValidationService[0]
+      Token validation successful for token: demo-token...
+info: TokenValidationService[0]
+      Successfully extracted user info for: sanjeev.p
+info: OrderProcessingSystem.API.Middleware.TokenAuthenticationMiddleware[0]
+      API request to /api/data/orders authorized for user: sanjeev.p
+Available embedded resources: OrderProcessingSystem.Core.JsonConfigurations.file-naming.json, OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json, OrderProcessingSystem.Core.JsonConfigurations.transexceptions.json, OrderProcessingSystem.Core.Sql.Customers.Insert.sql, OrderProcessingSystem.Core.Sql.Customers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Customers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Orders.Delete.sql, OrderProcessingSystem.Core.Sql.Orders.Insert.sql, OrderProcessingSystem.Core.Sql.Orders.SelectAll.sql, OrderProcessingSystem.Core.Sql.Orders.SelectByCustomerAndSupplier.sql, OrderProcessingSystem.Core.Sql.Orders.SelectById.sql, OrderProcessingSystem.Core.Sql.Orders.Update.sql, OrderProcessingSystem.Core.Sql.Reports.SalesByCustomer.sql, OrderProcessingSystem.Core.Sql.Suppliers.Delete.sql, OrderProcessingSystem.Core.Sql.Suppliers.Insert.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectById.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Suppliers.Update.sql, OrderProcessingSystem.Core.Sql.TransExceptions.Insert.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectAll.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByDateRange.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectById.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByTransactionType.sql
+Selected candidate: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+Looking for resource containing 'JsonConfigurations' and ending with 'grid-columns.json'
+Reading from embedded resource: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+info: TokenValidationService[0]
+      Token validation successful for token: demo-token...
+info: TokenValidationService[0]
+      Successfully extracted user info for: sanjeev.p
+info: OrderProcessingSystem.API.Middleware.TokenAuthenticationMiddleware[0]
+      API request to /api/data/suppliers-with-orders authorized for user: sanjeev.p
+Available embedded resources: OrderProcessingSystem.Core.JsonConfigurations.file-naming.json, OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json, OrderProcessingSystem.Core.JsonConfigurations.transexceptions.json, OrderProcessingSystem.Core.Sql.Customers.Insert.sql, OrderProcessingSystem.Core.Sql.Customers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Customers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Orders.Delete.sql, OrderProcessingSystem.Core.Sql.Orders.Insert.sql, OrderProcessingSystem.Core.Sql.Orders.SelectAll.sql, OrderProcessingSystem.Core.Sql.Orders.SelectByCustomerAndSupplier.sql, OrderProcessingSystem.Core.Sql.Orders.SelectById.sql, OrderProcessingSystem.Core.Sql.Orders.Update.sql, OrderProcessingSystem.Core.Sql.Reports.SalesByCustomer.sql, OrderProcessingSystem.Core.Sql.Suppliers.Delete.sql, OrderProcessingSystem.Core.Sql.Suppliers.Insert.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectById.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Suppliers.Update.sql, OrderProcessingSystem.Core.Sql.TransExceptions.Insert.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectAll.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByDateRange.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectById.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByTransactionType.sql
+Selected candidate: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+Looking for resource containing 'JsonConfigurations' and ending with 'grid-columns.json'
+Reading from embedded resource: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: MANAGER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60042, User: Steven Robinson, Email: steven.robinson@primeventures.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Steven Robinson as MANAGER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60043, User: Jennifer Jackson, Email: jennifer.jackson@titanindustries.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Jennifer Jackson as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60044, User: George Martinez, Email: george.martinez@catalystgroup.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: George Martinez as USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60045, User: Daniel King, Email: daniel.king@acmecorp.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Daniel King as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60046, User: Susan King, Email: susan.king@catalystgroup.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Susan King as USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60047, User: Deborah Torres, Email: deborah.torres@phoenixtech.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Deborah Torres as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 50, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60048, User: Joshua Nelson, Email: joshua.nelson@infinitelogistics.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Joshua Nelson as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60049, User: Deborah Rodriguez, Email: deborah.rodriguez@catalystgroup.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Deborah Rodriguez as USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60050, User: Carol Adams, Email: carol.adams@infinitelogistics.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Carol Adams as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: TokenValidationService[0]
+      Token validation successful for token: demo-token...
+info: TokenValidationService[0]
+      Successfully extracted user info for: sanjeev.p
+info: OrderProcessingSystem.API.Middleware.TokenAuthenticationMiddleware[0]
+      API request to /api/data/suppliers-with-orders authorized for user: sanjeev.p
+Available embedded resources: OrderProcessingSystem.Core.JsonConfigurations.file-naming.json, OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json, OrderProcessingSystem.Core.JsonConfigurations.transexceptions.json, OrderProcessingSystem.Core.Sql.Customers.Insert.sql, OrderProcessingSystem.Core.Sql.Customers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Customers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Orders.Delete.sql, OrderProcessingSystem.Core.Sql.Orders.Insert.sql, OrderProcessingSystem.Core.Sql.Orders.SelectAll.sql, OrderProcessingSystem.Core.Sql.Orders.SelectByCustomerAndSupplier.sql, OrderProcessingSystem.Core.Sql.Orders.SelectById.sql, OrderProcessingSystem.Core.Sql.Orders.Update.sql, OrderProcessingSystem.Core.Sql.Reports.SalesByCustomer.sql, OrderProcessingSystem.Core.Sql.Suppliers.Delete.sql, OrderProcessingSystem.Core.Sql.Suppliers.Insert.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectById.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Suppliers.Update.sql, OrderProcessingSystem.Core.Sql.TransExceptions.Insert.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectAll.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByDateRange.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectById.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByTransactionType.sql
+Selected candidate: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+Looking for resource containing 'JsonConfigurations' and ending with 'grid-columns.json'
+Reading from embedded resource: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+info: TokenValidationService[0]
+      Token validation successful for token: demo-token...
+info: TokenValidationService[0]
+      Successfully extracted user info for: sanjeev.p
+info: OrderProcessingSystem.API.Middleware.TokenAuthenticationMiddleware[0]
+      API request to /api/data/customers-with-orders authorized for user: sanjeev.p
+Available embedded resources: OrderProcessingSystem.Core.JsonConfigurations.file-naming.json, OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json, OrderProcessingSystem.Core.JsonConfigurations.transexceptions.json, OrderProcessingSystem.Core.Sql.Customers.Insert.sql, OrderProcessingSystem.Core.Sql.Customers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Customers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Orders.Delete.sql, OrderProcessingSystem.Core.Sql.Orders.Insert.sql, OrderProcessingSystem.Core.Sql.Orders.SelectAll.sql, OrderProcessingSystem.Core.Sql.Orders.SelectByCustomerAndSupplier.sql, OrderProcessingSystem.Core.Sql.Orders.SelectById.sql, OrderProcessingSystem.Core.Sql.Orders.Update.sql, OrderProcessingSystem.Core.Sql.Reports.SalesByCustomer.sql, OrderProcessingSystem.Core.Sql.Suppliers.Delete.sql, OrderProcessingSystem.Core.Sql.Suppliers.Insert.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectById.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Suppliers.Update.sql, OrderProcessingSystem.Core.Sql.TransExceptions.Insert.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectAll.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByDateRange.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectById.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByTransactionType.sql
+Selected candidate: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+Looking for resource containing 'JsonConfigurations' and ending with 'grid-columns.json'
+Reading from embedded resource: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+info: TokenValidationService[0]
+      Token validation successful for token: demo-token...
+info: TokenValidationService[0]
+      Successfully extracted user info for: sanjeev.p
+info: OrderProcessingSystem.API.Middleware.TokenAuthenticationMiddleware[0]
+      API request to /api/data/orders authorized for user: sanjeev.p
+Available embedded resources: OrderProcessingSystem.Core.JsonConfigurations.file-naming.json, OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json, OrderProcessingSystem.Core.JsonConfigurations.transexceptions.json, OrderProcessingSystem.Core.Sql.Customers.Insert.sql, OrderProcessingSystem.Core.Sql.Customers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Customers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Orders.Delete.sql, OrderProcessingSystem.Core.Sql.Orders.Insert.sql, OrderProcessingSystem.Core.Sql.Orders.SelectAll.sql, OrderProcessingSystem.Core.Sql.Orders.SelectByCustomerAndSupplier.sql, OrderProcessingSystem.Core.Sql.Orders.SelectById.sql, OrderProcessingSystem.Core.Sql.Orders.Update.sql, OrderProcessingSystem.Core.Sql.Reports.SalesByCustomer.sql, OrderProcessingSystem.Core.Sql.Suppliers.Delete.sql, OrderProcessingSystem.Core.Sql.Suppliers.Insert.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectAll.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectById.sql, OrderProcessingSystem.Core.Sql.Suppliers.SelectByName.sql, OrderProcessingSystem.Core.Sql.Suppliers.Update.sql, OrderProcessingSystem.Core.Sql.TransExceptions.Insert.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectAll.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByDateRange.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectById.sql, OrderProcessingSystem.Core.Sql.TransExceptions.SelectByTransactionType.sql
+Selected candidate: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+Looking for resource containing 'JsonConfigurations' and ending with 'grid-columns.json'
+Reading from embedded resource: OrderProcessingSystem.Core.JsonConfigurations.grid-columns.json
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60051, User: Anthony Nelson, Email: anthony.nelson@summitconsulting.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Anthony Nelson as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60052, User: Charles Sanchez, Email: charles.sanchez@stellartech.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Charles Sanchez as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Retrieving user logs. Page: 1, Size: 5, EventType: (null)
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60053, User: Helen Scott, Email: helen.scott@omegacorp.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Helen Scott as USER
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60054, User: Barbara Miller, Email: barbara.miller@fusionenterprises.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Barbara Miller as ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Logging login event for type: ADMIN
+info: OrderProcessingSystem.API.Controllers.UserLogController[0]
+      Successfully logged login event. ID: 60055, User: Betty Green, Email: betty.green@globexltd.com
+info: OrderProcessingSystem.Infrastructure.Services.UserLogNotificationService[0]
+      Broadcasting user login notification: Betty Green as ADMIN
 info: Microsoft.Hosting.Lifetime[0]
       Application is shutting down...

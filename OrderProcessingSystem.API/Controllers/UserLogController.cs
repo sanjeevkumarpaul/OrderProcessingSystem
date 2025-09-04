@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderProcessingSystem.Contracts.Interfaces;
 using OrderProcessingSystem.Contracts.Dto;
+using OrderProcessingSystem.Infrastructure.Services;
 
 namespace OrderProcessingSystem.API.Controllers;
 
@@ -9,11 +10,16 @@ namespace OrderProcessingSystem.API.Controllers;
 public class UserLogController : ControllerBase
 {
     private readonly IUserLogService _userLogService;
+    private readonly IUserLogNotificationService _notificationService;
     private readonly ILogger<UserLogController> _logger;
 
-    public UserLogController(IUserLogService userLogService, ILogger<UserLogController> logger)
+    public UserLogController(
+        IUserLogService userLogService, 
+        IUserLogNotificationService notificationService,
+        ILogger<UserLogController> logger)
     {
         _userLogService = userLogService;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -39,6 +45,9 @@ public class UserLogController : ControllerBase
             
             _logger.LogInformation("Successfully logged login event. ID: {Id}, User: {UserName}, Email: {UserId}", 
                 response.Id, response.UserName, response.UserId);
+            
+            // Send real-time notification to connected clients
+            await _notificationService.NotifyUserLoginAsync(response);
             
             return Ok(response);
         }
@@ -150,6 +159,36 @@ public class UserLogController : ControllerBase
         {
             _logger.LogError(ex, "Error occurred while retrieving user log statistics");
             return StatusCode(500, new { message = "Error retrieving statistics" });
+        }
+    }
+
+    [HttpPost("test-notification")]
+    public async Task<IActionResult> TestNotification()
+    {
+        try
+        {
+            _logger.LogInformation("🧪 Test notification endpoint called");
+            
+            var testLogResponse = new LoginEventResponse
+            {
+                Id = 999,
+                UserName = "TestUser",
+                Event = "TEST_LOGIN",
+                EventDate = DateTime.Now,
+                UserId = "test-user-123",
+                Success = true,
+                Message = "Test login notification"
+            };
+
+            await _notificationService.NotifyUserLoginAsync(testLogResponse);
+            
+            _logger.LogInformation("✅ Test notification sent successfully");
+            return Ok(new { message = "Test notification sent", testData = testLogResponse });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "❌ Error sending test notification");
+            return StatusCode(500, new { message = "Error sending test notification", error = ex.Message });
         }
     }
 }

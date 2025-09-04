@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderProcessingSystem.Authentication.Models;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace OrderProcessingSystem.Authentication.Controllers;
 
@@ -12,10 +13,14 @@ namespace OrderProcessingSystem.Authentication.Controllers;
 public class AuthController : Controller
 {
     private readonly IConfiguration _configuration;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IConfiguration configuration)
+    public AuthController(IConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<AuthController> logger)
     {
         _configuration = configuration;
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     /// <summary>
@@ -63,6 +68,9 @@ public class AuthController : Controller
         
         await HttpContext.SignInAsync("Cookies", claimsPrincipal);
 
+        // Log the login event to the API for real-time notifications
+        await LogLoginEventAsync(demoUser.Name, "ADMIN");
+
         return Redirect($"{GetUIBaseUrl()}/auth-success?provider=microsoft&demo=true");
     }
 
@@ -101,6 +109,9 @@ public class AuthController : Controller
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         
         await HttpContext.SignInAsync("Cookies", claimsPrincipal);
+
+        // Log the login event to the API for real-time notifications
+        await LogLoginEventAsync(demoUser.Name, "MANAGER");
 
         return Redirect($"{GetUIBaseUrl()}/auth-success?provider=google&demo=true");
     }
@@ -261,6 +272,38 @@ public class AuthController : Controller
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         await HttpContext.SignInAsync(claimsPrincipal);
+    }
+
+    private async Task LogLoginEventAsync(string userName, string userRole = "USER")
+    {
+        try
+        {
+            var httpClient = _httpClientFactory.CreateClient("ApiClient");
+            var loginRequest = new
+            {
+                EventType = userRole
+            };
+
+            var json = JsonSerializer.Serialize(loginRequest);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            _logger.LogInformation("🔔 Logging login event for user: {UserName} with role: {Role}", userName, userRole);
+            
+            var response = await httpClient.PostAsync("api/UserLog/login-event", content);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("✅ Successfully logged login event for user: {UserName}", userName);
+            }
+            else
+            {
+                _logger.LogWarning("⚠️ Failed to log login event for user: {UserName}. Status: {Status}", userName, response.StatusCode);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "❌ Error logging login event for user: {UserName}", userName);
+        }
     }
 
     private string GetUIBaseUrl()

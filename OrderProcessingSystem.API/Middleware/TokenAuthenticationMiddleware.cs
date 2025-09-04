@@ -72,7 +72,9 @@ public class TokenAuthenticationMiddleware
             "/health",
             "/error",
             "/api/metadata/ui-grid-columns",
-            "/api/userlog"  // Skip authentication for UserLog endpoints for now
+            "/api/userlog",  // Skip authentication for UserLog endpoints for now
+            "/userloghub",   // Skip authentication for SignalR hub
+            "/userLogHub"    // Skip authentication for SignalR hub (exact case match)
         };
 
         return skipPaths.Any(skipPath => path.StartsWith(skipPath, StringComparison.OrdinalIgnoreCase));

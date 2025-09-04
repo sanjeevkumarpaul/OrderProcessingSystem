@@ -40,6 +40,7 @@ builder.Services.Configure<FileNamingOptions>(
 // Add services
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddSignalR();
 // HttpClient configuration
 builder.Services.AddHttpClient();
 // Named client for API
@@ -94,6 +95,7 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapBlazorHub();
+app.MapHub<OrderProcessingSystem.Infrastructure.Hubs.UserLogHub>("/userLogHub");
 app.MapFallbackToPage("/_Host");
 
 app.Run();

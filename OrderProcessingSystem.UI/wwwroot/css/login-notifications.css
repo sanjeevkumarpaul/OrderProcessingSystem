@@ -1,0 +1,22 @@
+.login-notification {
+    animation: slideInRight 0.3s ease-out;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.login-notification:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;
+    transform: translateY(-2px);
+    transition: all 0.2s ease-in-out;
+}

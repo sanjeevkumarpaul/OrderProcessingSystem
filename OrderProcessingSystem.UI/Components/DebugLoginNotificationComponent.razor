@@ -1,0 +1,40 @@
+
+@inject IJSRuntime JS
+@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
+
+@code {
+    private HubConnection? _hubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/userloghub"))
+                .WithAutomaticReconnect()
+                .Build();
+
+            _hubConnection.On<string, string, string>("UserLoggedIn", async (userName, loginTime, ipAddress) =>
+            {
+                await JS.InvokeVoidAsync("addLoginNotification", userName, loginTime, ipAddress);
+            });
+
+            await _hubConnection.StartAsync();
+            await _hubConnection.InvokeAsync("JoinGroup", "UserActivityMonitors");
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", $"❌ Error in SignalR connection: {ex.Message}");
+        }
+    }	public async ValueTask DisposeAsync()
+	{
+		if (_hubConnection is not null)
+		{
+			await _hubConnection.DisposeAsync();
+		}
+	}
+
+	[Inject]
+	private NavigationManager NavigationManager { get; set; } = default!;
+}
