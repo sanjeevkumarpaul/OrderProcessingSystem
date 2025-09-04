@@ -1,0 +1,109 @@
+#!/bin/bash
+# Universal Cross-Platform Launcher for OrderProcessingSystem
+# File: launch
+# Works on: Windows (Git Bash/WSL), macOS, Linux
+
+echo "🌍 OrderProcessingSystem - Universal Cross-Platform Launcher"
+
+# Get the action from parameter or default to start
+action="${1:-start}"
+
+# Handle short flags and long parameters
+case "$action" in
+    "--s"|"--start") action="start" ;;
+    "--x"|"--stop")  action="stop" ;;
+    "--q"|"--qstart"|"--quick") action="qstart" ;;
+    "--help"|"-h") 
+        echo ""
+        echo "📖 Usage:"
+        echo "  ./launch [--s|--start|start]     Start with build validation"
+        echo "  ./launch [--q|--qstart|qstart]   Quick start (no build validation)"
+        echo "  ./launch [--x|--stop|stop]       Stop all services"
+        echo ""
+        echo "🔗 Short Keys:"
+        echo "  --s   Start with build validation"
+        echo "  --q   Quick start"
+        echo "  --x   Stop all services"
+        echo ""
+        echo "🖥️ Platform Usage:"
+        echo "  macOS/Linux: ./launch --s"
+        echo "  Windows:     bash launch --s  (or just 'launch --s' in Git Bash)"
+        exit 0
+        ;;
+esac
+
+echo ""
+echo "🎯 Action: $action"
+echo ""
+
+# Detect operating system
+OS=$(uname -s)
+case "$OS" in
+    MINGW*|MSYS*|CYGWIN*)
+        echo "🪟 Detected: Windows (Git Bash/MSYS)"
+        echo "📂 Using WINOS folder for Windows system..."
+        
+        if [ ! -d "WINOS" ]; then
+            echo "❌ Error: WINOS folder not found!"
+            exit 1
+        fi
+        
+        case "$action" in
+            "start")
+                echo "▶️  Executing: WINOS/start.ps1"
+                powershell.exe -ExecutionPolicy Bypass -File "WINOS/start.ps1"
+                ;;
+            "stop")
+                echo "▶️  Executing: WINOS/stop.ps1"
+                powershell.exe -ExecutionPolicy Bypass -File "WINOS/stop.ps1"
+                ;;
+            "qstart")
+                echo "⚡ Quick start mode"
+                echo "▶️  Executing: WINOS/start.ps1"
+                powershell.exe -ExecutionPolicy Bypass -File "WINOS/start.ps1"
+                ;;
+            *)
+                echo "❌ Error: Unknown action '$action'"
+                exit 1
+                ;;
+        esac
+        ;;
+    "Darwin"|"Linux"|*"BSD")
+        echo "🍎 Detected: macOS/Unix-like system"
+        echo "📂 Using MACOS folder for Unix-like system..."
+        
+        if [ ! -d "MACOS" ]; then
+            echo "❌ Error: MACOS folder not found!"
+            exit 1
+        fi
+        
+        chmod +x MACOS/*.sh 2>/dev/null || true
+        
+        case "$action" in
+            "start")
+                echo "▶️  Executing: ./MACOS/start.sh"
+                ./MACOS/start.sh
+                ;;
+            "stop")
+                echo "▶️  Executing: ./MACOS/stop.sh"
+                ./MACOS/stop.sh
+                ;;
+            "qstart")
+                echo "⚡ Quick start mode (Unix-like only)"
+                echo "▶️  Executing: ./MACOS/qstart.sh"
+                ./MACOS/qstart.sh
+                ;;
+            *)
+                echo "❌ Error: Unknown action '$action'"
+                exit 1
+                ;;
+        esac
+        ;;
+    *)
+        echo "❌ Error: Unsupported operating system: $OS"
+        exit 1
+        ;;
+esac
+
+echo ""
+echo "✅ Command completed successfully!"
