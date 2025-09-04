@@ -131,3 +131,38 @@
     border-color: #bbdefb;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
+
+/* Fix for pagination current page button visibility */
+
+.chunk-navigation .btn-group .btn.btn-primary,
+.chunk-navigation .btn-group .btn.current-page-indicator {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    border-color: #0056b3 !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3) !important;
+    position: relative;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+    display: inline-block !important;
+}
+
+.chunk-navigation .btn-group .btn.btn-primary:hover,
+.chunk-navigation .btn-group .btn.current-page-indicator:hover {
+    background: linear-gradient(135deg, #0056b3, #004085) !important;
+    border-color: #004085 !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.chunk-navigation .btn-group .btn.btn-primary:focus,
+.chunk-navigation .btn-group .btn.btn-primary:active,
+.chunk-navigation .btn-group .btn.current-page-indicator:focus,
+.chunk-navigation .btn-group .btn.current-page-indicator:active {
+    background: linear-gradient(135deg, #0056b3, #004085) !important;
+    border-color: #004085 !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
