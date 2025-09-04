@@ -1,7 +1,7 @@
 @page "/user-activity"
 @inject IUserLogService UserLogService
 @inject IGridColumnService GridColumnService
-@using OrderProcessingSystem.UI.Shared.UIViewModels
+@using OrderProcessingSystem.UI.Shared
 @using OrderProcessingSystem.Contracts.Interfaces
 @using OrderProcessingSystem.Infrastructure.Services
 
@@ -128,6 +128,12 @@
                                 <button class="btn btn-secondary me-2" @onclick="ClearFilters" disabled="@isLoading">
                                     <i class="fas fa-times me-1"></i> Clear Filters
                                 </button>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" @bind="enableGridScrolling" id="toggleScrolling" disabled="@isLoading">
+                                    <label class="form-check-label" for="toggleScrolling">
+                                        <small>Grid Scrolling</small>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         
@@ -154,6 +160,14 @@
                         <small class="mt-1 d-block">
                             Data loaded in chunks of <span class="page-size-badge">@pageSize records</span>. 
                             Total available: <strong>@totalRecords records</strong> across <strong>@totalPages pages</strong>.
+                            @if (enableGridScrolling)
+                            {
+                                <br/><span class="badge bg-success mt-1"><i class="fas fa-scroll me-1"></i>Grid Scrolling Enabled</span>
+                            }
+                            else
+                            {
+                                <br/><span class="badge bg-info mt-1"><i class="fas fa-arrows-v me-1"></i>Page Scrolling Mode</span>
+                            }
                         </small>
                     </div>
                     <div class="card-body p-0">
@@ -175,7 +189,14 @@
                             <GenericGrid TItem="UserLogVM" 
                                          Items="userLogViewModels" 
                                          Columns="gridColumns" 
-                                         PageSize="@pageSize" />
+                                         DefaultPageSize="5"
+                                         ShowInternalPagination="false"
+                                         ShowSimplePagination="true"
+                                         ShowPageSizeSelector="false"
+                                         ShowItemCount="false"
+                                         EnableGridScrolling="@enableGridScrolling"
+                                         GridMaxHeight="500px"
+                                         StickyHeader="true" />
                             
                             <!-- Custom Chunk Navigation Controls -->
                             <div class="px-3 pb-3">
@@ -250,6 +271,7 @@
 </div>
 
 <link rel="stylesheet" href="~/css/user-activity-chunked.css" />
+<script src="~/js/scrollable-grid.js"></script>
 
 @code {
     // Data properties for chunked loading
@@ -264,8 +286,9 @@
     
     // Pagination properties (chunked data loading)
     private int currentPageNumber = 1;
-    private int pageSize = 15;
+    private int pageSize = 5; // Changed to 5 to match GenericGrid DefaultPageSize
     private string selectedEventType = "";
+    private bool enableGridScrolling = true; // Toggle for grid scrolling vs page scrolling
     
     // Computed properties for display
     private int totalRecords => userLogResponse.TotalCount;
@@ -383,7 +406,7 @@
     private async Task ClearFilters()
     {
         selectedEventType = "";
-        pageSize = 15;
+        pageSize = 5; // Changed to 5 to match GenericGrid DefaultPageSize
         currentPageNumber = 1;
         await LoadUserLogsAsync();
     }

@@ -12,22 +12,29 @@
             <button class="btn btn-outline-secondary me-3" @onclick="ExportFiltered" disabled="@(Items==null || !IsFilterActive())">Export Filtered</button>
             <button class="btn btn-outline-secondary me-3" @onclick="ClearAllFilters" disabled="@(!IsFilterActive())">Clear Filters</button>
 
-            <label class="me-2">Page size:</label>
-            <select class="form-select d-inline-block w-auto" @onchange="OnPageSizeChanged">
-                @foreach (var s in PageSizes)
-                {
-                    <option selected="@(s==PageSize)" value="@s">@s</option>
-                }
-            </select>
+            @if (ShowPageSizeSelector)
+            {
+                <label class="me-2">Page size:</label>
+                <select class="form-select d-inline-block w-auto" @onchange="OnPageSizeChanged">
+                    @foreach (var s in PageSizes)
+                    {
+                        <option selected="@(s==_actualPageSize)" value="@s">@s</option>
+                    }
+                </select>
+            }
         </div>
-        <div>
-            <small>Showing @((PagedItems?.Count ?? 0)) of @(FilteredTotalCount) items</small>
-        </div>
+        @if (ShowItemCount)
+        {
+            <div>
+                <small>Showing @((PagedItems?.Count ?? 0)) of @(FilteredTotalCount) items</small>
+            </div>
+        }
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
+    <div class="@(EnableGridScrolling ? "scrollable-grid-container" : "table-responsive")" 
+         style="@(EnableGridScrolling ? $"max-height: {GridMaxHeight}; overflow-y: auto;" : "")">
+        <table class="table table-striped table-hover @(EnableGridScrolling && StickyHeader ? "sticky-header-table" : "")">
+            <thead class="@(EnableGridScrolling && StickyHeader ? "sticky-top" : "")">
                 <tr>
                     @foreach(var c in Columns)
                     {
@@ -136,32 +143,65 @@
         </table>
     </div>
 
-    <nav aria-label="grid-paging">
-        <ul class="pagination justify-content-center align-items-center">
-            <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(1)">«</button></li>
-            <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage-1)">Previous</button></li>
+    @if (ShowInternalPagination)
+    {
+        <nav aria-label="grid-paging">
+            <ul class="pagination justify-content-center align-items-center">
+                <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(1)">«</button></li>
+                <li class="page-item @(CurrentPage==1?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage-1)">Previous</button></li>
 
-            <li class="page-item px-2">
-                <select class="form-select form-select-sm" style="width:100px; display:inline-block" @onchange="OnPageSelect" value="@CurrentPage">
-                    @for (int p = 1; p <= TotalPages; p++)
-                    {
-                        <option value="@p" selected="@(p==CurrentPage)">Page @p</option>
-                    }
-                </select>
-            </li>
+                <li class="page-item px-2">
+                    <select class="form-select form-select-sm" style="width:100px; display:inline-block" @onchange="OnPageSelect" value="@CurrentPage">
+                        @for (int p = 1; p <= TotalPages; p++)
+                        {
+                            <option value="@p" selected="@(p==CurrentPage)">Page @p</option>
+                        }
+                    </select>
+                </li>
 
-            <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage+1)">Next</button></li>
-            <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(TotalPages)">»</button></li>
-        </ul>
-    </nav>
+                <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(CurrentPage+1)">Next</button></li>
+                <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><button class="page-link" @onclick="() => GoToPage(TotalPages)">»</button></li>
+            </ul>
+        </nav>
+    }
+    else if (ShowSimplePagination)
+    {
+        <nav aria-label="grid-simple-paging">
+            <ul class="pagination justify-content-center align-items-center">
+                <li class="page-item @(CurrentPage==1?"disabled":"")">
+                    <button class="page-link" @onclick="() => GoToPage(CurrentPage-1)" disabled="@(CurrentPage==1)">
+                        <i class="fas fa-chevron-left me-1"></i>Previous
+                    </button>
+                </li>
+                <li class="page-item mx-3">
+                    <span class="text-muted">Page @CurrentPage of @TotalPages</span>
+                </li>
+                <li class="page-item @(CurrentPage==TotalPages?"disabled":"")">
+                    <button class="page-link" @onclick="() => GoToPage(CurrentPage+1)" disabled="@(CurrentPage==TotalPages)">
+                        Next<i class="fas fa-chevron-right ms-1"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    }
 </div>
 
 @code {
     [Parameter] public IEnumerable<TItem>? Items { get; set; }
     [Parameter] public List<GridColumnVM> Columns { get; set; } = new List<GridColumnVM>();
-    [Parameter] public int PageSize { get; set; } = 10;
-    public int[] PageSizes { get; set; } = new[] {5,10,15};
+    [Parameter] public int? PageSize { get; set; } = null; // Nullable to detect if explicitly set
+    [Parameter] public int DefaultPageSize { get; set; } = 5;
+    [Parameter] public int[] PageSizes { get; set; } = new[] {5,10,15};
+    [Parameter] public bool ShowInternalPagination { get; set; } = true;
+    [Parameter] public bool ShowSimplePagination { get; set; } = false; // Only Previous/Next buttons
+    [Parameter] public bool ShowPageSizeSelector { get; set; } = true;
+    [Parameter] public bool ShowItemCount { get; set; } = true;
+    [Parameter] public bool EnableGridScrolling { get; set; } = false;
+    [Parameter] public string GridMaxHeight { get; set; } = "400px";
+    [Parameter] public bool StickyHeader { get; set; } = true;
 
+    private bool _isFirstRender = true;
+    private int _actualPageSize = 5; // Internal working page size
     List<TItem>? PagedItems;
     int CurrentPage = 1;
     int TotalPages = 1;
@@ -192,7 +232,8 @@
 
     protected override void OnParametersSet()
     {
-        PageSize = PageSize;
+        // Use explicit PageSize if provided, otherwise use DefaultPageSize
+        _actualPageSize = PageSize ?? DefaultPageSize;
         SetupPaging();
     }
 
@@ -200,7 +241,7 @@
     {
         CurrentPage = 1;
         var c = (Items?.Count() ?? 0);
-        TotalPages = Math.Max(1, (int)Math.Ceiling((double)c / PageSize));
+        TotalPages = Math.Max(1, (int)Math.Ceiling((double)c / _actualPageSize));
         ApplyPage();
     }
 
@@ -210,10 +251,10 @@
     var list = ApplyFilterList(Items.ToList());
     FilteredTotalCount = list.Count;
         if (SortColumn != null) list = ApplySort(list, SortColumn, SortAsc);
-        TotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / PageSize));
+        TotalPages = Math.Max(1, (int)Math.Ceiling((double)list.Count / _actualPageSize));
         if (CurrentPage < 1) CurrentPage = 1;
         if (CurrentPage > TotalPages) CurrentPage = TotalPages;
-        PagedItems = list.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+        PagedItems = list.Skip((CurrentPage - 1) * _actualPageSize).Take(_actualPageSize).ToList();
     }
 
     List<TItem> ApplyFilterList(List<TItem> input)
@@ -463,7 +504,12 @@
 
     void OnPageSizeChanged(ChangeEventArgs e)
     {
-        if (int.TryParse(e?.Value?.ToString(), out var s)) { PageSize = s; SetupPaging(); }
+        if (int.TryParse(e?.Value?.ToString(), out var s)) 
+        { 
+            _actualPageSize = s; 
+            PageSize = s; // Update the parameter value for external binding
+            SetupPaging(); 
+        }
     }
 
     void GoToPage(int p)
@@ -531,3 +577,4 @@
 }
 
 <link rel="stylesheet" href="~/css/generic-grid.css" />
+<link rel="stylesheet" href="~/css/scrollable-grid.css" />
