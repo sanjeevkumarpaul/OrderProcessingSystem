@@ -51,11 +51,8 @@ stop_service_smart() {
 
 # Stop services intelligently (checks expected ports and finds processes by name)
 stop_service_smart 5270 "Authentication"
-stop_service_smart 5000 "API"
-stop_service_smart 5253 "UI"
-
-# Also check for API on the alternate port we saw (5269)
 stop_service_smart 5269 "API"
+stop_service_smart 5253 "UI"
 
 echo ""
 echo "🧹 Final cleanup - stopping any remaining OrderProcessingSystem processes..."
