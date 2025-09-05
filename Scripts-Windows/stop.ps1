@@ -37,7 +37,7 @@ function Stop-ServiceByPort {
 
 # Stop services by port
 Stop-ServiceByPort 5270 "Authentication Service"
-Stop-ServiceByPort 5000 "API Service"  
+Stop-ServiceByPort 5269 "API Service"  
 Stop-ServiceByPort 5253 "UI Service"
 
 Write-Host ""
@@ -175,7 +175,7 @@ function Test-PortAvailability {
 
 $AllPortsFree = $true
 $AllPortsFree = (Test-PortAvailability 5270 "Authentication Service") -and $AllPortsFree
-$AllPortsFree = (Test-PortAvailability 5000 "API Service") -and $AllPortsFree  
+$AllPortsFree = (Test-PortAvailability 5269 "API Service") -and $AllPortsFree  
 $AllPortsFree = (Test-PortAvailability 5253 "UI Service") -and $AllPortsFree
 
 Write-Host ""
