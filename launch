@@ -41,26 +41,26 @@ OS=$(uname -s)
 case "$OS" in
     MINGW*|MSYS*|CYGWIN*)
         echo "🪟 Detected: Windows (Git Bash/MSYS)"
-        echo "📂 Using WINOS folder for Windows system..."
+        echo "📂 Using Scripts-Windows folder for Windows system..."
         
-        if [ ! -d "WINOS" ]; then
-            echo "❌ Error: WINOS folder not found!"
+        if [ ! -d "Scripts-Windows" ]; then
+            echo "❌ Error: Scripts-Windows folder not found!"
             exit 1
         fi
         
         case "$action" in
             "start")
-                echo "▶️  Executing: WINOS/start.ps1"
-                powershell.exe -ExecutionPolicy Bypass -File "WINOS/start.ps1"
+                echo "▶️  Executing: Scripts-Windows/start.ps1"
+                powershell.exe -ExecutionPolicy Bypass -File "Scripts-Windows/start.ps1"
                 ;;
             "stop")
-                echo "▶️  Executing: WINOS/stop.ps1"
-                powershell.exe -ExecutionPolicy Bypass -File "WINOS/stop.ps1"
+                echo "▶️  Executing: Scripts-Windows/stop.ps1"
+                powershell.exe -ExecutionPolicy Bypass -File "Scripts-Windows/stop.ps1"
                 ;;
             "qstart")
                 echo "⚡ Quick start mode"
-                echo "▶️  Executing: WINOS/start.ps1"
-                powershell.exe -ExecutionPolicy Bypass -File "WINOS/start.ps1"
+                echo "▶️  Executing: Scripts-Windows/start.ps1"
+                powershell.exe -ExecutionPolicy Bypass -File "Scripts-Windows/start.ps1"
                 ;;
             *)
                 echo "❌ Error: Unknown action '$action'"
@@ -70,28 +70,28 @@ case "$OS" in
         ;;
     "Darwin"|"Linux"|*"BSD")
         echo "🍎 Detected: macOS/Unix-like system"
-        echo "📂 Using MACOS folder for Unix-like system..."
+        echo "📂 Using Scripts-MacOS folder for Unix-like system..."
         
-        if [ ! -d "MACOS" ]; then
-            echo "❌ Error: MACOS folder not found!"
+        if [ ! -d "Scripts-MacOS" ]; then
+            echo "❌ Error: Scripts-MacOS folder not found!"
             exit 1
         fi
         
-        chmod +x MACOS/*.sh 2>/dev/null || true
+        chmod +x Scripts-MacOS/*.sh 2>/dev/null || true
         
         case "$action" in
             "start")
-                echo "▶️  Executing: ./MACOS/start.sh"
-                ./MACOS/start.sh
+                echo "▶️  Executing: ./Scripts-MacOS/start.sh"
+                ./Scripts-MacOS/start.sh
                 ;;
             "stop")
-                echo "▶️  Executing: ./MACOS/stop.sh"
-                ./MACOS/stop.sh
+                echo "▶️  Executing: ./Scripts-MacOS/stop.sh"
+                ./Scripts-MacOS/stop.sh
                 ;;
             "qstart")
                 echo "⚡ Quick start mode (Unix-like only)"
-                echo "▶️  Executing: ./MACOS/qstart.sh"
-                ./MACOS/qstart.sh
+                echo "▶️  Executing: ./Scripts-MacOS/qstart.sh"
+                ./Scripts-MacOS/qstart.sh
                 ;;
             *)
                 echo "❌ Error: Unknown action '$action'"
