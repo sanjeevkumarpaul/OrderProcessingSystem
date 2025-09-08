@@ -3,6 +3,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @inject HttpClient HttpClient
+@inject IConfiguration Configuration
 
 <div class="auth-success-container">
     <div class="auth-success-card">
@@ -67,7 +68,7 @@
             {
                 // Demo mode - use role-based values
                 var rolePrefix = !string.IsNullOrEmpty(Role) ? $" ({Role})" : "";
-                var demoUserName = $"Sanjeev P{rolePrefix}";
+                var demoUserName =GetRoleBasedName(Role);
                 var roleBasedEmail = GetRoleBasedEmail(Role, Provider);
                 
                 // Use a valid demo token that the API middleware recognizes
@@ -93,7 +94,10 @@
             else
             {
                 // Real OAuth mode - get user info from the auth API
-                var response = await HttpClient.GetAsync("http://localhost:5270/auth/user");
+                // Use API base address and endpoint from configuration instead of hardcoded value
+                var apiBaseUrl = Navigation.BaseUri.TrimEnd('/');
+                var authUserEndpoint = Configuration["ApiEndpoints:UserLog:LoginEvent"] ?? "auth/user"; // Example: adjust key as needed
+                var response = await HttpClient.GetAsync($"{apiBaseUrl}{authUserEndpoint}");
                 
                 if (response.IsSuccessStatusCode)
                 {
@@ -143,9 +147,20 @@
         return role?.ToLower() switch
         {
             "admin" => $"sanjeev.admin@{providerDomain}",
-            "manager" => $"sanjeev.manager@{providerDomain}",
-            "user" => $"sanjeev.user@{providerDomain}",
-            _ => $"sanjeev.p@{providerDomain}"
+            "manager" => $"institutional.manager@{providerDomain}",
+            "user" => $"reporting.user@{providerDomain}",
+            _ => $"other.anyuser@{providerDomain}"
+        };
+    } 
+
+    private string GetRoleBasedName(string? role)
+    {
+        return role?.ToLower() switch
+        {
+            "admin" => $"Sanjeev Admin",
+            "manager" => $"Institutional Manager",
+            "user" => $"Reporting User",
+            _ => $"Other Any User"
         };
     }    
 }

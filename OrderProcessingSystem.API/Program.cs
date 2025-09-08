@@ -70,6 +70,14 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 // Add caching services
 builder.Services.AddOrderProcessingCache(builder.Configuration);
 
+// Uncomment and configure the following line to enable JWT authentication for API endpoints:
+// builder.Services.AddJwtAuthentication(
+//     secretKey: "your-secret-key-here",
+//     issuer: "your-issuer-here",
+//     audience: "your-audience-here"
+// );
+// This will enable JWT Bearer authentication using the extension method from AuthenticationServiceExtensions.
+
 var app = builder.Build();
 
 // Enable Swagger (OpenAPI) UI

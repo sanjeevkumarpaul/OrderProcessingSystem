@@ -48,7 +48,7 @@ public class TokenValidationService : ITokenValidationService
             "demo-token-microsoft-user", 
             new TokenUserInfo 
             { 
-                Username = "sanjeev.p", 
+                Username = "Logging...", 
                 Email = "sanjeev.p@microsoft.com", 
                 Roles = new List<string> { "User", "Admin" } 
             }
@@ -57,7 +57,7 @@ public class TokenValidationService : ITokenValidationService
             "demo-token-google-user", 
             new TokenUserInfo 
             { 
-                Username = "sanjeev.p", 
+                Username = "Logging...", 
                 Email = "sanjeev.p@gmail.com", 
                 Roles = new List<string> { "User" } 
             }

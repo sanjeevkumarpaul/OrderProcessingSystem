@@ -42,7 +42,7 @@ public class AuthController : Controller
         {
             Id = 1,
             Email = "sanjeev.p@microsoft.com",
-            DisplayName = "Sanjeev P",
+            DisplayName = "Logging...",
             FirstName = "Sanjeev",
             LastName = "P",
             Provider = "Microsoft",
@@ -84,7 +84,7 @@ public class AuthController : Controller
         {
             Id = 2,
             Email = "sanjeev.p@gmail.com",
-            DisplayName = "Sanjeev P",
+            DisplayName = "Logging...",
             FirstName = "Sanjeev",
             LastName = "P",
             Provider = "Google",
