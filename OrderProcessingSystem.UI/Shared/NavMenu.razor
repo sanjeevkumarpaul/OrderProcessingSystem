@@ -106,16 +106,6 @@
     private string userRole = "Guest";
     private bool isAuthenticated = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (AuthState != null)
-        {
-            userName = await AuthState.GetUserNameAsync() ?? "User";
-            userRole = await AuthState.GetUserRoleAsync() ?? "Guest";
-            isAuthenticated = await AuthState.IsAuthenticatedAsync();
-        }
-    }
-
     private async Task Logout()
     {
         if (AuthState != null && Navigation != null)
@@ -147,24 +137,39 @@
         };
     }
 
-    /// <summary>
-    /// Determines if a menu item should be visible based on user role
-    /// </summary>
-    private bool ShouldShowMenuItem(string menuItem)
-    {
-        var role = userRole.ToLower();
-        
-        if (!isAuthenticated) return false;
+  /// <summary>
+  /// Determines if a menu item should be visible based on user profile (role)
+  /// Loads profile-menu mapping from appsettings.json (MenuProfiles section)
+  /// </summary>
+  [Inject] private IConfiguration? Configuration { get; set; }
 
-        return menuItem.ToLower() switch
-        {
-            "orders" => true, // Visible to all roles
-            "suppliers" => true, // Visible to all roles  
-            "customers" => true, // Visible to all roles
-            "useractivity" => role == "admin", // Visible only to ADMIN role
-            "reports" => role != "user" && role !=  "admin", // Hidden for USER role
-            "processing" => role != "admin" && role != "manager", // Hidden for ADMIN role
-            _ => false
-        };
+  private Dictionary<string, HashSet<string>> ProfileMenuMap = new();
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (AuthState != null)
+    {
+      userName = await AuthState.GetUserNameAsync() ?? "User";
+      userRole = await AuthState.GetUserRoleAsync() ?? "Guest";
+      isAuthenticated = await AuthState.IsAuthenticatedAsync();
     }
+
+    // Load menu profiles from configuration
+    if (Configuration != null)
+    {
+      var section = Configuration.GetSection("MenuProfiles");
+      foreach (var profile in section.GetChildren())
+      {
+        var menus = profile.Get<string[]>() ?? Array.Empty<string>();
+        ProfileMenuMap[profile.Key.ToLower()] = new HashSet<string>(menus.Select(m => m.ToLower()));
+      }
+    }
+  }
+
+  private bool ShouldShowMenuItem(string menuItem)
+  {
+    if (!isAuthenticated) return false;
+    var role = userRole.ToLower();
+    return ProfileMenuMap.TryGetValue(role, out var allowedMenus) && allowedMenus.Contains(menuItem.ToLower());
+  }
 }
