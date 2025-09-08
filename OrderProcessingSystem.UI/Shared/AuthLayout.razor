@@ -28,7 +28,7 @@ else
     <!-- Show Main Application Layout or Allow Role Selection -->
     <div class="bg-app">
         <div class="vertical-bar" aria-hidden="true"></div>
-        @if (isAuthenticated)
+        @if (isAuthenticated && !IsAuthSuccessPage())
         {
             <NavMenu />
         }
